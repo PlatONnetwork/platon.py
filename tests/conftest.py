@@ -1,9 +1,9 @@
 import pytest
 
-from eth_utils import (
+from platon_utils import (
     to_bytes,
 )
-from eth_utils.toolz import (
+from platon_utils.toolz import (
     identity,
 )
 

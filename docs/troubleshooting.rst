@@ -44,20 +44,20 @@ Why can't I use a particular function?
 
 Note that a Web3.py instance must be configured before you can use most of its capabilities.
 One symptom of not configuring the instance first is an error that looks something like this:
-``AttributeError: type object 'Web3' has no attribute 'eth'``.
+``AttributeError: type object 'Web3' has no attribute 'platon'``.
 
 To properly configure your Web3.py instance, specify which provider you're using to connect to the
-Ethereum network. An example configuration, if you're connecting to a locally run node, might be:
+Platon network. An example configuration, if you're connecting to a locally run node, might be:
 
 .. code-block:: python
 
-    >>> from web3 import Web3
+    >>> from platon import Web3
     >>> w3 = Web3(Web3.HTTPProvider('http://localhost:8545'))
 
     # now `w3` is available to use:
     >>> w3.isConnected()
     True
-    >>> w3.eth.send_transaction(...)
+    >>> w3.platon.send_transaction(...)
 
 Refer to the :ref:`providers` documentation for further help with configuration.
 
@@ -74,7 +74,7 @@ You can check that your instance is connected via the ``isConnected`` method:
     False
 
 There's a variety of explanations for why you may see ``False`` here. If you're
-running a local node, such as Geth, double-check that you've indeed started the
+running a local node, such as Gplaton, double-check that you've indeed started the
 binary and that you've started it from the intended directory - particularly if
 you've specified a relative path to its ipc file.
 
@@ -91,8 +91,8 @@ Export your private key from MetaMask, and use
 the local private key tools in Web3.py to sign and send transactions.
 
 See `how to export your private key
-<https://ethereum.stackexchange.com/questions/33053/what-is-a-private-key-in-an-ethereum-wallet-like-metamask-and-how-do-i-find-it>`_
-and :ref:`eth-account`.
+<https://platon.stackexchange.com/questions/33053/what-is-a-private-key-in-an-platon-wallet-like-metamask-and-how-do-i-find-it>`_
+and :ref:`platon-account`.
 
 .. _faucets:
 
@@ -108,7 +108,7 @@ must maintain its own faucet. If you're not sure which test network
 to use, see :ref:`choosing_network`
 
 Faucet mechanisms tend to come and go, so if any information here is
-out of date, try the `Ethereum Stackexchange <https://ethereum.stackexchange.com/>`_.
+out of date, try the `Platon Stackexchange <https://platon.stackexchange.com/>`_.
 Here are some links to testnet ether instructions (in no particular order):
 
 - `Kovan <https://github.com/kovan-testnet/faucet>`_
@@ -126,26 +126,26 @@ you may be trying to create an account while connected to a remote node provider
 As a matter of security, remote nodes cannot create accounts.
 
 If you are in fact running a local node, make sure that it's properly configured to accept ``personal``
-methods. For Geth, that looks something like: ``--http.api personal,eth,<etc>`` or ``--ws.api personal,eth,<etc>``
+methods. For Gplaton, that looks something like: ``--http.api personal,platon,<etc>`` or ``--ws.api personal,platon,<etc>``
 depending on your configuration. Note that the IPC configuration is most secure and includes the ``personal``
 API by default.
 
 In general, your options for accounts are:
 
-- Run a node (e.g., Geth) locally, connect to it via the local port, then use the ``personal`` API.
-- Import a keystore file for an account and :ref:`extract the private key<extract_geth_pk>`.
-- Create an account via the :ref:`eth-account <eth-account>` API, e.g., ``new_acct = w3.eth.account.create()``.
+- Run a node (e.g., Gplaton) locally, connect to it via the local port, then use the ``personal`` API.
+- Import a keystore file for an account and :ref:`extract the private key<extract_gplaton_pk>`.
+- Create an account via the :ref:`platon-account <platon-account>` API, e.g., ``new_acct = w3.platon.account.create()``.
 - Use an external service (e.g., MyCrypto) to generate a new account, then securely import its private key.
 
 .. Warning:: Don't store real value in an account until you are familiar with security best practices.
    If you lose your private key, you lose your account!
 
-Making Ethereum JSON-RPC API access faster
+Making Platon JSON-RPC API access faster
 ------------------------------------------
 
-Your Ethereum node JSON-RPC API might be slow when fetching multiple and large requests, especially when running batch jobs. Here are some tips for how to speed up your web3.py application.
+Your Platon node JSON-RPC API might be slow when fetching multiple and large requests, especially when running batch jobs. Here are some tips for how to speed up your web3.py application.
 
-- Run your client locally, e.g., `Go Ethereum <https://github.com/ethereum/go-ethereum>`_ or `TurboGeth <https://github.com/ledgerwatch/turbo-geth>`_. The network latency and speed are the major limiting factors for fast API access.
+- Run your client locally, e.g., `Go Platon <https://github.com/platonnetwork/platon-go>`_ or `TurboGplaton <https://github.com/ledgerwatch/turbo-gplaton>`_. The network latency and speed are the major limiting factors for fast API access.
 
 - Use IPC communication instead of HTTP/WebSockets. See :ref:`choosing_provider`.
 
@@ -159,8 +159,8 @@ Your Ethereum node JSON-RPC API might be slow when fetching multiple and large r
 
     import ujson
 
-    from web3.providers import JSONBaseProvider
-    from web3.types import RPCResponse
+    from platon.providers import JSONBaseProvider
+    from platon.types import RPCResponse
 
 
     def _fast_decode_rpc_response(raw_response: bytes) -> RPCResponse:

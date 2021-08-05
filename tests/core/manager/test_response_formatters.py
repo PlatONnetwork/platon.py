@@ -1,14 +1,13 @@
 import pytest
 
-from eth_utils.toolz import (
+from platon_utils.toolz import (
     identity,
 )
 
-from web3._utils.method_formatters import (
+from platon._utils.method_formatters import (
     raise_block_not_found,
-    raise_block_not_found_for_uncle_at_index,
 )
-from web3.exceptions import (
+from platon.exceptions import (
     BlockNotFound,
     ContractLogicError,
 )
@@ -73,22 +72,6 @@ def raise_contract_logic_error(response):
             raise_block_not_found,
             BlockNotFound,
         ),
-        (
-            # Multiple params are handled with a None result
-            NONE_RESPONSE,
-            ('0x03', '0x01'),
-            identity,
-            raise_block_not_found_for_uncle_at_index,
-            BlockNotFound,
-        ),
-        (
-            # Raise function handles missing param
-            NONE_RESPONSE,
-            ('0x01',),
-            identity,
-            raise_block_not_found_for_uncle_at_index,
-            BlockNotFound,
-        ),
     ],
 )
 def test_formatted_response_raises_errors(web3,
@@ -102,39 +85,6 @@ def test_formatted_response_raises_errors(web3,
                                         params,
                                         error_formatters,
                                         null_result_formatters)
-
-
-@pytest.mark.parametrize(
-    'response,params,error_formatters,null_result_formatters,error,error_message',
-    [
-        (
-            NONE_RESPONSE,
-            ('0x01',),
-            identity,
-            raise_block_not_found_for_uncle_at_index,
-            BlockNotFound,
-            "Unknown block identifier or uncle index",
-        ),
-        (
-            NONE_RESPONSE,
-            ('0x01', '0x00'),
-            identity,
-            raise_block_not_found_for_uncle_at_index,
-            BlockNotFound,
-            "Uncle at index: 0 of block with id: '0x01' not found."
-        ),
-    ],
-)
-def test_formatted_response_raises_correct_error_message(response,
-                                                         web3,
-                                                         params,
-                                                         error_formatters,
-                                                         null_result_formatters,
-                                                         error,
-                                                         error_message):
-
-    with pytest.raises(error, match=error_message):
-        web3.manager.formatted_response(response, params, error_formatters, null_result_formatters)
 
 
 @pytest.mark.parametrize(

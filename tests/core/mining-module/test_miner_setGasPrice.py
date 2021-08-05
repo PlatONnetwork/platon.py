@@ -5,7 +5,7 @@ from flaky import (
     flaky,
 )
 
-from web3._utils.threads import (
+from platon._utils.threads import (
     Timeout,
 )
 
@@ -14,18 +14,18 @@ from web3._utils.threads import (
 def test_miner_set_gas_price(web3_empty, wait_for_block):
     web3 = web3_empty
 
-    initial_gas_price = web3.eth.gas_price
+    initial_gas_price = web3.platon.gas_price
 
     # sanity check
-    assert web3.eth.gas_price > 1000
+    assert web3.platon.gas_price > 1000
 
-    web3.geth.miner.set_gas_price(initial_gas_price // 2)
+    web3.gplaton.miner.set_gas_price(initial_gas_price // 2)
 
     with Timeout(60) as timeout:
-        while web3.eth.gas_price == initial_gas_price:
+        while web3.platon.gas_price == initial_gas_price:
             timeout.sleep(random.random())
 
-    after_gas_price = web3.eth.gas_price
+    after_gas_price = web3.platon.gas_price
     assert after_gas_price < initial_gas_price
 
 
@@ -33,17 +33,17 @@ def test_miner_set_gas_price(web3_empty, wait_for_block):
 def test_miner_setGasPrice(web3_empty, wait_for_block):
     web3 = web3_empty
 
-    initial_gas_price = web3.eth.gas_price
-    assert web3.eth.gas_price > 1000
+    initial_gas_price = web3.platon.gas_price
+    assert web3.platon.gas_price > 1000
 
     # sanity check
 
     with pytest.warns(DeprecationWarning):
-        web3.geth.miner.setGasPrice(initial_gas_price // 2)
+        web3.gplaton.miner.setGasPrice(initial_gas_price // 2)
 
     with Timeout(60) as timeout:
-        while web3.eth.gas_price == initial_gas_price:
+        while web3.platon.gas_price == initial_gas_price:
             timeout.sleep(random.random())
 
-    after_gas_price = web3.eth.gas_price
+    after_gas_price = web3.platon.gas_price
     assert after_gas_price < initial_gas_price

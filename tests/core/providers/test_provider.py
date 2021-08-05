@@ -1,5 +1,5 @@
-from web3 import Web3
-from web3.providers import (
+from platon import Web3
+from platon.providers import (
     AutoProvider,
     BaseProvider,
 )

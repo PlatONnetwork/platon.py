@@ -6,25 +6,25 @@ import shutil
 import sys
 import time
 
-from eth_utils import (
+from platon_utils import (
     to_text,
 )
-from eth_utils.toolz import (
+from platon_utils.toolz import (
     merge,
 )
 
 import common
-import go_ethereum
+import platon
 from tests.utils import (
     get_open_port,
 )
-from web3 import Web3
+from platon import Web3
 
 CHAIN_CONFIG = {
     "name": "CrossClient",
     "dataDir": "CrossClient",
     "engine": {
-        "Ethash": {
+        "Platonhash": {
             "params": {
                 "minimumDifficulty": "0x020000",
                 "difficultyBoundDivisor": "0x0800",
@@ -73,7 +73,7 @@ CHAIN_CONFIG = {
     },
     "genesis": {
         "seal": {
-            "ethereum": {
+            "platon": {
                 "nonce": "0x0000000000000042",
                 "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
             }
@@ -139,7 +139,7 @@ CHAIN_CONFIG = {
 def get_parity_binary():
     """
     If generating a fixture from a local binary, update this value to that bin, e.g.,
-    return '/Users/xzy/Downloads/openethereum-2.5.13/target/release/parity'
+    return '/Users/xzy/Downloads/openplaton-2.5.13/target/release/parity'
     """
     return 'parity'
 
@@ -221,44 +221,44 @@ def parity_export_blocks_process(
 
 def generate_parity_fixture(destination_dir):
     """
-    The parity fixture generation strategy is to start a geth client with
-    existing fixtures copied into a temp datadir.  Then a parity client
-    is started is peered with the geth client.
+    The parity fixture generation strategy is to start a gplaton client with
+    existing fixtures copied into a temp data_dir.  Then a parity client
+    is started is peered with the gplaton client.
     """
     with contextlib.ExitStack() as stack:
 
-        geth_datadir = stack.enter_context(common.tempdir())
+        gplaton_datadir = stack.enter_context(common.tempdir())
 
-        geth_port = get_open_port()
+        gplaton_port = get_open_port()
 
-        geth_ipc_path_dir = stack.enter_context(common.tempdir())
-        geth_ipc_path = os.path.join(geth_ipc_path_dir, 'geth.ipc')
+        gplaton_ipc_path_dir = stack.enter_context(common.tempdir())
+        gplaton_ipc_path = os.path.join(gplaton_ipc_path_dir, 'gplaton.ipc')
 
-        geth_keystore_dir = os.path.join(geth_datadir, 'keystore')
-        common.ensure_path_exists(geth_keystore_dir)
-        geth_keyfile_path = os.path.join(geth_keystore_dir, common.KEYFILE_FILENAME)
-        with open(geth_keyfile_path, 'w') as keyfile:
+        gplaton_keystore_dir = os.path.join(gplaton_datadir, 'keystore')
+        common.ensure_path_exists(gplaton_keystore_dir)
+        gplaton_keyfile_path = os.path.join(gplaton_keystore_dir, common.KEYFILE_FILENAME)
+        with open(gplaton_keyfile_path, 'w') as keyfile:
             keyfile.write(common.KEYFILE_DATA)
 
-        genesis_file_path = os.path.join(geth_datadir, 'genesis.json')
+        genesis_file_path = os.path.join(gplaton_datadir, 'genesis.json')
         with open(genesis_file_path, 'w') as genesis_file:
             genesis_file.write(json.dumps(common.GENESIS_DATA))
 
         stack.enter_context(
-            common.get_geth_process(
-                common.get_geth_binary(),
-                geth_datadir,
+            common.get_gplaton_process(
+                common.get_gplaton_binary(),
+                gplaton_datadir,
                 genesis_file_path,
-                geth_ipc_path,
-                geth_port,
+                gplaton_ipc_path,
+                gplaton_port,
                 str(CHAIN_CONFIG['params']['networkID'])
             )
         )
         # set up fixtures
-        common.wait_for_socket(geth_ipc_path)
-        web3_geth = Web3(Web3.IPCProvider(geth_ipc_path))
-        chain_data = go_ethereum.setup_chain_state(web3_geth)
-        fixture_block_count = web3_geth.eth.block_number
+        common.wait_for_socket(gplaton_ipc_path)
+        web3_gplaton = Web3(Web3.IPCProvider(gplaton_ipc_path))
+        chain_data = platon.setup_chain_state(web3_gplaton)
+        fixture_block_count = web3_gplaton.platon.block_number
 
         datadir = stack.enter_context(common.tempdir())
 
@@ -291,7 +291,7 @@ def generate_parity_fixture(destination_dir):
         web3 = Web3(Web3.IPCProvider(parity_ipc_path))
 
         time.sleep(10)
-        connect_nodes(web3, web3_geth)
+        connect_nodes(web3, web3_gplaton)
         time.sleep(10)
         wait_for_chain_sync(web3, fixture_block_count)
 
@@ -318,15 +318,15 @@ def generate_parity_fixture(destination_dir):
 def connect_nodes(w3_parity, w3_secondary):
     parity_peers = w3_parity.parity.net_peers()
     parity_enode = w3_parity.parity.enode()
-    secondary_node_info = w3_secondary.geth.admin.node_info()
+    secondary_node_info = w3_secondary.gplaton.admin.node_info()
     if secondary_node_info['id'] not in (node.get('id', tuple()) for node in parity_peers['peers']):
-        w3_secondary.geth.admin.add_peer(parity_enode)
+        w3_secondary.gplaton.admin.add_peer(parity_enode)
 
 
 def wait_for_chain_sync(web3, target):
     start_time = time.time()
     while time.time() < start_time + 120:
-        current_block_number = web3.eth.block_number
+        current_block_number = web3.platon.block_number
         if current_block_number >= target:
             break
         else:

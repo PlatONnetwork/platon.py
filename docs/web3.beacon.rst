@@ -1,4 +1,4 @@
-Eth 2.0 Beacon API
+Platon 2.0 Beacon API
 =======================
 
 .. warning:: This API Is experimental. Client support is incomplete and the API itself is still evolving.
@@ -9,7 +9,7 @@ Once you have a running beacon node, import and configure your beacon instance:
 
 .. code-block:: python
 
-    >>> from web3.beacon import Beacon
+    >>> from platon.beacon import Beacon
     >>> beacon = Beacon("http://localhost:5051")
 
 Methods

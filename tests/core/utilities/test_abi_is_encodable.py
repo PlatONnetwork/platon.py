@@ -27,12 +27,12 @@ import pytest
         (['0x' + '00' * 20], '(uint256)', False),
 
         # Special address behavior
-        ('dennisthepeasant.eth', 'address', True),  # passes because eth_utils converts to bytes :/
-        ('autonomouscollective.eth', 'address', True),
+        ('dennisthepeasant.platon', 'address', True),  # passes because platon_utils converts to bytes :/
+        ('autonomouscollective.platon', 'address', True),
         ('all-TLDs-valid-now.test', 'address', True),
         ('ff', 'address', True),  # this could theoretically be a top-level domain (TLD)
-        ('0xname.eth', 'address', True),  # 0x in name is fine, if it is not a TLD
-        ('rejects_invalid_names.eth', 'address', False),  # no underscore in domain names
+        ('0xname.platon', 'address', True),  # 0x in name is fine, if it is not a TLD
+        ('rejects_invalid_names.platon', 'address', False),  # no underscore in domain names
 
         # Special bytes<M> behavior
         ('0x12', 'bytes2', True),  # with or without 0x OK
@@ -57,8 +57,8 @@ import pytest
         (('0x1234', 0), '(bytes,int128)', True),
         (('1', 0), '(bytes,int128)', False),
 
-        (('dennisthepeasant.eth', 0), '(address,int128)', True),
-        (('rejects_invalid_domains.eth', 0), '(address,int128)', False),
+        (('dennisthepeasant.platon', 0), '(address,int128)', True),
+        (('rejects_invalid_domains.platon', 0), '(address,int128)', False),
 
         ((b'anything', 0), '(string,int128)', True),
         ((b'\x80', 0), '(string,int128)', False),

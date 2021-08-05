@@ -1,6 +1,6 @@
 import random
 
-from eth_utils import (
+from platon_utils import (
     to_dict,
 )
 from hypothesis import (
@@ -8,7 +8,7 @@ from hypothesis import (
     strategies as st,
 )
 
-from web3._utils.caching import (
+from platon._utils.caching import (
     generate_cache_key,
 )
 

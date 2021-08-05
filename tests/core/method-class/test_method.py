@@ -3,20 +3,20 @@ from inspect import (
 )
 import pytest
 
-from eth_utils.toolz import (
+from platon_utils.toolz import (
     compose,
 )
 
-from web3 import (
-    EthereumTesterProvider,
+from platon import (
+    PlatonTesterProvider,
     Web3,
 )
-from web3.method import (
+from platon.method import (
     Method,
     _apply_request_formatters,
     default_root_munger,
 )
-from web3.module import (
+from platon.module import (
     Module,
     apply_result_formatters,
 )
@@ -25,17 +25,17 @@ from web3.module import (
 def test_method_accepts_callable_for_selector():
     method = Method(
         mungers=[],
-        json_rpc_method=lambda *_: 'eth_method',
+        json_rpc_method=lambda *_: 'platon_method',
     )
-    assert method.method_selector_fn() == 'eth_method'
+    assert method.method_selector_fn() == 'platon_method'
 
 
 def test_method_selector_fn_accepts_str():
     method = Method(
         mungers=None,
-        json_rpc_method='eth_method',
+        json_rpc_method='platon_method',
     )
-    assert method.method_selector_fn() == 'eth_method'
+    assert method.method_selector_fn() == 'platon_method'
 
 
 def test_method_selector_fn_invalid_arg():
@@ -50,7 +50,7 @@ def test_method_selector_fn_invalid_arg():
 def test_get_formatters_default_formatter_for_falsy_config():
     method = Method(
         mungers=[],
-        json_rpc_method='eth_method',
+        json_rpc_method='platon_method',
     )
 
     default_request_formatters = method.request_formatters(method.method_selector_fn())
@@ -63,19 +63,19 @@ def test_get_formatters_default_formatter_for_falsy_config():
 def test_get_formatters_non_falsy_config_retrieval():
     method = Method(
         mungers=[],
-        json_rpc_method='eth_getBalance',
+        json_rpc_method='platon_getBalance',
     )
     method_name = method.method_selector_fn()
     first_formatter = (method.request_formatters(method_name).first,)
     all_other_formatters = method.request_formatters(method_name).funcs
     assert len(first_formatter + all_other_formatters) == 2
-    # assert method.request_formatters('eth_nonmatching') == 'nonmatch'
+    # assert method.request_formatters('platon_nonmatching') == 'nonmatch'
 
 
 def test_input_munger_parameter_passthrough_matching_arity():
     method = Method(
         mungers=[lambda m, z, y: ['success']],
-        json_rpc_method='eth_method',
+        json_rpc_method='platon_method',
     )
     method.input_munger(object(), ['first', 'second'], {}) == 'success'
 
@@ -83,7 +83,7 @@ def test_input_munger_parameter_passthrough_matching_arity():
 def test_input_munger_parameter_passthrough_mismatch_arity():
     method = Method(
         mungers=[lambda m, z, y: 'success'],
-        json_rpc_method='eth_method',
+        json_rpc_method='platon_method',
     )
     with pytest.raises(TypeError):
         method.input_munger(object(), ['first', 'second', 'third'], {})
@@ -92,7 +92,7 @@ def test_input_munger_parameter_passthrough_mismatch_arity():
 def test_input_munger_falsy_config_result_in_default_munger():
     method = Method(
         mungers=[],
-        json_rpc_method='eth_method',
+        json_rpc_method='platon_method',
     )
     method.input_munger(object(), [], {}) == []
 
@@ -100,7 +100,7 @@ def test_input_munger_falsy_config_result_in_default_munger():
 def test_default_input_munger_with_input_parameters_exception():
     method = Method(
         mungers=[],
-        json_rpc_method='eth_method',
+        json_rpc_method='platon_method',
     )
     with pytest.raises(TypeError):
         method.input_munger(object(), [1], {})
@@ -121,7 +121,7 @@ def test_default_input_munger_with_input_parameters_exception():
         (
             {
                 'mungers': [],
-                'json_rpc_method': 'eth_getBalance',
+                'json_rpc_method': 'platon_getBalance',
             },
             ['unexpected_argument'],
             {},
@@ -131,21 +131,21 @@ def test_default_input_munger_with_input_parameters_exception():
         (
             {
                 'mungers': [default_root_munger],
-                'json_rpc_method': 'eth_getBalance',
+                'json_rpc_method': 'platon_getBalance',
             },
             ['0x0000000000000000000000000000000000000000', 3],
             {},
-            ('eth_getBalance', (('0x' + '00' * 20), "0x3")),
+            ('platon_getBalance', (('0x' + '00' * 20), "0x3")),
             2
         ),
         (
             {
                 'mungers': [default_root_munger],
-                'json_rpc_method': lambda *_: 'eth_getBalance',
+                'json_rpc_method': lambda *_: 'platon_getBalance',
             },
             ['0x0000000000000000000000000000000000000000', 3],
             {},
-            ('eth_getBalance', (('0x' + '00' * 20), "0x3")),
+            ('platon_getBalance', (('0x' + '00' * 20), "0x3")),
             2
         ),
         (
@@ -154,11 +154,11 @@ def test_default_input_munger_with_input_parameters_exception():
                     lambda m, x, y, z, addr: [x, y, addr],
                     lambda m, x, y, addr: [x, addr],
                     lambda m, x, addr: [addr, str(x)]],
-                'json_rpc_method': 'eth_getBalance',
+                'json_rpc_method': 'platon_getBalance',
             },
             [1, 2, 3, ('0x' + '00' * 20)],
             {},
-            ('eth_getBalance', (('0x' + '00' * 20), "1")),
+            ('platon_getBalance', (('0x' + '00' * 20), "1")),
             2,
         ),
         (
@@ -167,7 +167,7 @@ def test_default_input_munger_with_input_parameters_exception():
                     lambda m, x, y, z: [x, y],
                     lambda m, x, y: [x],
                     lambda m, x: [str(x)]],
-                'json_rpc_method': 'eth_getBalance',
+                'json_rpc_method': 'platon_getBalance',
             },
             [1, 2, 3, 4],
             {},
@@ -177,11 +177,11 @@ def test_default_input_munger_with_input_parameters_exception():
         (
             {
                 'mungers': [default_root_munger],
-                'json_rpc_method': 'eth_getBalance',
+                'json_rpc_method': 'platon_getBalance',
             },
             ('0x0000000000000000000000000000000000000000', 3),
             {},
-            ('eth_getBalance', ('0x0000000000000000000000000000000000000000', '0x3')),
+            ('platon_getBalance', ('0x0000000000000000000000000000000000000000', '0x3')),
             2,
         ),
         (
@@ -190,21 +190,21 @@ def test_default_input_munger_with_input_parameters_exception():
                     lambda m, addr, x, y, z: [addr, x, y],
                     lambda m, addr, x, y: [addr, x],
                     lambda m, addr, x: [addr, str(x)]],
-                'json_rpc_method': 'eth_getBalance',
+                'json_rpc_method': 'platon_getBalance',
             },
             [('0x' + '00' * 20), 1, 2, 3],
             {},
-            ('eth_getBalance', (('0x' + '00' * 20), '1')),
+            ('platon_getBalance', (('0x' + '00' * 20), '1')),
             2,
         ),
         (
             {
                 'mungers': None,
-                'json_rpc_method': 'eth_chainId',
+                'json_rpc_method': 'platon_chainId',
             },
             [],
             {},
-            ('eth_chainId', ()),
+            ('platon_chainId', ()),
             2,
         )
     ),
@@ -256,7 +256,7 @@ def return_exception_raising_formatter(method):
 
 class FakeModule(Module):
     method = Method(
-        'eth_method',
+        'platon_method',
         mungers=[keywords],
         request_formatters=return_exception_raising_formatter)
 
@@ -264,7 +264,7 @@ class FakeModule(Module):
 @pytest.fixture
 def dummy_w3():
     return Web3(
-        EthereumTesterProvider(),
+        PlatonTesterProvider(),
         modules={'fake': (FakeModule,)},
         middlewares=[])
 

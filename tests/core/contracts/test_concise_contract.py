@@ -3,11 +3,11 @@ from unittest.mock import (
     Mock,
 )
 
-from eth_utils import (
+from platon_utils import (
     decode_hex,
 )
 
-from web3.contract import (
+from platon.contract import (
     CONCISE_NORMALIZERS,
     ConciseContract,
     ConciseMethod,
@@ -17,10 +17,10 @@ from web3.contract import (
 def deploy(web3, Contract, args=None):
     args = args or []
     deploy_txn = Contract.constructor(*args).transact()
-    deploy_receipt = web3.eth.wait_for_transaction_receipt(deploy_txn)
+    deploy_receipt = web3.platon.wait_for_transaction_receipt(deploy_txn)
     assert deploy_receipt is not None
     contract = Contract(address=deploy_receipt['contractAddress'])
-    assert len(web3.eth.get_code(contract.address)) > 0
+    assert len(web3.platon.get_code(contract.address)) > 0
     return contract
 
 
@@ -35,7 +35,7 @@ def zero_address_contract(web3, WithConstructorAddressArgumentsContract, EMPTY_A
     deploy_txn = WithConstructorAddressArgumentsContract.constructor(
         EMPTY_ADDR,
     ).transact()
-    deploy_receipt = web3.eth.wait_for_transaction_receipt(deploy_txn)
+    deploy_receipt = web3.platon.wait_for_transaction_receipt(deploy_txn)
     assert deploy_receipt is not None
     _address_contract = WithConstructorAddressArgumentsContract(
         address=deploy_receipt['contractAddress'],
@@ -87,7 +87,7 @@ def test_class_construction_sets_class_vars(web3,
                                             MATH_RUNTIME,
                                             some_address,
                                             ):
-    MathContract = web3.eth.contract(
+    MathContract = web3.platon.contract(
         abi=MATH_ABI,
         bytecode=MATH_CODE,
         bytecode_runtime=MATH_RUNTIME,
@@ -100,7 +100,7 @@ def test_class_construction_sets_class_vars(web3,
 
 
 def test_conciscecontract_keeps_custom_normalizers_on_base(web3, MATH_ABI):
-    base_contract = web3.eth.contract(abi=MATH_ABI)
+    base_contract = web3.platon.contract(abi=MATH_ABI)
     # give different normalizers to this base instance
     base_contract._return_data_normalizers = base_contract._return_data_normalizers + tuple([None])
 

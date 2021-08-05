@@ -13,13 +13,13 @@ Filtering
 
     .. code-block:: python
 
-        from web3.auto import w3
+        from platon.auto import w3
 
-The :meth:`web3.eth.Eth.filter` method can be used to setup filters for:
+The :meth:`web3.platon.Platon.filter` method can be used to setup filters for:
 
-* Pending Transactions: ``web3.eth.filter('pending')``
+* Pending Transactions: ``web3.platon.filter('pending')``
 
-* New Blocks ``web3.eth.filter('latest')``
+* New Blocks ``web3.platon.filter('latest')``
 
 * Event Logs
 
@@ -29,21 +29,21 @@ The :meth:`web3.eth.Eth.filter` method can be used to setup filters for:
 
         event_filter = mycontract.events.myEvent.createFilter(fromBlock='latest', argument_filters={'arg1':10})
 
-    Or built manually by supplying `valid filter params <https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_newfilter/>`_:
+    Or built manually by supplying `valid filter params <https://github.com/platonnetwork/wiki/wiki/JSON-RPC#platon_newfilter/>`_:
 
     .. code-block:: python
 
-        event_filter = w3.eth.filter({"address": contract_address})
+        event_filter = w3.platon.filter({"address": contract_address})
 
 * Attaching to an existing filter
 
     .. code-block:: python
 
-        existing_filter = w3.eth.filter(filter_id="0x0")
+        existing_filter = w3.platon.filter(filter_id="0x0")
 
 .. note ::
 
-    Creating event filters requires that your Ethereum node has an API support enabled for filters.
+    Creating event filters requires that your Platon node has an API support enabled for filters.
     It does not work with Infura nodes. To get event logs on Infura or other
     stateless nodes please see :class:`web3.contract.ContractEvents`.
 
@@ -55,7 +55,7 @@ Filter Class
 
 .. py:attribute:: Filter.filter_id
 
-    The ``filter_id`` for this filter as returned by the ``eth_newFilter`` RPC
+    The ``filter_id`` for this filter as returned by the ``platon_newFilter`` RPC
     method when this filter was created.
 
 
@@ -64,7 +64,7 @@ Filter Class
     Retrieve new entries for this filter.
 
     Logs will be retrieved using the
-    :func:`web3.eth.Eth.get_filter_changes` which returns only new entries since the last
+    :func:`web3.platon.Platon.get_filter_changes` which returns only new entries since the last
     poll.
 
 
@@ -73,7 +73,7 @@ Filter Class
     Retrieve all entries for this filter.
 
     Logs will be retrieved using the
-    :func:`web3.eth.Eth.get_filter_logs` which returns all entries that match the given
+    :func:`web3.platon.Platon.get_filter_logs` which returns all entries that match the given
     filter.
 
 
@@ -98,24 +98,24 @@ Block and Transaction Filter Classes
 
 ``BlockFilter`` is a subclass of :class:`Filter`.
 
-You can setup a filter for new blocks using ``web3.eth.filter('latest')`` which
+You can setup a filter for new blocks using ``web3.platon.filter('latest')`` which
 will return a new :class:`BlockFilter` object.
 
     .. code-block:: python
 
-        new_block_filter = w3.eth.filter('latest')
+        new_block_filter = w3.platon.filter('latest')
         new_block_filter.get_new_entries()
 
 .. py:class:: TransactionFilter(...)
 
 ``TransactionFilter`` is a subclass of :class:`Filter`.
 
-You can setup a filter for new blocks using ``web3.eth.filter('pending')`` which
+You can setup a filter for new blocks using ``web3.platon.filter('pending')`` which
 will return a new :class:`BlockFilter` object.
 
     .. code-block:: python
 
-        new_transaction_filter = w3.eth.filter('pending')
+        new_transaction_filter = w3.platon.filter('pending')
         new_transaction_filter.get_new_entries()
 
 
@@ -133,14 +133,14 @@ creating event log filters. Refer to the following example:
 
 See :meth:`web3.contract.Contract.events.your_event_name.createFilter()` documentation for more information.
 
-You can set up an event log filter like the one above with ``web3.eth.filter`` by supplying a
+You can set up an event log filter like the one above with ``web3.platon.filter`` by supplying a
 dictionary containing the standard filter parameters. Assuming that ``arg1`` is indexed, the
 equivalent filter creation would look like:
 
     .. code-block:: python
 
         event_signature_hash = web3.keccak(text="eventName(uint32)").hex()
-        event_filter = web3.eth.filter({
+        event_filter = web3.platon.filter({
             "address": myContract_address,
             "topics": [event_signature_hash,
                        "0x000000000000000000000000000000000000000000000000000000000000000a"],
@@ -158,7 +158,7 @@ In addition to being order-dependent, there are a few more points to recognize w
     - [A, B] "A in first position AND B in second position (and anything after)"
     - [[A, B], [A, B]] "(A OR B) in first position AND (A OR B) in second position (and anything after)"
 
-See the JSON-RPC documentation for `eth_newFilter <https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_newfilter>`_ more information on the standard filter parameters.
+See the JSON-RPC documentation for `platon_newFilter <https://github.com/platonnetwork/wiki/wiki/JSON-RPC#platon_newfilter>`_ more information on the standard filter parameters.
 
 Creating a log filter by either of the above methods will return a :class:`LogFilter` instance.
 
@@ -178,7 +178,7 @@ un-indexed event arguments. The parameter ``data_filter_set`` should be a list o
 Getting events without setting up a filter
 ------------------------------------------
 
-You can query an Ethereum node for direct fetch of events, without creating a filter first.
+You can query an Platon node for direct fetch of events, without creating a filter first.
 This works on all node types, including Infura.
 
 For examples see :meth:`web3.contract.ContractEvents.getLogs`.
@@ -191,7 +191,7 @@ Synchronous
 
     .. code-block:: python
 
-        from web3.auto import w3
+        from platon.auto import w3
         import time
 
         def handle_event(event):
@@ -204,7 +204,7 @@ Synchronous
                 time.sleep(poll_interval)
 
         def main():
-            block_filter = w3.eth.filter('latest')
+            block_filter = w3.platon.filter('latest')
             log_loop(block_filter, 2)
 
         if __name__ == '__main__':
@@ -230,7 +230,7 @@ entries to a handler.
 
         .. code-block:: python
 
-            from web3.auto import w3
+            from platon.auto import w3
             import asyncio
 
 
@@ -245,8 +245,8 @@ entries to a handler.
                     await asyncio.sleep(poll_interval)
 
             def main():
-                block_filter = w3.eth.filter('latest')
-                tx_filter = w3.eth.filter('pending')
+                block_filter = w3.platon.filter('latest')
+                tx_filter = w3.platon.filter('pending')
                 loop = asyncio.get_event_loop()
                 try:
                     loop.run_until_complete(
@@ -269,7 +269,7 @@ releasing the ``main`` function for other tasks.
 
         .. code-block:: python
 
-            from web3.auto import w3
+            from platon.auto import w3
             from threading import Thread
             import time
 
@@ -287,7 +287,7 @@ releasing the ``main`` function for other tasks.
 
 
             def main():
-                block_filter = w3.eth.filter('latest')
+                block_filter = w3.platon.filter('latest')
                 worker = Thread(target=log_loop, args=(block_filter, 5), daemon=True)
                 worker.start()
                     # .. do some other stuff

@@ -1,40 +1,40 @@
 import pytest
 
-from web3 import (
-    EthereumTesterProvider,
+from platon import (
+    PlatonTesterProvider,
     Web3,
 )
-from web3.eth import (
-    Eth,
+from platon.platon import (
+    Platon,
 )
-from web3.providers.eth_tester.main import (
-    AsyncEthereumTesterProvider,
+from platon.providers.platon_tester.main import (
+    AsyncPlatonTesterProvider,
 )
-from web3.version import (
+from platon.version import (
     AsyncVersion,
-    BlockingVersion,
+    Version,
     Version,
 )
 
 # This file is being left in since the Version module is being experimented on for
-# async behavior. But, this file along with web3/version.py should be removed eventually.
+# async behavior. But, this file along with platon/version.py should be removed eventually.
 
 
 @pytest.fixture
 def blocking_w3():
     return Web3(
-        EthereumTesterProvider(),
+        PlatonTesterProvider(),
         modules={
-            "blocking_version": (BlockingVersion,),
+            "blocking_version": (Version,),
             "legacy_version": (Version,),
-            "eth": (Eth,),
+            "platon": (Platon,),
         })
 
 
 @pytest.fixture
 def async_w3():
     return Web3(
-        AsyncEthereumTesterProvider(),
+        AsyncPlatonTesterProvider(),
         middlewares=[],
         modules={
             'async_version': (AsyncVersion,),
@@ -45,7 +45,7 @@ def test_legacy_version_deprecation(blocking_w3):
     with pytest.raises(DeprecationWarning):
         blocking_w3.legacy_version.node
     with pytest.raises(DeprecationWarning):
-        blocking_w3.legacy_version.ethereum
+        blocking_w3.legacy_version.platon
 
 
 @pytest.mark.asyncio
@@ -54,4 +54,4 @@ async def test_async_blocking_version(async_w3, blocking_w3):
 
     assert await async_w3.async_version.node == blocking_w3.clientVersion
     with pytest.warns(DeprecationWarning):
-        assert await async_w3.async_version.ethereum == blocking_w3.eth.protocol_version
+        assert await async_w3.async_version.platon == blocking_w3.platon.protocol_version

@@ -1,16 +1,16 @@
 import json
 import pytest
 
-from web3._utils.abi import (
+from platon._utils.abi import (
     abi_data_tree,
     get_aligned_abi_inputs,
     get_tuple_type_str_parts,
     map_abi_data,
 )
-from web3._utils.normalizers import (
+from platon._utils.normalizers import (
     BASE_RETURN_NORMALIZERS,
     abi_string_to_text,
-    addresses_checksummed,
+    addresses_bech32,
 )
 
 
@@ -268,7 +268,7 @@ def test_abi_data_tree(types, data, expected):
         (
             ['(string,address[])'],
             [(b'a string', [b'\xf2\xe2F\xbbv\xdf\x87l\xef\x8b8\xae\x84\x13\x0fOU\xde9['])],
-            [addresses_checksummed, abi_string_to_text],
+            [addresses_bech32, abi_string_to_text],
             [('a string', ['0xF2E246BB76DF876Cef8b38ae84130F4F55De395b'])],
         ),
     ],

@@ -4,15 +4,15 @@ from flaky import (
     flaky,
 )
 
-from web3._utils.module_testing import (  # noqa: F401
-    EthModuleTest,
+from platon._utils.module_testing import (  # noqa: F401
+    PlatonModuleTest,
     ParityModuleTest,
     ParityPersonalModuleTest,
     ParitySetModuleTest,
     ParityTraceModuleTest,
     Web3ModuleTest,
 )
-from web3._utils.module_testing.eth_module import (
+from platon._utils.module_testing.platon_module import (
     UNKNOWN_ADDRESS,
 )
 
@@ -22,15 +22,15 @@ MAX_FLAKY_RUNS = 3
 
 class ParityWeb3ModuleTest(Web3ModuleTest):
     def _check_web3_clientVersion(self, client_version):
-        assert client_version.startswith('Parity-Ethereum/')
+        assert client_version.startswith('Parity-Platon/')
 
 
-class ParityEthModuleTest(EthModuleTest):
+class ParityPlatonModuleTest(PlatonModuleTest):
     @pytest.mark.xfail(reason='Parity returns a gas value even when a function will revert')
-    def test_eth_estimate_gas_revert_with_msg(self, web3, revert_contract, unlocked_account):
-        super().test_eth_estimate_gas_revert_with_msg(web3, revert_contract, unlocked_account)
+    def test_platon_estimate_gas_revert_with_msg(self, web3, revert_contract, unlocked_account):
+        super().test_platon_estimate_gas_revert_with_msg(web3, revert_contract, unlocked_account)
 
-    def test_eth_estimate_gas_revert_without_msg(
+    def test_platon_estimate_gas_revert_without_msg(
         self,
         web3,
         revert_contract,
@@ -44,46 +44,42 @@ class ParityEthModuleTest(EthModuleTest):
                     "to": revert_contract.address,
                 },
             )
-            web3.eth.estimate_gas(txn_params)
+            web3.platon.estimate_gas(txn_params)
 
     @pytest.mark.xfail(reason='Parity dropped "pending" option in 1.11.1')
-    def test_eth_getBlockByNumber_pending(self, web3):
-        super().test_eth_getBlockByNumber_pending(web3)
+    def test_platon_getBlockByNumber_pending(self, web3):
+        super().test_platon_getBlockByNumber_pending(web3)
 
-    def test_eth_uninstall_filter(self, web3):
-        pytest.xfail('eth_uninstallFilter calls to parity always return true')
-        super().test_eth_uninstall_filter(web3)
-
-    def test_eth_uninstallFilter_deprecated(self, web3):
-        pytest.xfail('eth_uninstallFilter calls to parity always return true')
-        super().test_eth_uninstallFilter_deprecated(web3)
+    def test_platon_uninstall_filter(self, web3):
+        pytest.xfail('platon_uninstallFilter calls to parity always return true')
+        super().test_platon_uninstall_filter(web3)
 
     @pytest.mark.xfail(reason='Parity is not setup to auto mine')
-    def test_eth_replace_transaction_already_mined(self, web3, unlocked_account):
-        super().test_eth_replace_transaction_already_mined(web3, unlocked_account)
+    def test_platon_replace_transaction_already_mined(self, web3, unlocked_account):
+        super().test_platon_replace_transaction_already_mined(web3, unlocked_account)
 
     @flaky(max_runs=MAX_FLAKY_RUNS)
-    def test_eth_get_transaction_receipt_unmined(self, web3, unlocked_account):
+    def test_platon_get_transaction_receipt_unmined(self, web3, unlocked_account):
         # Parity diverges from json-rpc spec and retrieves pending block
         # transactions with get_transaction_receipt.
-        txn_hash = web3.eth.send_transaction({
+        txn_hash = web3.platon.send_transaction({
             'from': unlocked_account,
             'to': unlocked_account,
             'value': 1,
             'gas': 21000,
-            'gasPrice': web3.eth.gas_price,
+            'gasPrice': web3.platon.gas_price,
         })
-        receipt = web3.eth.get_transaction_receipt(txn_hash)
+        receipt = web3.platon.get_transaction_receipt(txn_hash)
         assert receipt is not None
         assert receipt['blockHash'] is None
 
     @pytest.mark.xfail(reason="Parity matches None to asbent values")
-    def test_eth_get_logs_with_logs_none_topic_args(self, web3):
-        super().test_eth_get_logs_with_logs_none_topic_args(web3)
+    def test_platon_get_logs_with_logs_none_topic_args(self, web3):
+        super().test_platon_get_logs_with_logs_none_topic_args(web3)
 
     @flaky(max_runs=MAX_FLAKY_RUNS)
-    def test_eth_call_old_contract_state(self, web3, math_contract, unlocked_account):
-        start_block = web3.eth.get_block('latest')
+    def test_platon_call_old_contract_state(self, web3, math_contract, unlocked_account):
+        start_block = web3.platon.get_block('latest')
         block_num = start_block.number
         block_hash = start_block.hash
 
@@ -112,14 +108,14 @@ class ParityEthModuleTest(EthModuleTest):
         if pending_call_result not in range(1, MAX_FLAKY_RUNS + 1):
             raise AssertionError("pending call result was %d!" % pending_call_result)
 
-    def test_eth_get_logs_without_logs(self, web3, block_with_txn_with_log):
+    def test_platon_get_logs_without_logs(self, web3, block_with_txn_with_log):
         # Test with block range
 
         filter_params = {
             "fromBlock": 0,
             "toBlock": block_with_txn_with_log['number'] - 1,
         }
-        result = web3.eth.get_logs(filter_params)
+        result = web3.platon.get_logs(filter_params)
         assert len(result) == 0
 
         # the range is wrong, parity returns error message
@@ -128,7 +124,7 @@ class ParityEthModuleTest(EthModuleTest):
             "toBlock": block_with_txn_with_log['number'] - 1,
         }
         with pytest.raises(ValueError):
-            web3.eth.get_logs(filter_params)
+            web3.platon.get_logs(filter_params)
 
         # Test with `address`
 
@@ -137,7 +133,7 @@ class ParityEthModuleTest(EthModuleTest):
             "fromBlock": 0,
             "address": UNKNOWN_ADDRESS,
         }
-        result = web3.eth.get_logs(filter_params)
+        result = web3.platon.get_logs(filter_params)
         assert len(result) == 0
 
         # Test with multiple `address`
@@ -147,16 +143,16 @@ class ParityEthModuleTest(EthModuleTest):
             "fromBlock": 0,
             "address": [UNKNOWN_ADDRESS, UNKNOWN_ADDRESS],
         }
-        result = web3.eth.get_logs(filter_params)
+        result = web3.platon.get_logs(filter_params)
         assert len(result) == 0
 
-    @pytest.mark.xfail(reason='eth_signTypedData has not been released in Parity')
-    def test_eth_sign_typed_data(self, web3, unlocked_account_dual_type):
-        super().test_eth_sign_typed_data(web3, unlocked_account_dual_type)
+    @pytest.mark.xfail(reason='platon_signTypedData has not been released in Parity')
+    def test_platon_sign_typed_data(self, web3, unlocked_account_dual_type):
+        super().test_platon_sign_typed_data(web3, unlocked_account_dual_type)
 
-    @pytest.mark.xfail(reason='eth_signTypedData has not been released in Parity')
-    def test_invalid_eth_sign_typed_data(self, web3, unlocked_account_dual_type):
-        super().test_invalid_eth_sign_typed_data(web3, unlocked_account_dual_type)
+    @pytest.mark.xfail(reason='platon_signTypedData has not been released in Parity')
+    def test_invalid_platon_sign_typed_data(self, web3, unlocked_account_dual_type):
+        super().test_invalid_platon_sign_typed_data(web3, unlocked_account_dual_type)
 
 
 class ParityTraceModuleTest(ParityTraceModuleTest):
@@ -165,20 +161,8 @@ class ParityTraceModuleTest(ParityTraceModuleTest):
         super().test_trace_block(web3)
 
     @pytest.mark.xfail(reason="TODO: tracing not working on v2.5.13")
-    def test_traceBlock_deprecated(self, web3):
-        super().test_traceBlock_deprecated(web3)
-
-    @pytest.mark.xfail(reason="TODO: tracing not working on v2.5.13")
     def test_trace_transaction(self, web3):
         super().test_trace_transaction(web3)
-
-    @pytest.mark.xfail(reason="TODO: tracing not working on v2.5.13")
-    def test_traceTransaction_deprecated(self, web3):
-        super().test_traceTransaction_deprecated(web3)
-
-    @pytest.mark.xfail(reason="TODO: tracing not working on v2.5.13")
-    def test_traceFilter_deprecated(self, web3):
-        super().test_traceFilter_deprecated(web3)
 
     @pytest.mark.xfail(reason="TODO: tracing not working on v2.5.13")
     def test_trace_filter(self, web3):

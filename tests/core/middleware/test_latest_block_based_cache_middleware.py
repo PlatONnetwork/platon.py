@@ -4,25 +4,25 @@ import pytest
 import time
 import uuid
 
-from eth_utils import (
+from platon_utils import (
     is_hex,
     is_integer,
     to_tuple,
 )
 
-from web3 import Web3
-from web3._utils.caching import (
+from platon import Web3
+from platon._utils.caching import (
     generate_cache_key,
 )
-from web3._utils.formatters import (
+from platon._utils.formatters import (
     hex_to_integer,
 )
-from web3.middleware import (  # noqa: F401
+from platon.middleware import (  # noqa: F401
     construct_error_generator_middleware,
     construct_latest_block_based_cache_middleware,
     construct_result_generator_middleware,
 )
-from web3.providers.base import (
+from platon.providers.base import (
     BaseProvider,
 )
 
@@ -115,8 +115,8 @@ def construct_block_data_middleware():
                 return None
 
         return construct_result_generator_middleware({
-            'eth_getBlockByNumber': _get_block_by_number,
-            'eth_getBlockByHash': _get_block_by_hash,
+            'platon_getBlockByNumber': _get_block_by_number,
+            'platon_getBlockByHash': _get_block_by_hash,
             'evm_mine': _evm_mine,
         })
     return _construct_block_data_middleware
@@ -164,7 +164,7 @@ def test_latest_block_based_cache_middleware_pulls_from_cache(
     w3.middleware_onion.add(block_data_middleware)
     w3.middleware_onion.add(result_generator_middleware)
 
-    current_block_hash = w3.eth.get_block('latest')['hash']
+    current_block_hash = w3.platon.get_block('latest')['hash']
 
     def cache_class():
         return {

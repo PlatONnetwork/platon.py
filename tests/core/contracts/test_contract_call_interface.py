@@ -8,24 +8,24 @@ from distutils.version import (
 import json
 import pytest
 
-import eth_abi
-from eth_tester.exceptions import (
+import platon_abi
+from platon_tester.exceptions import (
     TransactionFailed,
 )
-from eth_utils import (
+from platon_utils import (
     is_text,
 )
-from eth_utils.toolz import (
+from platon_utils.toolz import (
     identity,
 )
 from hexbytes import (
     HexBytes,
 )
 
-from web3._utils.ens import (
+from platon._utils.ens import (
     contract_ens_addresses,
 )
-from web3.exceptions import (
+from platon.exceptions import (
     BadFunctionCallOutput,
     BlockNumberOutofRange,
     FallbackNotFound,
@@ -40,12 +40,12 @@ from web3.exceptions import (
 def deploy(web3, Contract, apply_func=identity, args=None):
     args = args or []
     deploy_txn = Contract.constructor(*args).transact()
-    deploy_receipt = web3.eth.wait_for_transaction_receipt(deploy_txn)
+    deploy_receipt = web3.platon.wait_for_transaction_receipt(deploy_txn)
     assert deploy_receipt is not None
     address = apply_func(deploy_receipt['contractAddress'])
     contract = Contract(address=address)
     assert contract.address == address
-    assert len(web3.eth.get_code(contract.address)) > 0
+    assert len(web3.platon.get_code(contract.address)) > 0
     return contract
 
 
@@ -159,7 +159,7 @@ def undeployed_math_contract(web3, MathContract, address_conversion_func):
 @pytest.fixture()
 def mismatched_math_contract(web3, StringContract, MathContract, address_conversion_func):
     deploy_txn = StringContract.constructor("Caqalai").transact()
-    deploy_receipt = web3.eth.wait_for_transaction_receipt(deploy_txn)
+    deploy_receipt = web3.platon.wait_for_transaction_receipt(deploy_txn)
     assert deploy_receipt is not None
     address = address_conversion_func(deploy_receipt['contractAddress'])
     _mismatched_math_contract = MathContract(address=address)
@@ -244,15 +244,15 @@ def test_saved_method_call_with_multiple_arguments(math_contract, call_args, cal
 def test_call_get_string_value(string_contract, call):
     result = call(contract=string_contract,
                   contract_function='getValue')
-    # eth_abi.decode_abi() does not assume implicit utf-8
+    # platon_abi.decode_abi() does not assume implicit utf-8
     # encoding of string return values. Thus, we need to decode
     # ourselves for fair comparison.
     assert result == "Caqalai"
 
 
 @pytest.mark.skipif(
-    LooseVersion(eth_abi.__version__) >= LooseVersion("2"),
-    reason="eth-abi >=2 does utf-8 string decoding")
+    LooseVersion(platon_abi.__version__) >= LooseVersion("2"),
+    reason="platon-abi >=2 does utf-8 string decoding")
 def test_call_read_string_variable(string_contract, call):
     result = call(contract=string_contract,
                   contract_function='constValue')
@@ -260,8 +260,8 @@ def test_call_read_string_variable(string_contract, call):
 
 
 @pytest.mark.skipif(
-    LooseVersion(eth_abi.__version__) < LooseVersion("2"),
-    reason="eth-abi does not raise exception on undecodable bytestrings")
+    LooseVersion(platon_abi.__version__) < LooseVersion("2"),
+    reason="platon-abi does not raise exception on undecodable bytestrings")
 def test_call_on_undecodable_string(string_contract, call):
     with pytest.raises(BadFunctionCallOutput):
         call(
@@ -355,10 +355,10 @@ def test_call_read_address_variable(address_contract, call):
 def test_init_with_ens_name_arg(web3, WithConstructorAddressArgumentsContract, call):
     with contract_ens_addresses(
         WithConstructorAddressArgumentsContract,
-        [("arg-name.eth", "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413")],
+        [("arg-name.platon", "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413")],
     ):
         address_contract = deploy(web3, WithConstructorAddressArgumentsContract, args=[
-            "arg-name.eth",
+            "arg-name.platon",
         ])
 
     result = call(contract=address_contract,
@@ -456,18 +456,18 @@ def test_call_address_list_reflector_with_address(address_reflector_contract,
 def test_call_address_reflector_single_name(address_reflector_contract, call):
     with contract_ens_addresses(
         address_reflector_contract,
-        [("dennisthepeasant.eth", "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413")],
+        [("dennisthepeasant.platon", "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413")],
     ):
         result = call(contract=address_reflector_contract,
                       contract_function='reflect',
-                      func_args=['dennisthepeasant.eth'])
+                      func_args=['dennisthepeasant.platon'])
         assert result == '0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413'
 
 
 def test_call_address_reflector_name_array(address_reflector_contract, call):
     names = [
-        'autonomouscollective.eth',
-        'wedonthavealord.eth',
+        'autonomouscollective.platon',
+        'wedonthavealord.platon',
     ]
     addresses = [
         '0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413',
@@ -487,7 +487,7 @@ def test_call_reject_invalid_ens_name(address_reflector_contract, call):
         with pytest.raises(ValueError):
             call(contract=address_reflector_contract,
                  contract_function='reflect',
-                 func_args=['type0.eth'])
+                 func_args=['type0.platon'])
 
 
 def test_call_missing_function(mismatched_math_contract, call):
@@ -535,7 +535,7 @@ def test_call_receive_fallback_function(web3,
     assert initial_value == ''
     to = {'to': contract.address}
     merged = {**to, **tx_params}
-    web3.eth.send_transaction(merged)
+    web3.platon.send_transaction(merged)
     final_value = call(contract=contract, contract_function='getText')
     assert final_value == expected
 
@@ -588,7 +588,7 @@ def test_neg_block_indexes_from_the_end(web3, math_contract):
 
 
 def test_returns_data_from_specified_block(web3, math_contract):
-    start_num = web3.eth.get_block('latest').number
+    start_num = web3.platon.get_block('latest').number
     web3.provider.make_request(method='evm_mine', params=[5])
     math_contract.functions.increment().transact()
     math_contract.functions.increment().transact()
@@ -637,7 +637,7 @@ def test_function_1_match_identifier_wrong_args_encoding(arrays_contract):
 
 def test_function_multiple_match_identifiers_no_correct_number_of_args(web3):
     MULTIPLE_FUNCTIONS = json.loads('[{"constant":false,"inputs":[],"name":"a","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"","type":"bytes32"}],"name":"a","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"","type":"uint256"}],"name":"a","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"","type":"uint8"}],"name":"a","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"","type":"int8"}],"name":"a","outputs":[],"type":"function"}]')  # noqa: E501
-    Contract = web3.eth.contract(abi=MULTIPLE_FUNCTIONS)
+    Contract = web3.platon.contract(abi=MULTIPLE_FUNCTIONS)
     regex = message_regex + diagnosis_arg_regex
     with pytest.raises(ValidationError, match=regex):
         Contract.functions.a(100, 'dog').call()
@@ -645,7 +645,7 @@ def test_function_multiple_match_identifiers_no_correct_number_of_args(web3):
 
 def test_function_multiple_match_identifiers_no_correct_encoding_of_args(web3):
     MULTIPLE_FUNCTIONS = json.loads('[{"constant":false,"inputs":[],"name":"a","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"","type":"bytes32"}],"name":"a","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"","type":"uint256"}],"name":"a","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"","type":"uint8"}],"name":"a","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"","type":"int8"}],"name":"a","outputs":[],"type":"function"}]')  # noqa: E501
-    Contract = web3.eth.contract(abi=MULTIPLE_FUNCTIONS)
+    Contract = web3.platon.contract(abi=MULTIPLE_FUNCTIONS)
     regex = message_regex + diagnosis_encoding_regex
     with pytest.raises(ValidationError, match=regex):
         Contract.functions.a('dog').call()
@@ -653,20 +653,20 @@ def test_function_multiple_match_identifiers_no_correct_encoding_of_args(web3):
 
 def test_function_multiple_possible_encodings(web3):
     MULTIPLE_FUNCTIONS = json.loads('[{"constant":false,"inputs":[],"name":"a","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"","type":"bytes32"}],"name":"a","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"","type":"uint256"}],"name":"a","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"","type":"uint8"}],"name":"a","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"","type":"int8"}],"name":"a","outputs":[],"type":"function"}]')  # noqa: E501
-    Contract = web3.eth.contract(abi=MULTIPLE_FUNCTIONS)
+    Contract = web3.platon.contract(abi=MULTIPLE_FUNCTIONS)
     regex = message_regex + diagnosis_ambiguous_encoding
     with pytest.raises(ValidationError, match=regex):
         Contract.functions.a(100).call()
 
 
 def test_function_no_abi(web3):
-    contract = web3.eth.contract()
+    contract = web3.platon.contract()
     with pytest.raises(NoABIFound):
         contract.functions.thisFunctionDoesNotExist().call()
 
 
 def test_call_abi_no_functions(web3):
-    contract = web3.eth.contract(abi=[])
+    contract = web3.platon.contract(abi=[])
     with pytest.raises(NoABIFunctionsFound):
         contract.functions.thisFunctionDoesNotExist().call()
 
@@ -875,7 +875,7 @@ def test_call_nested_tuple_contract(nested_tuple_contract, method_input, expecte
 
 def test_call_revert_contract(revert_contract):
     with pytest.raises(TransactionFailed, match="Function has been reverted."):
-        # eth-tester will do a gas estimation if we don't submit a gas value,
+        # platon-tester will do a gas estimation if we don't submit a gas value,
         # which does not contain the revert reason. Avoid that by giving a gas
         # value.
         revert_contract.functions.revertWithMessage().call({'gas': 100000})

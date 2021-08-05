@@ -38,8 +38,8 @@ sudo apt-get -y install python3-venv
 #RESOLVES ERROR: The virtual environment was not created successfully because ensurepip is not available.  On Debian/Ubuntu systems, you need to install the python3-venv package using the following command.
 
 cd ~
-git clone https://github.com/ethereum/web3.py.git
-cd web3.py
+git clone https://github.com/platonnetwork/web3.py.git
+cd platon.py
 python3 -m venv venv
 . venv/bin/activate
 pip install --upgrade pip

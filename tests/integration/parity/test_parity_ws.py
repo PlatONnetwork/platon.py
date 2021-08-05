@@ -8,14 +8,14 @@ from tests.utils import (
     get_open_port,
     wait_for_ws,
 )
-from web3 import Web3
-from web3._utils.module_testing import (
+from platon import Web3
+from platon._utils.module_testing import (
     NetModuleTest,
     VersionModuleTest,
 )
 
 from .common import (
-    ParityEthModuleTest,
+    ParityPlatonModuleTest,
     ParityModuleTest,
     ParityPersonalModuleTest,
     ParitySetModuleTest,
@@ -87,7 +87,7 @@ class TestParityWeb3ModuleTest(ParityWeb3ModuleTest):
     pass
 
 
-class TestParityEthModuleTest(ParityEthModuleTest):
+class TestParityPlatonModuleTest(ParityPlatonModuleTest):
     pass
 
 

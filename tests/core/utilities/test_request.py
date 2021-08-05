@@ -7,7 +7,7 @@ from requests.adapters import (
     HTTPAdapter,
 )
 
-from web3._utils import (
+from platon._utils import (
     request,
 )
 

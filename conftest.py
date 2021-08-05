@@ -2,14 +2,14 @@ import pytest
 import time
 import warnings
 
-from web3._utils.threads import (
+from platon._utils.threads import (
     Timeout,
 )
-from web3.main import (
+from platon.main import (
     Web3,
 )
-from web3.providers.eth_tester import (
-    EthereumTesterProvider,
+from platon.providers.platon_tester import (
+    PlatonTesterProvider,
 )
 
 
@@ -41,7 +41,7 @@ def sleep_interval():
 
 
 def is_testrpc_provider(provider):
-    return isinstance(provider, EthereumTesterProvider)
+    return isinstance(provider, PlatonTesterProvider)
 
 
 @pytest.fixture()
@@ -58,7 +58,7 @@ def wait_for_miner_start():
     def _wait_for_miner_start(web3, timeout=60):
         poll_delay_counter = PollDelayCounter()
         with Timeout(timeout) as timeout:
-            while not web3.eth.mining or not web3.eth.hashrate:
+            while not web3.platon.mining or not web3.platon.hashrate:
                 time.sleep(poll_delay_counter())
                 timeout.check()
     return _wait_for_miner_start
@@ -68,10 +68,10 @@ def wait_for_miner_start():
 def wait_for_block():
     def _wait_for_block(web3, block_number=1, timeout=None):
         if not timeout:
-            timeout = (block_number - web3.eth.block_number) * 3
+            timeout = (block_number - web3.platon.block_number) * 3
         poll_delay_counter = PollDelayCounter()
         with Timeout(timeout) as timeout:
-            while web3.eth.block_number < block_number:
+            while web3.platon.block_number < block_number:
                 web3.manager.request_blocking("evm_mine", [])
                 timeout.sleep(poll_delay_counter())
     return _wait_for_block
@@ -83,7 +83,7 @@ def wait_for_transaction():
         poll_delay_counter = PollDelayCounter()
         with Timeout(timeout) as timeout:
             while True:
-                txn_receipt = web3.eth.get_transaction_receipt(txn_hash)
+                txn_receipt = web3.platon.get_transaction_receipt(txn_hash)
                 if txn_receipt is not None:
                     break
                 time.sleep(poll_delay_counter())
@@ -95,13 +95,13 @@ def wait_for_transaction():
 
 @pytest.fixture()
 def web3():
-    provider = EthereumTesterProvider()
+    provider = PlatonTesterProvider()
     return Web3(provider)
 
 
 @pytest.fixture(scope="module")
 def w3_strict_abi():
-    w3 = Web3(EthereumTesterProvider())
+    w3 = Web3(PlatonTesterProvider())
     w3.enable_strict_bytes_type_checking()
     return w3
 

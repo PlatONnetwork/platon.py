@@ -1,14 +1,14 @@
-from web3 import Web3
-from web3.providers.auto import (
+from platon import Web3
+from platon.providers.auto import (
     AutoProvider,
 )
-from web3.providers.eth_tester import (
-    EthereumTesterProvider,
+from platon.providers.platon_tester import (
+    PlatonTesterProvider,
 )
 
 
 def test_set_provider(web3):
-    provider = EthereumTesterProvider()
+    provider = PlatonTesterProvider()
 
     web3.provider = provider
 

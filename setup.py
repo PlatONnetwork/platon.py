@@ -7,8 +7,8 @@ from setuptools import (
 
 extras_require = {
     'tester': [
-        "eth-tester[py-evm]==v0.5.0-beta.4",
-        "py-geth>=3.2.0,<4",
+        "platon-tester[py-evm]==v0.5.0-beta.4",
+        "py-gplaton>=3.2.0,<4",
     ],
     'linter': [
         "flake8==3.8.3",
@@ -21,7 +21,7 @@ extras_require = {
         "click>=5.1",
         "configparser==3.5.0",
         "contextlib2>=0.5.4",
-        "py-geth>=3.2.0,<4",
+        "py-gplaton>=3.2.0,<4",
         "py-solc>=0.4.0",
         "pytest>=4.4.0,<5.0.0",
         "sphinx>=3.0,<4",
@@ -60,7 +60,7 @@ with open('./README.md') as readme:
     long_description = readme.read()
 
 setup(
-    name='web3',
+    name='platon',
     # *IMPORTANT*: Don't manually change the version here. Use the 'bumpversion' utility.
     version='5.21.0',
     description="""Web3.py""",
@@ -68,15 +68,15 @@ setup(
     long_description=long_description,
     author='Piper Merriam',
     author_email='pipermerriam@gmail.com',
-    url='https://github.com/ethereum/web3.py',
+    url='https://github.com/platonnetwork/web3.py',
     include_package_data=True,
     install_requires=[
         "aiohttp>=3.7.4.post0,<4",
-        "eth-abi>=2.0.0b6,<3.0.0",
-        "eth-account>=0.5.3,<0.6.0",
-        "eth-hash[pycryptodome]>=0.2.0,<1.0.0",
-        "eth-typing>=2.0.0,<3.0.0",
-        "eth-utils>=1.9.5,<2.0.0",
+        "platon-abi>=2.0.0b6,<3.0.0",
+        "platon-account>=0.5.3,<0.6.0",
+        "platon-hash[pycryptodome]>=0.2.0,<1.0.0",
+        "platon-typing>=2.0.0,<3.0.0",
+        "platon-utils>=1.9.5,<2.0.0",
         "hexbytes>=0.1.0,<1.0.0",
         "ipfshttpclient==0.7.0",
         "jsonschema>=3.2.0,<4.0.0",
@@ -84,19 +84,19 @@ setup(
         "protobuf>=3.10.0,<4",
         "pywin32>=223;platform_system=='Windows'",
         "requests>=2.16.0,<3.0.0",
-        # remove typing_extensions after python_requires>=3.8, see web3._utils.compat
+        # remove typing_extensions after python_requires>=3.8, see platon._utils.compat
         "typing-extensions>=3.7.4.1,<4;python_version<'3.8'",
         "websockets>=9.1,<10",
     ],
     python_requires='>=3.6,<4',
     extras_require=extras_require,
-    py_modules=['web3', 'ens', 'ethpm'],
-    entry_points={"pytest11": ["pytest_ethereum = web3.tools.pytest_ethereum.plugins"]},
+    py_modules=['platon', 'ens', 'platonpm'],
+    entry_points={"pytest11": ["pytest_platon = platon.tools.pytest_platon.plugins"]},
     license="MIT",
     zip_safe=False,
-    keywords='ethereum',
+    keywords='platon',
     packages=find_packages(exclude=["tests", "tests.*"]),
-    package_data={"web3": ["py.typed"]},
+    package_data={"platon": ["py.typed"]},
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',

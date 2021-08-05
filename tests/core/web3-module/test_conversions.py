@@ -6,8 +6,8 @@ from hexbytes import (
     HexBytes,
 )
 
-from web3 import Web3
-from web3.datastructures import (
+from platon import Web3
+from platon.datastructures import (
     AttributeDict,
 )
 

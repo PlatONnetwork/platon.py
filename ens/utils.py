@@ -13,16 +13,16 @@ from typing import (
     cast,
 )
 
-from eth_typing import (
+from platon_typing import (
     Address,
-    ChecksumAddress,
+    Bech32Address,
     HexAddress,
     HexStr,
 )
-from eth_utils import (
+from platon_utils import (
     is_same_address,
     remove_0x_prefix,
-    to_normalized_address,
+    to_bech32_address,
 )
 from hexbytes import (
     HexBytes,
@@ -45,14 +45,14 @@ default = object()
 
 
 if TYPE_CHECKING:
-    from web3 import Web3 as _Web3  # noqa: F401
-    from web3.providers import (  # noqa: F401
+    from platon import Web3 as _Web3  # noqa: F401
+    from platon.providers import (  # noqa: F401
         BaseProvider,
     )
 
 
 def Web3() -> Type['_Web3']:
-    from web3 import Web3 as Web3Main
+    from platon import Web3 as Web3Main
     return Web3Main
 
 
@@ -69,7 +69,7 @@ def dict_copy(func: TFunc) -> TFunc:
 
 
 def init_web3(provider: 'BaseProvider' = cast('BaseProvider', default)) -> '_Web3':
-    from web3 import Web3 as Web3Main
+    from platon import Web3 as Web3Main
 
     if provider is default:
         w3 = Web3Main(ens=None)
@@ -80,7 +80,7 @@ def init_web3(provider: 'BaseProvider' = cast('BaseProvider', default)) -> '_Web
 
 
 def customize_web3(w3: '_Web3') -> '_Web3':
-    from web3.middleware import make_stalecheck_middleware
+    from platon.middleware import make_stalecheck_middleware
 
     w3.middleware_onion.remove('name_to_address')
     w3.middleware_onion.add(
@@ -93,7 +93,7 @@ def customize_web3(w3: '_Web3') -> '_Web3':
 def normalize_name(name: str) -> str:
     """
     Clean the fully qualified name, as defined in ENS `EIP-137
-    <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_
+    <https://github.com/platonnetwork/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_
 
     This does *not* enforce whether ``name`` is a label or fully qualified domain.
 
@@ -114,7 +114,7 @@ def normalize_name(name: str) -> str:
 def is_valid_name(name: str) -> bool:
     """
     Validate whether the fully qualified name is valid, as defined in ENS `EIP-137
-    <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_
+    <https://github.com/platonnetwork/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_
 
     :param str name: the dot-separated ENS name
     :returns: True if ``name`` is set, and :meth:`~ens.main.ENS.nameprep` will not raise InvalidName
@@ -168,7 +168,7 @@ def raw_name_to_hash(name: str) -> HexBytes:
     behind the scenes. For advanced usage, it is a helpful utility.
 
     This normalizes the name with `nameprep
-    <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_
+    <https://github.com/platonnetwork/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_
     before hashing.
 
     :param str name: ENS name to hash
@@ -180,20 +180,26 @@ def raw_name_to_hash(name: str) -> HexBytes:
     return normal_name_to_hash(normalized_name)
 
 
-def address_in(address: ChecksumAddress, addresses: Collection[ChecksumAddress]) -> bool:
+def address_in(address: Bech32Address, addresses: Collection[Bech32Address]) -> bool:
     return any(is_same_address(address, item) for item in addresses)
 
 
-def address_to_reverse_domain(address: ChecksumAddress) -> str:
-    lower_unprefixed_address = remove_0x_prefix(HexStr(to_normalized_address(address)))
-    return lower_unprefixed_address + '.' + REVERSE_REGISTRAR_DOMAIN
+# def address_to_reverse_domain(address: Bech32Address) -> str:
+#     lower_unprefixed_address = remove_0x_prefix(HexStr(to_normalized_address(address)))
+#     return lower_unprefixed_address + '.' + REVERSE_REGISTRAR_DOMAIN
+
+
+# todo: noqa
+def address_to_reverse_domain(address: Bech32Address) -> str:
+    bech32_address = to_bech32_address(address)
+    return bech32_address + '.' + REVERSE_REGISTRAR_DOMAIN
 
 
 def estimate_auction_start_gas(labels: Collection[str]) -> int:
     return AUCTION_START_GAS_CONSTANT + AUCTION_START_GAS_MARGINAL * len(labels)
 
 
-def assert_signer_in_modifier_kwargs(modifier_kwargs: Any) -> ChecksumAddress:
+def assert_signer_in_modifier_kwargs(modifier_kwargs: Any) -> Bech32Address:
     ERR_MSG = "You must specify the sending account"
     assert len(modifier_kwargs) == 1, ERR_MSG
 
@@ -204,7 +210,7 @@ def assert_signer_in_modifier_kwargs(modifier_kwargs: Any) -> ChecksumAddress:
     return modifier_dict['from']
 
 
-def is_none_or_zero_address(addr: Union[Address, ChecksumAddress, HexAddress]) -> bool:
+def is_none_or_zero_address(addr: Union[Address, Bech32Address, HexAddress]) -> bool:
     return not addr or addr == EMPTY_ADDR_HEX
 
 

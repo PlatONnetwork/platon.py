@@ -6,7 +6,7 @@ import os
 import stat
 import sys
 
-from eth_utils import (
+from platon_utils import (
     to_tuple,
 )
 import requests
@@ -41,6 +41,7 @@ def get_parity_release_json(**kwargs):
         )) from json_err
 
 
+# todo: noqa
 @to_tuple
 def get_binary_uri(releases_json):
     for release in releases_json:

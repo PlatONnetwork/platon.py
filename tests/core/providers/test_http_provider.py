@@ -5,11 +5,11 @@ from requests.adapters import (
     HTTPAdapter,
 )
 
-from web3 import Web3
-from web3._utils import (
+from platon import Web3
+from platon._utils import (
     request,
 )
-from web3.providers import (
+from platon.providers import (
     HTTPProvider,
 )
 

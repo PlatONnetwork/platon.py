@@ -11,12 +11,12 @@ from requests.exceptions import (
     TooManyRedirects,
 )
 
-import web3
-from web3.middleware.exception_retry_request import (
+import platon
+from platon.middleware.exception_retry_request import (
     check_if_retry_on_failure,
     exception_retry_middleware,
 )
-from web3.providers import (
+from platon.providers import (
     HTTPProvider,
     IPCProvider,
 )
@@ -33,20 +33,20 @@ def exception_retry_request_setup():
 
 
 def test_check_if_retry_on_failure_false():
-    methods = ['eth_sendTransaction', 'personal_signAndSendTransaction', 'personal_sendTRansaction']
+    methods = ['platon_sendTransaction', 'personal_signAndSendTransaction', 'personal_sendTRansaction']
 
     for method in methods:
         assert not check_if_retry_on_failure(method)
 
 
 def test_check_if_retry_on_failure_true():
-    method = 'eth_getBalance'
+    method = 'platon_getBalance'
     assert check_if_retry_on_failure(method)
 
 
-@patch('web3.providers.rpc.make_post_request', side_effect=ConnectionError)
+@patch('platon.providers.rpc.make_post_request', side_effect=ConnectionError)
 def test_check_send_transaction_called_once(make_post_request_mock, exception_retry_request_setup):
-    method = 'eth_sendTransaction'
+    method = 'platon_sendTransaction'
     params = [{
         'to': '0x0',
         'value': 1,
@@ -57,9 +57,9 @@ def test_check_send_transaction_called_once(make_post_request_mock, exception_re
     assert make_post_request_mock.call_count == 1
 
 
-@patch('web3.providers.rpc.make_post_request', side_effect=ConnectionError)
+@patch('platon.providers.rpc.make_post_request', side_effect=ConnectionError)
 def test_valid_method_retried(make_post_request_mock, exception_retry_request_setup):
-    method = 'eth_getBalance'
+    method = 'platon_getBalance'
     params = []
 
     with pytest.raises(ConnectionError):
@@ -75,10 +75,10 @@ def test_is_strictly_default_http_middleware():
     assert 'http_retry_request' not in web3.middlewares
 
 
-@patch('web3.providers.rpc.make_post_request', side_effect=ConnectionError)
+@patch('platon.providers.rpc.make_post_request', side_effect=ConnectionError)
 def test_check_with_all_middlewares(make_post_request_mock):
     provider = HTTPProvider()
-    w3 = web3.Web3(provider)
+    w3 = platon.Web3(provider)
     with pytest.raises(ConnectionError):
-        w3.eth.block_number
+        w3.platon.block_number
     assert make_post_request_mock.call_count == 5

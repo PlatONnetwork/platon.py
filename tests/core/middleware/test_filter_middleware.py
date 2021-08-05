@@ -4,19 +4,19 @@ from hexbytes import (
     HexBytes,
 )
 
-from web3 import Web3
-from web3.datastructures import (
+from platon import Web3
+from platon.datastructures import (
     AttributeDict,
 )
-from web3.middleware import (
+from platon.middleware import (
     construct_result_generator_middleware,
     local_filter_middleware,
 )
-from web3.middleware.filter import (
+from platon.middleware.filter import (
     block_ranges,
     iter_latest_block_ranges,
 )
-from web3.providers.base import (
+from platon.providers.base import (
     BaseProvider,
 )
 
@@ -46,10 +46,10 @@ def iter_block_number(start=0):
 @pytest.fixture(scope='function')
 def result_generator_middleware(iter_block_number):
     return construct_result_generator_middleware({
-        'eth_getLogs': lambda *_: FILTER_LOG,
-        'eth_getBlockByNumber': lambda *_: {'hash': BLOCK_HASH},
+        'platon_getLogs': lambda *_: FILTER_LOG,
+        'platon_getBlockByNumber': lambda *_: {'hash': BLOCK_HASH},
         'net_version': lambda *_: 1,
-        'eth_blockNumber': lambda *_: next(iter_block_number),
+        'platon_blockNumber': lambda *_: next(iter_block_number),
     })
 
 
@@ -139,23 +139,23 @@ def test_iter_latest_block_ranges(
 
 def test_pending_block_filter_middleware(w3):
     with pytest.raises(NotImplementedError):
-        w3.eth.filter('pending')
+        w3.platon.filter('pending')
 
 
 def test_local_filter_middleware(w3, iter_block_number):
-    block_filter = w3.eth.filter('latest')
+    block_filter = w3.platon.filter('latest')
     block_filter.get_new_entries()
     iter_block_number.send(1)
 
-    log_filter = w3.eth.filter(filter_params={'fromBlock': 'latest'})
+    log_filter = w3.platon.filter(filter_params={'fromBlock': 'latest'})
 
-    assert w3.eth.get_filter_changes(block_filter.filter_id) == [HexBytes(BLOCK_HASH)]
+    assert w3.platon.get_filter_changes(block_filter.filter_id) == [HexBytes(BLOCK_HASH)]
 
     iter_block_number.send(2)
-    results = w3.eth.get_filter_changes(log_filter.filter_id)
+    results = w3.platon.get_filter_changes(log_filter.filter_id)
     assert results == FILTER_LOG
 
-    assert w3.eth.get_filter_logs(log_filter.filter_id) == FILTER_LOG
+    assert w3.platon.get_filter_logs(log_filter.filter_id) == FILTER_LOG
 
     filter_ids = (
         block_filter.filter_id,

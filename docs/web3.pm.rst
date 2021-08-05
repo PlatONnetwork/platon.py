@@ -2,9 +2,9 @@ Package Manager API
 ===================
 
 
-The ``web3.pm`` object exposes methods to interact with Packages as defined by `ERC 1123 <https://github.com/ethereum/EIPs/issues/1123>`_.
+The ``web3.pm`` object exposes methods to interact with Packages as defined by `ERC 1123 <https://github.com/platonnetwork/EIPs/issues/1123>`_.
 
-- To learn more about the EthPM spec, visit the `spec <http://ethpm.github.io/ethpm-spec/>`__ or the `documentation <http://docs.ethpm.com/>`__.
+- To learn more about the PlatonPM spec, visit the `spec <http://platonpm.github.io/platonpm-spec/>`__ or the `documentation <http://docs.platonpm.com/>`__.
 
 
 .. WARNING::
@@ -18,7 +18,7 @@ The ``web3.pm`` object exposes methods to interact with Packages as defined by `
 
    .. code-block:: python
 
-      >>> from web3.auto import w3
+      >>> from platon.auto import w3
       >>> w3.pm
       ...
       AttributeError: The Package Management feature is disabled by default ...
@@ -45,11 +45,11 @@ The following methods are available on the ``web3.pm`` namespace.
 
 Creating your own Registry class
 --------------------------------
-If you want to implement your own registry and use it with ``web3.pm``, you must create a subclass that inherits from ``ERC1319Registry``, and implements all the `ERC 1319 standard methods <https://github.com/ethereum/EIPs/issues/1319>`_ prefixed with an underscore in ``ERC1319Registry``. Then, you have to manually set it as the ``registry`` attribute on ``web3.pm``.
+If you want to implement your own registry and use it with ``web3.pm``, you must create a subclass that inherits from ``ERC1319Registry``, and implements all the `ERC 1319 standard methods <https://github.com/platonnetwork/EIPs/issues/1319>`_ prefixed with an underscore in ``ERC1319Registry``. Then, you have to manually set it as the ``registry`` attribute on ``web3.pm``.
 
 .. code-block:: python
     
     custom_registry = CustomRegistryClass(address, w3)
     w3.pm.registry = custom_registry
 
-One reason a user might want to create their own Registry class is if they build a custom Package Registry smart contract that has features beyond those specified in `ERC 1319 <https://github.com/ethereum/EIPs/issues/1319>`_. For example, the ability to delete a release or some micropayment feature. Rather than accessing those functions directly on the contract instance, they can create a custom ``ERC1319Registry`` subclass to easily call both the standard & custom methods.
+One reason a user might want to create their own Registry class is if they build a custom Package Registry smart contract that has features beyond those specified in `ERC 1319 <https://github.com/platonnetwork/EIPs/issues/1319>`_. For example, the ability to delete a release or some micropayment feature. Rather than accessing those functions directly on the contract instance, they can create a custom ``ERC1319Registry`` subclass to easily call both the standard & custom methods.

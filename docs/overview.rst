@@ -29,10 +29,10 @@ following built-in providers:
 
 .. code-block:: python
 
-   >>> from web3 import Web3
+   >>> from platon import Web3
 
    # IPCProvider:
-   >>> w3 = Web3(Web3.IPCProvider('./path/to/geth.ipc'))
+   >>> w3 = Web3(Web3.IPCProvider('./path/to/gplaton.ipc'))
 
    # HTTPProvider:
    >>> w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:8545'))
@@ -70,15 +70,15 @@ Your Keys
 Private keys are required to approve any transaction made on your behalf. The manner in
 which your key is secured will determine how you create and send transactions in Web3.py.
 
-A local node, like `Geth <https://geth.ethereum.org/>`_, may manage your keys for you.
-You can reference those keys using the :attr:`web3.eth.accounts <web3.eth.Eth.accounts>`
+A local node, like `Gplaton <https://gplaton.platon.org/>`_, may manage your keys for you.
+You can reference those keys using the :attr:`web3.platon.accounts <web3.platon.Platon.accounts>`
 property.
 
 A hosted node, like `Infura <https://infura.io/>`_, will have no knowledge of your keys.
 In this case, you'll need to have your private key available locally for signing
 transactions.
 
-Full documentation on the distinction between keys can be found :ref:`here <eth-account>`.
+Full documentation on the distinction between keys can be found :ref:`here <platon-account>`.
 
 
 Base API
@@ -120,46 +120,44 @@ Cryptographic Hashing
 - :meth:`Web3.solidityKeccak() <web3.Web3.solidityKeccak>`
 
 
-web3.eth API
+web3.platon API
 ~~~~~~~~~~~~
 
-The most commonly used APIs for interacting with Ethereum can be found under the
-``web3.eth`` namespace.  As a reminder, the :ref:`Examples <examples>` page will
+The most commonly used APIs for interacting with Platon can be found under the
+``web3.platon`` namespace.  As a reminder, the :ref:`Examples <examples>` page will
 demonstrate how to use several of these methods.
 
 
 Fetching Data
 -------------
 
-Viewing account balances (:meth:`get_balance <web3.eth.Eth.get_balance>`), transactions
-(:meth:`get_transaction <web3.eth.Eth.get_transaction>`), and block data
-(:meth:`get_block <web3.eth.Eth.get_block>`) are some of the most common starting
+Viewing account balances (:meth:`get_balance <web3.platon.Platon.get_balance>`), transactions
+(:meth:`get_transaction <web3.platon.Platon.get_transaction>`), and block data
+(:meth:`get_block <web3.platon.Platon.get_block>`) are some of the most common starting
 points in Web3.py.
 
 
 API
 ^^^
 
-- :meth:`web3.eth.get_balance() <web3.eth.Eth.get_balance>`
-- :meth:`web3.eth.get_block() <web3.eth.Eth.get_block>`
-- :meth:`web3.eth.get_block_transaction_count() <web3.eth.Eth.get_block_transaction_count>`
-- :meth:`web3.eth.get_code() <web3.eth.Eth.get_code>`
-- :meth:`web3.eth.get_proof() <web3.eth.Eth.get_proof>`
-- :meth:`web3.eth.get_storage_at() <web3.eth.Eth.get_storage_at>`
-- :meth:`web3.eth.get_transaction() <web3.eth.Eth.get_transaction>`
-- :meth:`web3.eth.get_transaction_by_block() <web3.eth.Eth.get_transaction_by_block>`
-- :meth:`web3.eth.get_transaction_count() <web3.eth.Eth.get_transaction_count>`
-- :meth:`web3.eth.get_uncle_by_block() <web3.eth.Eth.get_uncle_by_block>`
-- :meth:`web3.eth.get_uncle_count() <web3.eth.Eth.get_uncle_count>`
+- :meth:`web3.platon.get_balance() <web3.platon.Platon.get_balance>`
+- :meth:`web3.platon.get_block() <web3.platon.Platon.get_block>`
+- :meth:`web3.platon.get_block_transaction_count() <web3.platon.Platon.get_block_transaction_count>`
+- :meth:`web3.platon.get_code() <web3.platon.Platon.get_code>`
+- :meth:`web3.platon.get_proof() <web3.platon.Platon.get_proof>`
+- :meth:`web3.platon.get_storage_at() <web3.platon.Platon.get_storage_at>`
+- :meth:`web3.platon.get_transaction() <web3.platon.Platon.get_transaction>`
+- :meth:`web3.platon.get_transaction_by_block() <web3.platon.Platon.get_transaction_by_block>`
+- :meth:`web3.platon.get_transaction_count() <web3.platon.Platon.get_transaction_count>`
 
 
 Making Transactions
 -------------------
 
 The most common use cases will be satisfied with
-:meth:`send_transaction <web3.eth.Eth.send_transaction>` or the combination of
-:meth:`sign_transaction <web3.eth.Eth.sign_transaction>` and
-:meth:`send_raw_transaction <web3.eth.Eth.send_raw_transaction>`.
+:meth:`send_transaction <web3.platon.Platon.send_transaction>` or the combination of
+:meth:`sign_transaction <web3.platon.Platon.sign_transaction>` and
+:meth:`send_raw_transaction <web3.platon.Platon.send_raw_transaction>`.
 
 .. note::
 
@@ -170,18 +168,18 @@ The most common use cases will be satisfied with
 API
 ^^^
 
-- :meth:`web3.eth.send_transaction() <web3.eth.Eth.send_transaction>`
-- :meth:`web3.eth.sign_transaction() <web3.eth.Eth.sign_transaction>`
-- :meth:`web3.eth.send_raw_transaction() <web3.eth.Eth.send_raw_transaction>`
-- :meth:`web3.eth.replace_transaction() <web3.eth.Eth.replace_transaction>`
-- :meth:`web3.eth.modify_transaction() <web3.eth.Eth.modify_transaction>`
-- :meth:`web3.eth.wait_for_transaction_receipt() <web3.eth.Eth.wait_for_transaction_receipt>`
-- :meth:`web3.eth.get_transaction_receipt() <web3.eth.Eth.get_transaction_receipt>`
-- :meth:`web3.eth.sign() <web3.eth.Eth.sign>`
-- :meth:`web3.eth.sign_typed_data() <web3.eth.Eth.sign_typed_data>`
-- :meth:`web3.eth.estimate_gas() <web3.eth.Eth.estimate_gas>`
-- :meth:`web3.eth.generate_gas_price() <web3.eth.Eth.generate_gas_price>`
-- :meth:`web3.eth.set_gas_price_strategy() <web3.eth.Eth.set_gas_price_strategy>`
+- :meth:`web3.platon.send_transaction() <web3.platon.Platon.send_transaction>`
+- :meth:`web3.platon.sign_transaction() <web3.platon.Platon.sign_transaction>`
+- :meth:`web3.platon.send_raw_transaction() <web3.platon.Platon.send_raw_transaction>`
+- :meth:`web3.platon.replace_transaction() <web3.platon.Platon.replace_transaction>`
+- :meth:`web3.platon.modify_transaction() <web3.platon.Platon.modify_transaction>`
+- :meth:`web3.platon.wait_for_transaction_receipt() <web3.platon.Platon.wait_for_transaction_receipt>`
+- :meth:`web3.platon.get_transaction_receipt() <web3.platon.Platon.get_transaction_receipt>`
+- :meth:`web3.platon.sign() <web3.platon.Platon.sign>`
+- :meth:`web3.platon.sign_typed_data() <web3.platon.Platon.sign_typed_data>`
+- :meth:`web3.platon.estimate_gas() <web3.platon.Platon.estimate_gas>`
+- :meth:`web3.platon.generate_gas_price() <web3.platon.Platon.generate_gas_price>`
+- :meth:`web3.platon.set_gas_price_strategy() <web3.platon.Platon.set_gas_price_strategy>`
 
 
 .. _overview_contracts:
@@ -194,8 +192,8 @@ functions on a deployed contract.
 
 Deployment requires that the contract already be compiled, with its bytecode and ABI
 available. This compilation step can done within
-`Remix <http://remix.ethereum.org/>`_ or one of the many contract development
-frameworks, such as `Brownie <https://eth-brownie.readthedocs.io/>`_.
+`Remix <http://remix.platon.org/>`_ or one of the many contract development
+frameworks, such as `Brownie <https://platon-brownie.readthedocs.io/>`_.
 
 Once the contract object is instantiated, calling ``transact`` on the
 :meth:`constructor <web3.contract.Contract.constructor>` method will deploy an
@@ -203,9 +201,9 @@ instance of the contract:
 
 .. code-block:: python
 
-   >>> ExampleContract = w3.eth.contract(abi=abi, bytecode=bytecode)
+   >>> ExampleContract = w3.platon.contract(abi=abi, bytecode=bytecode)
    >>> tx_hash = ExampleContract.constructor().transact()
-   >>> tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+   >>> tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
    >>> tx_receipt.contractAddress
    '0x8a22225eD7eD460D7ee3842bce2402B9deaD23D3'
 
@@ -214,7 +212,7 @@ on the ``functions`` namespace:
 
 .. code-block:: python
 
-   >>> deployed_contract = w3.eth.contract(address=tx_receipt.contractAddress, abi=abi)
+   >>> deployed_contract = w3.platon.contract(address=tx_receipt.contractAddress, abi=abi)
    >>> deployed_contract.functions.myFunction(42).transact()
 
 If you want to read data from a contract (or see the result of transaction locally,
@@ -238,7 +236,7 @@ For more, see the full :ref:`Contracts` documentation.
 API
 ^^^
 
-- :meth:`web3.eth.contract() <web3.eth.Eth.contract>`
+- :meth:`web3.platon.contract() <web3.platon.Platon.contract>`
 - :attr:`Contract.address <web3.contract.Contract.address>`
 - :attr:`Contract.abi <web3.contract.Contract.abi>`
 - :attr:`Contract.bytecode <web3.contract.Contract.bytecode>`
@@ -261,7 +259,7 @@ a contract, you can leverage Web3.py filters.
 .. code-block:: python
 
    # Use case: filter for new blocks
-   >>> new_filter = web3.eth.filter('latest')
+   >>> new_filter = web3.platon.filter('latest')
 
    # Use case: filter for contract event "MyEvent"
    >>> new_filter = deployed_contract.events.MyEvent.createFilter(fromBlock='latest')
@@ -277,11 +275,11 @@ More complex patterns for creating filters and polling for logs can be found in 
 API
 ^^^
 
-- :meth:`web3.eth.filter() <web3.eth.Eth.filter>`
-- :meth:`web3.eth.get_filter_changes() <web3.eth.Eth.get_filter_changes>`
-- :meth:`web3.eth.get_filter_logs() <web3.eth.Eth.get_filter_logs>`
-- :meth:`web3.eth.uninstall_filter() <web3.eth.Eth.uninstall_filter>`
-- :meth:`web3.eth.get_logs() <web3.eth.Eth.get_logs>`
+- :meth:`web3.platon.filter() <web3.platon.Platon.filter>`
+- :meth:`web3.platon.get_filter_changes() <web3.platon.Platon.get_filter_changes>`
+- :meth:`web3.platon.get_filter_logs() <web3.platon.Platon.get_filter_logs>`
+- :meth:`web3.platon.uninstall_filter() <web3.platon.Platon.uninstall_filter>`
+- :meth:`web3.platon.get_logs() <web3.platon.Platon.get_logs>`
 - :meth:`Contract.events.your_event_name.createFilter() <web3.contract.Contract.events.your_event_name.createFilter>`
 - :meth:`Contract.events.your_event_name.build_filter() <web3.contract.Contract.events.your_event_name.build_filter>`
 - :meth:`Filter.get_new_entries() <web3.utils.filters.Filter.get_new_entries>`
@@ -304,14 +302,14 @@ ethPM
 ~~~~~
 
 ethPM allows you to package up your contracts for reuse or use contracts from
-another trusted registry. See the full details :ref:`here <ethpm>`.
+another trusted registry. See the full details :ref:`here <platonpm>`.
 
 
 ENS
 ~~~
 
-`Ethereum Name Service (ENS) <https://ens.domains/>`_ provides the infrastructure
+`Platon Name Service (ENS) <https://ens.domains/>`_ provides the infrastructure
 for human-readable addresses. As an example, instead of
 ``0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359``, you can send funds to
-``ethereumfoundation.eth``. Web3.py has support for ENS, documented
+``platonfoundation.platon``. Web3.py has support for ENS, documented
 :ref:`here <ens_overview>`.

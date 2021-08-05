@@ -1,10 +1,10 @@
 import pytest
 
-from eth_utils.toolz import (
+from platon_utils.toolz import (
     dissoc,
 )
 
-from web3.exceptions import (
+from platon.exceptions import (
     ValidationError,
 )
 
@@ -14,7 +14,7 @@ from web3.exceptions import (
 @pytest.fixture()
 def math_contract(web3, MathContract, address_conversion_func):
     deploy_txn = MathContract.constructor().transact()
-    deploy_receipt = web3.eth.wait_for_transaction_receipt(deploy_txn)
+    deploy_receipt = web3.platon.wait_for_transaction_receipt(deploy_txn)
     assert deploy_receipt is not None
     math_contract_address = address_conversion_func(deploy_receipt['contractAddress'])
     _math_contract = MathContract(address=math_contract_address)
@@ -25,7 +25,7 @@ def math_contract(web3, MathContract, address_conversion_func):
 @pytest.fixture()
 def fallback_function_contract(web3, FallbackFunctionContract, address_conversion_func):
     deploy_txn = FallbackFunctionContract.constructor().transact()
-    deploy_receipt = web3.eth.wait_for_transaction_receipt(deploy_txn)
+    deploy_receipt = web3.platon.wait_for_transaction_receipt(deploy_txn)
     assert deploy_receipt is not None
     fallback_contract_address = address_conversion_func(deploy_receipt['contractAddress'])
     _fallback_contract = FallbackFunctionContract(address=fallback_contract_address)
@@ -36,7 +36,7 @@ def fallback_function_contract(web3, FallbackFunctionContract, address_conversio
 @pytest.fixture()
 def payable_tester_contract(web3, PayableTesterContract, address_conversion_func):
     deploy_txn = PayableTesterContract.constructor().transact()
-    deploy_receipt = web3.eth.wait_for_transaction_receipt(deploy_txn)
+    deploy_receipt = web3.platon.wait_for_transaction_receipt(deploy_txn)
     assert deploy_receipt is not None
     payable_tester_address = address_conversion_func(deploy_receipt['contractAddress'])
     _payable_tester = PayableTesterContract(address=payable_tester_address)
@@ -55,7 +55,7 @@ def test_build_transaction_not_paying_to_nonpayable_function(
         'data': '0xe4cb8f5c',
         'value': 0,
         'gasPrice': 1,
-        'chainId': 61,
+        'chain_id': 61,
     }
 
 
@@ -76,7 +76,7 @@ def test_build_transaction_with_contract_no_arguments(web3, math_contract, build
         'data': '0xd09de08a',
         'value': 0,
         'gasPrice': 1,
-        'chainId': 61,
+        'chain_id': 61,
     }
 
 
@@ -87,7 +87,7 @@ def test_build_transaction_with_contract_fallback_function(web3, fallback_functi
         'data': '0x',
         'value': 0,
         'gasPrice': 1,
-        'chainId': 61,
+        'chain_id': 61,
     }
 
 
@@ -106,7 +106,7 @@ def test_build_transaction_with_contract_class_method(
         'data': '0xd09de08a',
         'value': 0,
         'gasPrice': 1,
-        'chainId': 61,
+        'chain_id': 61,
     }
 
 
@@ -120,21 +120,21 @@ def test_build_transaction_with_contract_default_account_is_set(
         'data': '0xd09de08a',
         'value': 0,
         'gasPrice': 1,
-        'chainId': 61,
+        'chain_id': 61,
     }
 
 
 def test_build_transaction_with_gas_price_strategy_set(web3, math_contract, buildTransaction):
     def my_gas_price_strategy(web3, transaction_params):
         return 5
-    web3.eth.set_gas_price_strategy(my_gas_price_strategy)
+    web3.platon.set_gas_price_strategy(my_gas_price_strategy)
     txn = buildTransaction(contract=math_contract, contract_function='increment')
     assert dissoc(txn, 'gas') == {
         'to': math_contract.address,
         'data': '0xd09de08a',
         'value': 0,
         'gasPrice': 5,
-        'chainId': 61,
+        'chain_id': 61,
     }
 
 
@@ -162,31 +162,31 @@ def test_build_transaction_with_contract_to_address_supplied_errors(web3,
         (
             {}, (5,), {}, {
                 'data': '0x7cf5dab00000000000000000000000000000000000000000000000000000000000000005',  # noqa: E501
-                'value': 0, 'gasPrice': 1, 'chainId': 61,
+                'value': 0, 'gasPrice': 1, 'chain_id': 61,
             }, False
         ),
         (
             {'gas': 800000}, (5,), {}, {
                 'data': '0x7cf5dab00000000000000000000000000000000000000000000000000000000000000005',  # noqa: E501
-                'value': 0, 'gasPrice': 1, 'chainId': 61,
+                'value': 0, 'gasPrice': 1, 'chain_id': 61,
             }, False
         ),
         (
             {'gasPrice': 21000000000}, (5,), {}, {
                 'data': '0x7cf5dab00000000000000000000000000000000000000000000000000000000000000005',  # noqa: E501
-                'value': 0, 'gasPrice': 21000000000, 'chainId': 61,
+                'value': 0, 'gasPrice': 21000000000, 'chain_id': 61,
             }, False
         ),
         (
             {'nonce': 7}, (5,), {}, {
                 'data': '0x7cf5dab00000000000000000000000000000000000000000000000000000000000000005',  # noqa: E501
-                'value': 0, 'gasPrice': 1, 'nonce': 7, 'chainId': 61,
+                'value': 0, 'gasPrice': 1, 'nonce': 7, 'chain_id': 61,
             }, True
         ),
         (
             {'value': 20000}, (5,), {}, {
                 'data': '0x7cf5dab00000000000000000000000000000000000000000000000000000000000000005',  # noqa: E501
-                'value': 20000, 'gasPrice': 1, 'chainId': 61,
+                'value': 20000, 'gasPrice': 1, 'chain_id': 61,
             }, False
         ),
     ),

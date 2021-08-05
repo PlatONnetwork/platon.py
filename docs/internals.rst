@@ -18,9 +18,9 @@ Here are some common things you might want to do with these APIs.
 
 * Redirect certain RPC requests to different providers such as sending all
   *read* operations to a provider backed by Infura and all *write* operations
-  to a go-ethereum node that you control.
-* Transparently intercept transactions sent over ``eth_sendTransaction``, sign
-  them locally, and then send them through ``eth_sendRawTransaction``.
+  to a platon node that you control.
+* Transparently intercept transactions sent over ``platon_sendTransaction``, sign
+  them locally, and then send them through ``platon_sendRawTransaction``.
 * Modify the response from an RPC request so that it is returned in different
   format such as converting all integer values to their hexadecimal
   representation.
@@ -75,7 +75,7 @@ Providers
 ---------
 
 A provider is responsible for all direct blockchain interactions.  In most
-cases this means interacting with the JSON-RPC server for an ethereum node over
+cases this means interacting with the JSON-RPC server for an platon node over
 HTTP or an IPC socket.  There is however nothing which requires providers to be
 RPC based, allowing for providers designed for testing purposes which use an
 in-memory EVM to fulfill requests.
@@ -96,7 +96,7 @@ setting the middlewares the provider should use.
 
 
     * ``method``  This will be a string representing the JSON-RPC method that
-      is being called such as ``'eth_sendTransaction'``.
+      is being called such as ``'platon_sendTransaction'``.
     * ``params``  This will be a list or other iterable of the parameters for
       the JSON-RPC method being called.
 

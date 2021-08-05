@@ -2,28 +2,28 @@ import importlib
 import os
 import pytest
 
-from eth_utils import (
+from platon_utils import (
     ValidationError,
 )
 
-from web3.exceptions import (
+from platon.exceptions import (
     InfuraKeyNotFound,
 )
-from web3.providers import (
+from platon.providers import (
     HTTPProvider,
     IPCProvider,
     WebsocketProvider,
 )
-from web3.providers.auto import (
+from platon.providers.auto import (
     load_provider_from_environment,
 )
-from web3.providers.ipc import (
+from platon.providers.ipc import (
     get_dev_ipc_path,
 )
 
 # Ugly hack to import infura now that API KEY is required
 os.environ['WEB3_INFURA_API_KEY'] = 'test'
-from web3.auto import (  # noqa E402 isort:skip
+from platon.auto import (  # noqa E402 isort:skip
     infura,
 )
 

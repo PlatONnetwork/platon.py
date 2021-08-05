@@ -3,8 +3,8 @@ import pytest
 import tempfile
 import zipfile
 
-from eth_utils import (
-    is_checksum_address,
+from platon_utils import (
+    is_bech32_address,
     is_dict,
 )
 
@@ -70,7 +70,7 @@ def datadir(tmpdir_factory, parity_fixture_data):
         parity_fixture_data['zip'],
     ))
     base_dir = tmpdir_factory.mktemp('parity')
-    tmp_datadir = os.path.join(str(base_dir), 'datadir')
+    tmp_datadir = os.path.join(str(base_dir), 'data_dir')
     with zipfile.ZipFile(zipfile_path, 'r') as zip_ref:
         zip_ref.extractall(tmp_datadir)
     return tmp_datadir
@@ -78,7 +78,7 @@ def datadir(tmpdir_factory, parity_fixture_data):
 
 @pytest.fixture(scope="module")
 def author(parity_fixture_data):
-    # need the address to unlock before web3 module has been opened
+    # need the address to unlock before platon module has been opened
     author = parity_fixture_data['coinbase']
     return author
 
@@ -108,7 +108,7 @@ def parity_import_blocks_process(parity_import_blocks_command):
 
 @pytest.fixture(scope='module')
 def coinbase(web3):
-    return web3.eth.coinbase
+    return web3.platon.coinbase
 
 
 @pytest.fixture(scope="module")
@@ -164,20 +164,20 @@ def unlocked_account_dual_type(unlockable_account_dual_type):
 @pytest.fixture(scope="module")
 def funded_account_for_raw_txn(parity_fixture_data):
     account = parity_fixture_data['raw_txn_account']
-    assert is_checksum_address(account)
+    assert is_bech32_address(account)
     return account
 
 
 @pytest.fixture(scope="module")
 def empty_block(web3, parity_fixture_data):
-    block = web3.eth.get_block(parity_fixture_data['empty_block_hash'])
+    block = web3.platon.get_block(parity_fixture_data['empty_block_hash'])
     assert is_dict(block)
     return block
 
 
 @pytest.fixture(scope="module")
 def block_with_txn(web3, parity_fixture_data):
-    block = web3.eth.get_block(parity_fixture_data['block_with_txn_hash'])
+    block = web3.platon.get_block(parity_fixture_data['block_with_txn_hash'])
     assert is_dict(block)
     return block
 
@@ -189,7 +189,7 @@ def mined_txn_hash(parity_fixture_data):
 
 @pytest.fixture(scope="module")
 def block_with_txn_with_log(web3, parity_fixture_data):
-    block = web3.eth.get_block(parity_fixture_data['block_hash_with_log'])
+    block = web3.platon.get_block(parity_fixture_data['block_hash_with_log'])
     assert is_dict(block)
     return block
 

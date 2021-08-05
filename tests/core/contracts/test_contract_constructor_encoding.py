@@ -1,6 +1,6 @@
 import pytest
 
-from eth_utils import (
+from platon_utils import (
     encode_hex,
     remove_0x_prefix,
 )

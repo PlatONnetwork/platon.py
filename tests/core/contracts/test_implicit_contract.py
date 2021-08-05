@@ -1,10 +1,10 @@
 import pytest
 
-from eth_utils import (
+from platon_utils import (
     is_integer,
 )
 
-from web3.contract import (
+from platon.contract import (
     ImplicitContract,
 )
 
@@ -13,17 +13,17 @@ from web3.contract import (
 def math_contract(web3, MATH_ABI, MATH_CODE, MATH_RUNTIME, address_conversion_func):
     # Deploy math contract
     # NOTE Must use non-specialized contract factory or else deploy() doesn't work
-    MathContract = web3.eth.contract(
+    MathContract = web3.platon.contract(
         abi=MATH_ABI,
         bytecode=MATH_CODE,
         bytecode_runtime=MATH_RUNTIME,
     )
     tx_hash = MathContract.constructor().transact()
-    tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    tx_receipt = web3.platon.wait_for_transaction_receipt(tx_hash)
     math_address = address_conversion_func(tx_receipt['contractAddress'])
     # Return interactive contract instance at deployed address
     # TODO Does parent class not implement 'deploy()' for a reason?
-    MathContract = web3.eth.contract(
+    MathContract = web3.platon.contract(
         abi=MATH_ABI,
         bytecode=MATH_CODE,
         bytecode_runtime=MATH_RUNTIME,
@@ -38,7 +38,7 @@ def math_contract(web3, MATH_ABI, MATH_CODE, MATH_RUNTIME, address_conversion_fu
 @pytest.fixture()
 def get_transaction_count(web3):
     def get_transaction_count(blocknum_or_label):
-        block = web3.eth.get_block(blocknum_or_label)
+        block = web3.platon.get_block(blocknum_or_label)
         # Return the blocknum if we requested this via labels
         # so we can directly query the block next time (using the same API call)
         # Either way, return the number of transactions in the given block

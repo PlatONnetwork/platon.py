@@ -13,7 +13,7 @@ request to an HTTP or IPC socket based server.
    that requires multiple providers, create and configure a new web3 instance
    per connection.
 
-If you are already happily connected to your Ethereum node, then you
+If you are already happily connected to your Platon node, then you
 can skip the rest of the Providers section.
 
 .. _choosing_provider:
@@ -54,7 +54,7 @@ Once you have configured your provider, for example:
 
 .. code-block:: python
 
-    from web3 import Web3
+    from platon import Web3
     my_provider = Web3.IPCProvider('/my/node/ipc/path')
 
 Then you are ready to initialize your Web3 instance, like so:
@@ -70,17 +70,17 @@ Finally, you are ready to :ref:`get started with Web3.py<first_w3_use>`.
 Automatic vs Manual Providers
 -----------------------------
 
-The ``Web3`` object will look for the Ethereum node in a few
+The ``Web3`` object will look for the Platon node in a few
 standard locations if no providers are specified. Auto-detection happens
 when you initialize like so:
 
 .. code-block:: python
 
-    from web3.auto import w3
+    from platon.auto import w3
 
     # which is equivalent to:
 
-    from web3 import Web3
+    from platon import Web3
     w3 = Web3()
 
 Sometimes, web3 cannot automatically detect where your node is.
@@ -106,7 +106,7 @@ successful connection it can make:
 2. :class:`~web3.providers.ipc.IPCProvider`, which looks for several IPC file locations.
    ``IPCProvider`` will not automatically detect a testnet connection, it is suggested that the
    user instead uses a ``w3`` instance from ``web3.auto.infura`` (e.g.
-   ``from web3.auto.infura.ropsten import w3``) if they want to auto-detect a testnet.
+   ``from platon.auto.infura.ropsten import w3``) if they want to auto-detect a testnet.
 3. :class:`~web3.providers.rpc.HTTPProvider`, which attempts to connect to "http://localhost:8545"
 4. ``None`` - if no providers are successful, you can still use Web3 APIs
    that do not require a connection, like:
@@ -114,7 +114,7 @@ successful connection it can make:
    - :ref:`overview_type_conversions`
    - :ref:`overview_currency_conversions`
    - :ref:`overview_addresses`
-   - :ref:`eth-account`
+   - :ref:`platon-account`
    - etc.
 
 .. _automatic_provider_detection_examples:
@@ -126,19 +126,19 @@ Some nodes provide APIs beyond the standards. Sometimes the same information is 
 in different ways across nodes. If you want to write code that works
 across multiple nodes, you may want to look up the node type you are connected to.
 
-For example, the following retrieves the client enode endpoint for both geth and parity:
+For example, the following retrieves the client enode endpoint for both gplaton and parity:
 
 .. code-block:: python
 
-    from web3.auto import w3
+    from platon.auto import w3
 
     connected = w3.isConnected()
 
     if connected and w3.clientVersion.startswith('Parity'):
         enode = w3.parity.enode
 
-    elif connected and w3.clientVersion.startswith('Geth'):
-        enode = w3.geth.admin.nodeInfo['enode']
+    elif connected and w3.clientVersion.startswith('Gplaton'):
+        enode = w3.gplaton.admin.nodeInfo['enode']
 
     else:
         enode = None
@@ -183,20 +183,20 @@ an optional secret key, set the environment variable ``WEB3_INFURA_API_SECRET``:
 
 .. code-block:: python
 
-    >>> from web3.auto.infura import w3
+    >>> from platon.auto.infura import w3
 
     # confirm that the connection succeeded
     >>> w3.isConnected()
     True
 
-Geth dev Proof of Authority
+Gplaton dev Proof of Authority
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To connect to a ``geth --dev`` Proof of Authority instance with defaults:
+To connect to a ``gplaton --dev`` Proof of Authority instance with defaults:
 
 .. code-block:: python
 
-    >>> from web3.auto.gethdev import w3
+    >>> from platon.auto.gplatondev import w3
 
     # confirm that the connection succeeded
     >>> w3.isConnected()
@@ -227,7 +227,7 @@ HTTPProvider
 
     .. code-block:: python
 
-        >>> from web3 import Web3
+        >>> from platon import Web3
         >>> w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:8545"))
 
     Note that you should create only one HTTPProvider per python
@@ -242,7 +242,7 @@ HTTPProvider
 
     .. code-block:: python
 
-        >>> from web3 import Web3
+        >>> from platon import Web3
         >>> w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:8545", request_kwargs={'timeout': 60}))
 
 
@@ -250,7 +250,7 @@ HTTPProvider
 
     .. code-block:: python
 
-        >>> from web3 import Web3
+        >>> from platon import Web3
         >>> adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
         >>> session = requests.Session()
         >>> session.mount('http://', adapter)
@@ -270,25 +270,25 @@ IPCProvider
 
     .. code-block:: python
 
-        >>> from web3 import Web3
-        >>> w3 = Web3(Web3.IPCProvider("~/Library/Ethereum/geth.ipc"))
+        >>> from platon import Web3
+        >>> w3 = Web3(Web3.IPCProvider("~/Library/Platon/gplaton.ipc"))
 
     If no ``ipc_path`` is specified, it will use the first IPC file
     it can find from this list:
 
     - On Linux and FreeBSD:
 
-      - ``~/.ethereum/geth.ipc``
-      - ``~/.local/share/io.parity.ethereum/jsonrpc.ipc``
+      - ``~/.platon/gplaton.ipc``
+      - ``~/.local/share/io.parity.platon/jsonrpc.ipc``
       - ``~/.local/share/trinity/mainnet/ipcs-eth1/jsonrpc.ipc``
     - On Mac OS:
 
-      - ``~/Library/Ethereum/geth.ipc``
-      - ``~/Library/Application Support/io.parity.ethereum/jsonrpc.ipc``
+      - ``~/Library/Platon/gplaton.ipc``
+      - ``~/Library/Application Support/io.parity.platon/jsonrpc.ipc``
       - ``~/.local/share/trinity/mainnet/ipcs-eth1/jsonrpc.ipc``
     - On Windows:
 
-      - ``\\\.\pipe\geth.ipc``
+      - ``\\\.\pipe\gplaton.ipc``
       - ``\\\.\pipe\jsonrpc.ipc``
 
 
@@ -308,7 +308,7 @@ WebsocketProvider
 
     .. code-block:: python
 
-        >>> from web3 import Web3
+        >>> from platon import Web3
         >>> w3 = Web3(Web3.WebsocketProvider("ws://127.0.0.1:8546"))
 
     Under the hood, the ``WebsocketProvider`` uses the python websockets library for
@@ -324,32 +324,32 @@ WebsocketProvider
 
     .. code-block:: python
 
-        >>> from web3 import Web3
+        >>> from platon import Web3
         >>> w3 = Web3(Web3.WebsocketProvider("ws://127.0.0.1:8546", websocket_timeout=60))
 
-.. py:currentmodule:: web3.providers.eth_tester
+.. py:currentmodule:: web3.providers.platon_tester
 
-EthereumTesterProvider
+PlatonTesterProvider
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. warning:: Experimental:  This provider is experimental. There are still significant gaps in
     functionality. However it is being actively developed and supported.
 
-.. py:class:: EthereumTesterProvider(eth_tester=None)
+.. py:class:: PlatonTesterProvider(platon_tester=None)
 
-    This provider integrates with the ``eth-tester`` library.  The ``eth_tester`` constructor
-    argument should be an instance of the :class:`~eth_tester.EthereumTester` or a subclass of
-    :class:`~eth_tester.backends.base.BaseChainBackend` class provided by the ``eth-tester`` library.
-    If you would like a custom eth-tester instance to test with, see the
-    ``eth-tester`` library `documentation <https://github.com/ethereum/eth-tester>`_ for details.
+    This provider integrates with the ``platon-tester`` library.  The ``platon_tester`` constructor
+    argument should be an instance of the :class:`~platon_tester.PlatonTester` or a subclass of
+    :class:`~platon_tester.backends.base.BaseChainBackend` class provided by the ``platon-tester`` library.
+    If you would like a custom platon-tester instance to test with, see the
+    ``platon-tester`` library `documentation <https://github.com/platonnetwork/platon-tester>`_ for details.
 
     .. code-block:: python
 
-        >>> from web3 import Web3, EthereumTesterProvider
-        >>> w3 = Web3(EthereumTesterProvider())
+        >>> from platon import Web3, PlatonTesterProvider
+        >>> w3 = Web3(PlatonTesterProvider())
 
-.. NOTE:: To install the needed dependencies to use EthereumTesterProvider, you can install the
-    pip extras package that has the correct interoperable versions of the ``eth-tester``
+.. NOTE:: To install the needed dependencies to use PlatonTesterProvider, you can install the
+    pip extras package that has the correct interoperable versions of the ``platon-tester``
     and ``py-evm`` dependencies needed to do testing: e.g. ``pip install web3[tester]``
 
 
@@ -382,7 +382,7 @@ AsyncHTTPProvider
 
     .. code-block:: python
 
-        >>> from web3 import Web3
+        >>> from platon import Web3
         >>> w3 = Web3(Web3.AsyncHTTPProvider("http://127.0.0.1:8545"))
 
     Under the hood, the ``AsyncHTTPProvider`` uses the python
@@ -391,14 +391,14 @@ AsyncHTTPProvider
 Supported Methods
 ^^^^^^^^^^^^^^^^^
 
-- :meth:`web3.eth.block_number <web3.eth.Eth.block_number>`
-- :meth:`web3.eth.coinbase <web3.eth.Eth.coinbase>`
-- :meth:`web3.eth.gas_price <web3.eth.Eth.gas_price>`
-- :meth:`web3.eth.estimate_gas() <web3.eth.Eth.estimate_gas>`
-- :meth:`web3.eth.generate_gas_price() <web3.eth.Eth.generate_gas_price>`
-- :meth:`web3.eth.get_block() <web3.eth.Eth.get_block>`
-- :meth:`web3.eth.get_transaction() <web3.eth.Eth.get_transaction>`
-- :meth:`web3.eth.send_transaction() <web3.eth.Eth.send_transaction>`
+- :meth:`web3.platon.block_number <web3.platon.Platon.block_number>`
+- :meth:`web3.platon.coinbase <web3.platon.Platon.coinbase>`
+- :meth:`web3.platon.gas_price <web3.platon.Platon.gas_price>`
+- :meth:`web3.platon.estimate_gas() <web3.platon.Platon.estimate_gas>`
+- :meth:`web3.platon.generate_gas_price() <web3.platon.Platon.generate_gas_price>`
+- :meth:`web3.platon.get_block() <web3.platon.Platon.get_block>`
+- :meth:`web3.platon.get_transaction() <web3.platon.Platon.get_transaction>`
+- :meth:`web3.platon.send_transaction() <web3.platon.Platon.send_transaction>`
 
 Supported Middleware
 ^^^^^^^^^^^^^^^^^^^^

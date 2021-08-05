@@ -15,15 +15,13 @@ Hexadecimal Representations
 * All hexadecimal values will be returned as text.
 * All hexadecimal values will be ``0x`` prefixed.
 
-Ethereum Addresses
+Platon Addresses
 ------------------
 
 All addresses must be supplied in one of three ways:
 
-* While connected to mainnet, an Ethereum Name Service name (often in the form ``myname.eth``)
-* A 20-byte hexadecimal that is checksummed using the `EIP-55
-  <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md>`_ spec.
-* A 20-byte binary address.
+* While connected to mainnet, an Platon Name Service name (often in the form ``myname.platon``)
+* A bech32 address.
 
 Strict Bytes Type Checking
 --------------------------

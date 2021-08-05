@@ -1,20 +1,20 @@
 import pytest
 
-from web3._utils.method_formatters import (
+from platon._utils.method_formatters import (
     get_error_formatters,
     raise_solidity_error_on_revert,
 )
-from web3._utils.rpc_abi import (
+from platon._utils.rpc_abi import (
     RPC,
 )
-from web3.exceptions import (
+from platon.exceptions import (
     ContractLogicError,
 )
-from web3.types import (
+from platon.types import (
     RPCResponse,
 )
 
-# OpenEthereum/default case:
+# OpenPlaton/default case:
 REVERT_WITH_MSG = RPCResponse({
     'jsonrpc': '2.0',
     'error': {
@@ -50,7 +50,7 @@ OTHER_ERROR = RPCResponse({
     "id": 1,
 })
 
-GETH_RESPONSE = RPCResponse({
+GPLATON_RESPONSE = RPCResponse({
     'jsonrpc': '2.0',
     'id': 2,
     'error': {
@@ -84,13 +84,13 @@ GANACHE_RESPONSE = RPCResponse({
     (
         (REVERT_WITH_MSG, 'execution reverted: not allowed to monitor'),
         (REVERT_WITHOUT_MSG, 'execution reverted'),
-        (GETH_RESPONSE, 'execution reverted: Function has been reverted.'),
+        (GPLATON_RESPONSE, 'execution reverted: Function has been reverted.'),
         (GANACHE_RESPONSE, 'execution reverted: VM Exception while processing transaction: revert Custom revert message'),  # noqa: 501
     ),
     ids=[
         'test-get-revert-reason-with-msg',
         'test-get-revert-reason-without-msg',
-        'test-get-geth-revert-reason',
+        'test-get-gplaton-revert-reason',
         'test_get-ganache-revert-reason',
     ])
 def test_get_revert_reason(response, expected) -> None:
@@ -103,7 +103,7 @@ def test_get_revert_reason_other_error() -> None:
 
 
 def test_get_error_formatters() -> None:
-    formatters = get_error_formatters(RPC.eth_call)
+    formatters = get_error_formatters(RPC.platon_call)
     with pytest.raises(ContractLogicError, match='not allowed to monitor'):
         formatters(REVERT_WITH_MSG)
     with pytest.raises(ContractLogicError):

@@ -1,6 +1,6 @@
 import pytest
 
-from web3.exceptions import (
+from platon.exceptions import (
     ABIEventFunctionNotFound,
     ABIFunctionNotFound,
 )
@@ -16,7 +16,7 @@ def abi():
     ('functions', 'events', 'caller')
 )
 def test_getattr(web3, abi, attribute):
-    contract = web3.eth.contract(abi=abi)
+    contract = web3.platon.contract(abi=abi)
     contract_attribute = getattr(contract, attribute)
     assert getattr(contract_attribute, "Increased")
 
@@ -29,7 +29,7 @@ def test_getattr(web3, abi, attribute):
     )
 )
 def test_getattr_raises_error(web3, abi, attribute, error):
-    contract = web3.eth.contract(abi=abi)
+    contract = web3.platon.contract(abi=abi)
     contract_attribute = getattr(contract, attribute)
 
     with pytest.raises(error):
@@ -41,7 +41,7 @@ def test_getattr_raises_error(web3, abi, attribute, error):
     ('functions', 'events', 'caller')
 )
 def test_hasattr(web3, abi, attribute):
-    contract = web3.eth.contract(abi=abi)
+    contract = web3.platon.contract(abi=abi)
     contract_attribute = getattr(contract, attribute)
 
     assert hasattr(contract_attribute, "Increased") is True

@@ -10,7 +10,7 @@ common: &common
         keys:
           - cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
     - run:
-        name: checkout ethpm-spec submodule
+        name: checkout platonpm-spec submodule
         command: git submodule update --init --recursive
     - run:
         name: install dependencies
@@ -25,7 +25,7 @@ common: &common
           - ~/.local
           - ./eggs
           - ~/.ethash
-          - ~/.py-geth
+          - ~/.py-gplaton
         key: cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
 docs_steps: &docs_steps
@@ -36,14 +36,14 @@ docs_steps: &docs_steps
         keys:
           - cache-docs-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
     - run:
-        name: checkout ethpm-spec submodule
+        name: checkout platonpm-spec submodule
         command: git submodule update --init --recursive
     - run:
         name: install dependencies
         command: pip install --user tox
     - run:
-        name: install web3
-        command: pip install -U web3
+        name: install platon
+        command: pip install -U platon
     - run:
         name: run tox
         command: ~/.local/bin/tox -r
@@ -54,7 +54,7 @@ docs_steps: &docs_steps
           - ~/.local
           - ./eggs
           - ~/.ethash
-          - ~/.py-geth
+          - ~/.py-gplaton
         key: cache-docs-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
 # parity_steps: &parity_steps
@@ -70,7 +70,7 @@ docs_steps: &docs_steps
     # - run:
         # name: install parity if needed
         # command: |
-          # pip install --user requests eth_utils tqdm eth-hash[pycryptodome]
+          # pip install --user requests platon_utils tqdm platon-hash[pycryptodome]
           # echo "Job specifies Parity version $PARITY_VERSION"
           # python tests/integration/parity/install_parity.py $PARITY_VERSION
     # - run:
@@ -91,11 +91,11 @@ docs_steps: &docs_steps
           # - ~/.local
           # - ./eggs
           # - ~/.ethash
-          # - ~/.py-geth
+          # - ~/.py-gplaton
           # - ~/.parity-bin
         # key: cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
-geth_steps: &geth_steps
+gplaton_steps: &gplaton_steps
   working_directory: ~/repo
   steps:
     - checkout
@@ -106,14 +106,14 @@ geth_steps: &geth_steps
         name: install dependencies
         command: pip install --user tox
     - run:
-        name: build geth if missing
+        name: build gplaton if missing
         command: |
           mkdir -p $HOME/.ethash
-          pip install --user py-geth>=3.2.0
+          pip install --user py-gplaton>=3.2.0
           export GOROOT=/usr/local/go
-          echo $GETH_VERSION
-          export GETH_BINARY="$HOME/.py-geth/geth-$GETH_VERSION/bin/geth"
-          if [ ! -e "$GETH_BINARY" ]; then
+          echo $GPLATON_VERSION
+          export GPLATON_BINARY="$HOME/.py-gplaton/gplaton-$GPLATON_VERSION/bin/gplaton"
+          if [ ! -e "$GPLATON_BINARY" ]; then
             curl -O https://storage.googleapis.com/golang/go1.14.2.linux-amd64.tar.gz
             tar xvf go1.14.2.linux-amd64.tar.gz
             sudo chown -R root:root ./go
@@ -121,11 +121,11 @@ geth_steps: &geth_steps
             sudo ln -s /usr/local/go/bin/go /usr/local/bin/go
             sudo apt-get update;
             sudo apt-get install -y build-essential;
-            python -m geth.install $GETH_VERSION;
+            python -m gplaton.install $GPLATON_VERSION;
           fi
-          sudo ln -s /home/circleci/.py-geth/geth-$GETH_VERSION/bin/geth /usr/local/bin/geth
-          geth version
-          geth makedag 0 $HOME/.ethash
+          sudo ln -s /home/circleci/.py-gplaton/gplaton-$GPLATON_VERSION/bin/gplaton /usr/local/bin/gplaton
+          gplaton version
+          gplaton makedag 0 $HOME/.ethash
     - run:
         name: run tox
         command: ~/.local/bin/tox -r
@@ -136,10 +136,10 @@ geth_steps: &geth_steps
           - ~/.local
           - ./eggs
           - ~/.ethash
-          - ~/.py-geth
+          - ~/.py-gplaton
         key: cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
-geth_custom_steps: &geth_custom_steps
+gplaton_custom_steps: &gplaton_custom_steps
   working_directory: ~/repo
   steps:
     - checkout
@@ -150,13 +150,13 @@ geth_custom_steps: &geth_custom_steps
         name: install dependencies
         command: pip install --user tox
     - run:
-        name: use a pre-built geth binary
+        name: use a pre-built gplaton binary
         command: |
           mkdir -p $HOME/.ethash
           export GOROOT=/usr/local/go
-          echo $GETH_VERSION
-          export GETH_BINARY="./custom_geth"
-          echo 'export GETH_BINARY="./custom_geth"' >> $BASH_ENV
+          echo $GPLATON_VERSION
+          export GPLATON_BINARY="./custom_gplaton"
+          echo 'export GPLATON_BINARY="./custom_gplaton"' >> $BASH_ENV
           curl -O https://storage.googleapis.com/golang/go1.14.2.linux-amd64.tar.gz
           tar xvf go1.14.2.linux-amd64.tar.gz
           sudo chown -R root:root ./go
@@ -164,8 +164,8 @@ geth_custom_steps: &geth_custom_steps
           sudo ln -s /usr/local/go/bin/go /usr/local/bin/go
           sudo apt-get update;
           sudo apt-get install -y build-essential;
-          ./custom_geth version
-          ./custom_geth makedag 0 $HOME/.ethash
+          ./custom_gplaton version
+          ./custom_gplaton makedag 0 $HOME/.ethash
     - run:
         name: run tox
         command: ~/.local/bin/tox -r
@@ -178,13 +178,13 @@ geth_custom_steps: &geth_custom_steps
           - ~/.ethash
         key: cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
-ethpm_steps: &ethpm_steps
+platonpm_steps: &platonpm_steps
   working_directory: ~/repo
   steps:
     - checkout
     - restore_cache:
         keys:
-          - ethpm-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+          - platonpm-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
     - run:
         name: install ipfs
         command:
@@ -197,7 +197,7 @@ ethpm_steps: &ethpm_steps
         command: ipfs daemon
         background: true
     - run:
-        name: checkout ethpm-spec submodule
+        name: checkout platonpm-spec submodule
         command: git submodule update --init --recursive
     - run:
         name: install dependencies
@@ -210,7 +210,7 @@ ethpm_steps: &ethpm_steps
           - .tox
           - ~/.cache/pip
           - ~/.local
-        key: ethpm-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
+        key: platonpm-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
 orbs:
   win: circleci/windows@2.2.0
@@ -226,7 +226,7 @@ windows_steps: &windows_steps
         keys:
           - windows-cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
     - run:
-        name: checkout ethpm-spec submodule
+        name: checkout platonpm-spec submodule
         command: git submodule update --init --recursive
     - run:
         name: install dependencies
@@ -272,38 +272,38 @@ jobs:
     environment:
       TOXENV: py36-ens
 
-  py36-ethpm:
-    <<: *ethpm_steps
+  py36-platonpm:
+    <<: *platonpm_steps
     docker:
       - image: circleci/python:3.6
     environment:
-      TOXENV: py36-ethpm
+      TOXENV: py36-platonpm
       # Please don't use this key for any shenanigans
       WEB3_INFURA_PROJECT_ID: 7707850c2fb7465ebe6f150d67182e22
 
-  py36-integration-goethereum-ipc:
-    <<: *geth_steps
+  py36-integration-platon-ipc:
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.6
     environment:
-      TOXENV: py36-integration-goethereum-ipc
-      GETH_VERSION: v1.10.4
+      TOXENV: py36-integration-platon-ipc
+      GPLATON_VERSION: v1.10.4
 
-  py36-integration-goethereum-http:
-    <<: *geth_steps
+  py36-integration-platon-http:
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.6
     environment:
-      TOXENV: py36-integration-goethereum-http
-      GETH_VERSION: v1.10.4
+      TOXENV: py36-integration-platon-http
+      GPLATON_VERSION: v1.10.4
 
-  py36-integration-goethereum-ws:
-    <<: *geth_steps
+  py36-integration-platon-ws:
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.6
     environment:
-      TOXENV: py36-integration-goethereum-ws
-      GETH_VERSION: v1.10.4
+      TOXENV: py36-integration-platon-ws
+      GPLATON_VERSION: v1.10.4
 
   # py36-integration-parity-ipc:
     # <<: *parity_steps
@@ -338,7 +338,7 @@ jobs:
       - image: circleci/python:3.6
     environment:
       TOXENV: py36-integration-ethtester
-      ETHEREUM_TESTER_CHAIN_BACKEND: eth_tester.backends.PyEVMBackend
+      ETHEREUM_TESTER_CHAIN_BACKEND: platon_tester.backends.PyEVMBackend
 
   py36-wheel-cli:
     <<: *common
@@ -364,38 +364,38 @@ jobs:
     environment:
       TOXENV: py37-ens
 
-  py37-ethpm:
-    <<: *ethpm_steps
+  py37-platonpm:
+    <<: *platonpm_steps
     docker:
       - image: circleci/python:3.7
     environment:
-      TOXENV: py37-ethpm
+      TOXENV: py37-platonpm
       # Please don't use this key for any shenanigans
       WEB3_INFURA_PROJECT_ID: 7707850c2fb7465ebe6f150d67182e22
 
-  py37-integration-goethereum-ipc:
-    <<: *geth_steps
+  py37-integration-platon-ipc:
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.7
     environment:
-      TOXENV: py37-integration-goethereum-ipc
-      GETH_VERSION: v1.10.4
+      TOXENV: py37-integration-platon-ipc
+      GPLATON_VERSION: v1.10.4
 
-  py37-integration-goethereum-http:
-    <<: *geth_steps
+  py37-integration-platon-http:
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.7
     environment:
-      TOXENV: py37-integration-goethereum-http
-      GETH_VERSION: v1.10.4
+      TOXENV: py37-integration-platon-http
+      GPLATON_VERSION: v1.10.4
 
-  py37-integration-goethereum-ws:
-    <<: *geth_steps
+  py37-integration-platon-ws:
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.7
     environment:
-      TOXENV: py37-integration-goethereum-ws
-      GETH_VERSION: v1.10.4
+      TOXENV: py37-integration-platon-ws
+      GPLATON_VERSION: v1.10.4
 
   # py37-integration-parity-ipc:
     # <<: *parity_steps
@@ -430,7 +430,7 @@ jobs:
       - image: circleci/python:3.7
     environment:
       TOXENV: py37-integration-ethtester
-      ETHEREUM_TESTER_CHAIN_BACKEND: eth_tester.backends.PyEVMBackend
+      ETHEREUM_TESTER_CHAIN_BACKEND: platon_tester.backends.PyEVMBackend
 
   py37-wheel-cli:
     <<: *common
@@ -461,38 +461,38 @@ jobs:
     environment:
       TOXENV: py38-ens
 
-  py38-ethpm:
-    <<: *ethpm_steps
+  py38-platonpm:
+    <<: *platonpm_steps
     docker:
       - image: circleci/python:3.8
     environment:
-      TOXENV: py38-ethpm
+      TOXENV: py38-platonpm
       # Please don't use this key for any shenanigans
       WEB3_INFURA_PROJECT_ID: 7707850c2fb7465ebe6f150d67182e22
 
-  py38-integration-goethereum-ipc:
-    <<: *geth_steps
+  py38-integration-platon-ipc:
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.8
     environment:
-      TOXENV: py38-integration-goethereum-ipc
-      GETH_VERSION: v1.10.4
+      TOXENV: py38-integration-platon-ipc
+      GPLATON_VERSION: v1.10.4
 
-  py38-integration-goethereum-http:
-    <<: *geth_steps
+  py38-integration-platon-http:
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.8
     environment:
-      TOXENV: py38-integration-goethereum-http
-      GETH_VERSION: v1.10.4
+      TOXENV: py38-integration-platon-http
+      GPLATON_VERSION: v1.10.4
 
-  py38-integration-goethereum-ws:
-    <<: *geth_steps
+  py38-integration-platon-ws:
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.8
     environment:
-      TOXENV: py38-integration-goethereum-ws
-      GETH_VERSION: v1.10.4
+      TOXENV: py38-integration-platon-ws
+      GPLATON_VERSION: v1.10.4
 
   # py38-integration-parity-ipc:
     # <<: *parity_steps
@@ -527,7 +527,7 @@ jobs:
       - image: circleci/python:3.8
     environment:
       TOXENV: py38-integration-ethtester
-      ETHEREUM_TESTER_CHAIN_BACKEND: eth_tester.backends.PyEVMBackend
+      ETHEREUM_TESTER_CHAIN_BACKEND: platon_tester.backends.PyEVMBackend
 
   py38-wheel-cli:
     <<: *common
@@ -553,38 +553,38 @@ jobs:
     environment:
       TOXENV: py39-ens
 
-  py39-ethpm:
-    <<: *ethpm_steps
+  py39-platonpm:
+    <<: *platonpm_steps
     docker:
       - image: circleci/python:3.9
     environment:
-      TOXENV: py39-ethpm
+      TOXENV: py39-platonpm
       # Please don't use this key for any shenanigans
       WEB3_INFURA_PROJECT_ID: 7707850c2fb7465ebe6f150d67182e22
 
-  py39-integration-goethereum-ipc:
-    <<: *geth_steps
+  py39-integration-platon-ipc:
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.9
     environment:
-      TOXENV: py39-integration-goethereum-ipc
-      GETH_VERSION: v1.10.4
+      TOXENV: py39-integration-platon-ipc
+      GPLATON_VERSION: v1.10.4
 
-  py39-integration-goethereum-http:
-    <<: *geth_steps
+  py39-integration-platon-http:
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.9
     environment:
-      TOXENV: py39-integration-goethereum-http
-      GETH_VERSION: v1.10.4
+      TOXENV: py39-integration-platon-http
+      GPLATON_VERSION: v1.10.4
 
-  py39-integration-goethereum-ws:
-    <<: *geth_steps
+  py39-integration-platon-ws:
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.9
     environment:
-      TOXENV: py39-integration-goethereum-ws
-      GETH_VERSION: v1.10.4
+      TOXENV: py39-integration-platon-ws
+      GPLATON_VERSION: v1.10.4
 
   # py39-integration-parity-ipc:
   #   <<: *parity_steps
@@ -619,7 +619,7 @@ jobs:
       - image: circleci/python:3.9
     environment:
       TOXENV: py39-integration-ethtester
-      ETHEREUM_TESTER_CHAIN_BACKEND: eth_tester.backends.PyEVMBackend
+      ETHEREUM_TESTER_CHAIN_BACKEND: platon_tester.backends.PyEVMBackend
 
   py39-wheel-cli:
     <<: *common
@@ -629,12 +629,12 @@ jobs:
           TOXENV: py39-wheel-cli
 
   benchmark:
-    <<: *geth_steps
+    <<: *gplaton_steps
     docker:
       - image: circleci/python:3.9
     environment:
       TOXENV: benchmark
-      GETH_VERSION: v1.10.4
+      GPLATON_VERSION: v1.10.4
 
 workflows:
   version: 2.1
@@ -649,20 +649,20 @@ workflows:
       - docs
       - benchmark
       - py36-ens
-      - py36-ethpm
-      - py36-integration-goethereum-ipc
-      - py36-integration-goethereum-http
-      - py36-integration-goethereum-ws
+      - py36-platonpm
+      - py36-integration-platon-ipc
+      - py36-integration-platon-http
+      - py36-integration-platon-ws
       # - py36-integration-parity-ipc
       # - py36-integration-parity-http
       # - py36-integration-parity-ws
       - py36-integration-ethtester-pyevm
       - py36-wheel-cli
       - py37-ens
-      - py37-ethpm
-      - py37-integration-goethereum-ipc
-      - py37-integration-goethereum-http
-      - py37-integration-goethereum-ws
+      - py37-platonpm
+      - py37-integration-platon-ipc
+      - py37-integration-platon-http
+      - py37-integration-platon-ws
       # - py37-integration-parity-ipc
       # - py37-integration-parity-http
       # - py37-integration-parity-ws
@@ -670,20 +670,20 @@ workflows:
       - py37-wheel-cli
       - py37-wheel-cli-windows
       - py38-ens
-      - py38-ethpm
-      - py38-integration-goethereum-ipc
-      - py38-integration-goethereum-http
-      - py38-integration-goethereum-ws
+      - py38-platonpm
+      - py38-integration-platon-ipc
+      - py38-integration-platon-http
+      - py38-integration-platon-ws
       # - py38-integration-parity-ipc
       # - py38-integration-parity-http
       # - py38-integration-parity-ws
       - py38-integration-ethtester-pyevm
       - py38-wheel-cli
       - py39-ens
-      - py39-ethpm
-      - py39-integration-goethereum-ipc
-      - py39-integration-goethereum-http
-      - py39-integration-goethereum-ws
+      - py39-platonpm
+      - py39-integration-platon-ipc
+      - py39-integration-platon-http
+      - py39-integration-platon-ws
       # - py39-integration-parity-ipc
       # - py39-integration-parity-http
       # - py39-integration-parity-ws

@@ -1,21 +1,21 @@
 import pytest
 
-from eth_utils import (
+from platon_utils import (
     is_address,
-    to_checksum_address,
+    to_bech32_address,
 )
 
-from ethpm import (
+from platonpm import (
     Package,
 )
-from ethpm.contract import (
+from platonpm.contract import (
     LinkableContract,
 )
-from web3 import Web3
-from web3.exceptions import (
+from platon import Web3
+from platon.exceptions import (
     PMError,
 )
-from web3.pm import (
+from platon.pm import (
     SimpleRegistry,
     get_simple_registry_manifest,
 )
@@ -23,9 +23,9 @@ from web3.pm import (
 
 @pytest.fixture
 def fresh_w3():
-    w3 = Web3(Web3.EthereumTesterProvider())
-    w3.eth.default_account = w3.eth.accounts[0]
-    w3.eth.defaultContractFactory = LinkableContract
+    w3 = Web3(Web3.PlatonTesterProvider())
+    w3.platon.default_account = w3.platon.accounts[0]
+    w3.platon.defaultContractFactory = LinkableContract
     w3.enable_unstable_package_management_api()
     return w3
 
@@ -46,7 +46,7 @@ def test_pm_deploy_and_set_registry(fresh_w3):
 
 def test_pm_set_registry(empty_sol_registry, fresh_w3):
     assert not hasattr(fresh_w3.pm, "registry")
-    fresh_w3.pm.set_registry(address=to_checksum_address(empty_sol_registry.address))
+    fresh_w3.pm.set_registry(address=to_bech32_address(empty_sol_registry.address))
     assert isinstance(fresh_w3.pm.registry, SimpleRegistry)
     assert is_address(fresh_w3.pm.registry.address)
 
@@ -167,7 +167,7 @@ def test_pm_get_package(loaded_sol_registry, w3, monkeypatch):
     registry, _, _ = loaded_sol_registry
     w3.pm.registry = registry
     monkeypatch.setenv(
-        "ETHPM_IPFS_BACKEND_CLASS", "ethpm.backends.ipfs.DummyIPFSBackend"
+        "ETHPM_IPFS_BACKEND_CLASS", "platonpm.backends.ipfs.DummyIPFSBackend"
     )
     w3.pm.deploy_and_set_registry()
     w3.pm.release_package(

@@ -4,7 +4,7 @@ from websockets.exceptions import (
     ConnectionClosed,
 )
 
-from web3 import Web3
+from platon import Web3
 
 
 class MiscWebsocketTest:
@@ -14,4 +14,4 @@ class MiscWebsocketTest:
             endpoint_uri=endpoint_uri, websocket_kwargs={'max_size': 1})
         )
         with pytest.raises((OSError, ConnectionClosed)):
-            w3.eth.get_block(0)
+            w3.platon.get_block(0)

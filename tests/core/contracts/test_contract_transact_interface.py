@@ -2,17 +2,17 @@
 
 import pytest
 
-from eth_utils import (
+from platon_utils import (
     to_bytes,
 )
-from eth_utils.toolz import (
+from platon_utils.toolz import (
     identity,
 )
 
-from web3._utils.empty import (
+from platon._utils.empty import (
     empty,
 )
-from web3.exceptions import (
+from platon.exceptions import (
     ValidationError,
 )
 
@@ -20,12 +20,12 @@ from web3.exceptions import (
 def deploy(web3, Contract, apply_func=identity, args=None):
     args = args or []
     deploy_txn = Contract.constructor(*args).transact()
-    deploy_receipt = web3.eth.wait_for_transaction_receipt(deploy_txn)
+    deploy_receipt = web3.platon.wait_for_transaction_receipt(deploy_txn)
     assert deploy_receipt is not None
     address = apply_func(deploy_receipt['contractAddress'])
     contract = Contract(address=address)
     assert contract.address == address
-    assert len(web3.eth.get_code(contract.address)) > 0
+    assert len(web3.platon.get_code(contract.address)) > 0
     return contract
 
 
@@ -71,7 +71,7 @@ def test_transacting_with_contract_no_arguments(web3, math_contract, transact, c
 
     txn_hash = transact(contract=math_contract,
                         contract_function='increment')
-    txn_receipt = web3.eth.wait_for_transaction_receipt(txn_hash)
+    txn_receipt = web3.platon.wait_for_transaction_receipt(txn_hash)
     assert txn_receipt is not None
 
     final_value = call(contract=math_contract,
@@ -91,7 +91,7 @@ def test_transact_not_sending_ether_to_nonpayable_function(
     assert initial_value is False
     txn_hash = transact(contract=payable_tester_contract,
                         contract_function='doNoValueCall')
-    txn_receipt = web3.eth.wait_for_transaction_receipt(txn_hash)
+    txn_receipt = web3.platon.wait_for_transaction_receipt(txn_hash)
     assert txn_receipt is not None
 
     final_value = call(contract=payable_tester_contract,
@@ -113,7 +113,7 @@ def test_transact_sending_ether_to_nonpayable_function(
         txn_hash = transact(contract=payable_tester_contract,
                             contract_function='doNoValueCall',
                             tx_params={'value': 1})
-        txn_receipt = web3.eth.wait_for_transaction_receipt(txn_hash)
+        txn_receipt = web3.platon.wait_for_transaction_receipt(txn_hash)
         assert txn_receipt is not None
 
     final_value = call(contract=payable_tester_contract,
@@ -143,7 +143,7 @@ def test_transacting_with_contract_with_arguments(web3,
                         func_args=transact_args,
                         func_kwargs=transact_kwargs)
 
-    txn_receipt = web3.eth.wait_for_transaction_receipt(txn_hash)
+    txn_receipt = web3.platon.wait_for_transaction_receipt(txn_hash)
     assert txn_receipt is not None
 
     final_value = call(contract=math_contract,
@@ -155,38 +155,38 @@ def test_transacting_with_contract_with_arguments(web3,
 def test_deploy_when_default_account_is_set(web3,
                                             wait_for_transaction,
                                             STRING_CONTRACT):
-    web3.eth.default_account = web3.eth.accounts[1]
-    assert web3.eth.default_account is not empty
+    web3.platon.default_account = web3.platon.accounts[1]
+    assert web3.platon.default_account is not empty
 
-    StringContract = web3.eth.contract(**STRING_CONTRACT)
+    StringContract = web3.platon.contract(**STRING_CONTRACT)
 
     deploy_txn = StringContract.constructor("Caqalai").transact()
-    web3.eth.wait_for_transaction_receipt(deploy_txn)
-    txn_after = web3.eth.get_transaction(deploy_txn)
-    assert txn_after['from'] == web3.eth.default_account
+    web3.platon.wait_for_transaction_receipt(deploy_txn)
+    txn_after = web3.platon.get_transaction(deploy_txn)
+    assert txn_after['from'] == web3.platon.default_account
 
 
 def test_transact_when_default_account_is_set(web3,
                                               wait_for_transaction,
                                               math_contract,
                                               transact):
-    web3.eth.default_account = web3.eth.accounts[1]
-    assert web3.eth.default_account is not empty
+    web3.platon.default_account = web3.platon.accounts[1]
+    assert web3.platon.default_account is not empty
 
     txn_hash = transact(contract=math_contract,
                         contract_function='increment')
     wait_for_transaction(web3, txn_hash)
-    txn_after = web3.eth.get_transaction(txn_hash)
-    assert txn_after['from'] == web3.eth.default_account
+    txn_after = web3.platon.get_transaction(txn_hash)
+    assert txn_after['from'] == web3.platon.default_account
 
 
 def test_transacting_with_contract_with_string_argument(web3, string_contract, transact, call):
-    # eth_abi will pass as raw bytes, no encoding
+    # platon_abi will pass as raw bytes, no encoding
     # unless we encode ourselves
     txn_hash = transact(contract=string_contract,
                         contract_function='setValue',
                         func_args=["ÄLÄMÖLÖ".encode('utf8')])
-    txn_receipt = web3.eth.wait_for_transaction_receipt(txn_hash)
+    txn_receipt = web3.platon.wait_for_transaction_receipt(txn_hash)
     assert txn_receipt is not None
 
     final_value = call(contract=string_contract,
@@ -208,7 +208,7 @@ def test_transacting_with_contract_with_bytes32_array_argument(web3,
     txn_hash = transact(contract=arrays_contract,
                         contract_function="setBytes32Value",
                         func_args=[new_bytes32_array])
-    txn_receipt = web3.eth.wait_for_transaction_receipt(txn_hash)
+    txn_receipt = web3.platon.wait_for_transaction_receipt(txn_hash)
     assert txn_receipt is not None
 
     final_value = call(contract=arrays_contract,
@@ -221,7 +221,7 @@ def test_transacting_with_contract_with_byte_array_argument(web3, arrays_contrac
     txn_hash = transact(contract=arrays_contract,
                         contract_function='setByteValue',
                         func_args=[new_byte_array])
-    txn_receipt = web3.eth.wait_for_transaction_receipt(txn_hash)
+    txn_receipt = web3.platon.wait_for_transaction_receipt(txn_hash)
     assert txn_receipt is not None
 
     final_value = call(contract=arrays_contract,
@@ -239,27 +239,27 @@ def test_transacting_with_contract_respects_explicit_gas(web3,
 
     wait_for_block(web3)
 
-    StringContract = web3.eth.contract(**STRING_CONTRACT)
+    StringContract = web3.platon.contract(**STRING_CONTRACT)
 
     deploy_txn = StringContract.constructor("Caqalai").transact()
-    deploy_receipt = web3.eth.wait_for_transaction_receipt(deploy_txn, 30)
+    deploy_receipt = web3.platon.wait_for_transaction_receipt(deploy_txn, 30)
     assert deploy_receipt is not None
     string_contract = StringContract(address=deploy_receipt['contractAddress'])
 
-    # eth_abi will pass as raw bytes, no encoding
+    # platon_abi will pass as raw bytes, no encoding
     # unless we encode ourselves
     txn_hash = transact(contract=string_contract,
                         contract_function='setValue',
                         func_args=[to_bytes(text="ÄLÄMÖLÖ")],
                         tx_kwargs={'gas': 200000})
-    txn_receipt = web3.eth.wait_for_transaction_receipt(txn_hash, 30)
+    txn_receipt = web3.platon.wait_for_transaction_receipt(txn_hash, 30)
     assert txn_receipt is not None
 
     final_value = call(contract=string_contract,
                        contract_function='getValue')
     assert to_bytes(text=final_value) == to_bytes(text="ÄLÄMÖLÖ")
 
-    txn = web3.eth.get_transaction(txn_hash)
+    txn = web3.platon.get_transaction(txn_hash)
     assert txn['gas'] == 200000
 
 
@@ -273,28 +273,28 @@ def test_auto_gas_computation_when_transacting(web3,
 
     wait_for_block(web3)
 
-    StringContract = web3.eth.contract(**STRING_CONTRACT)
+    StringContract = web3.platon.contract(**STRING_CONTRACT)
 
     deploy_txn = StringContract.constructor("Caqalai").transact()
-    deploy_receipt = web3.eth.wait_for_transaction_receipt(deploy_txn, 30)
+    deploy_receipt = web3.platon.wait_for_transaction_receipt(deploy_txn, 30)
     assert deploy_receipt is not None
     string_contract = StringContract(address=deploy_receipt['contractAddress'])
 
     gas_estimate = string_contract.functions.setValue(to_bytes(text="ÄLÄMÖLÖ")).estimateGas()
 
-    # eth_abi will pass as raw bytes, no encoding
+    # platon_abi will pass as raw bytes, no encoding
     # unless we encode ourselves
     txn_hash = transact(contract=string_contract,
                         contract_function="setValue",
                         func_args=[to_bytes(text="ÄLÄMÖLÖ")])
-    txn_receipt = web3.eth.wait_for_transaction_receipt(txn_hash, 30)
+    txn_receipt = web3.platon.wait_for_transaction_receipt(txn_hash, 30)
     assert txn_receipt is not None
 
     final_value = call(contract=string_contract,
                        contract_function='getValue')
     assert to_bytes(text=final_value) == to_bytes(text="ÄLÄMÖLÖ")
 
-    txn = web3.eth.get_transaction(txn_hash)
+    txn = web3.platon.get_transaction(txn_hash)
     assert txn['gas'] == gas_estimate + 100000
 
 
@@ -302,7 +302,7 @@ def test_fallback_transacting_with_contract(web3, fallback_function_contract, ca
     initial_value = call(contract=fallback_function_contract,
                          contract_function='getData')
     txn_hash = fallback_function_contract.fallback.transact()
-    txn_receipt = web3.eth.wait_for_transaction_receipt(txn_hash)
+    txn_receipt = web3.platon.wait_for_transaction_receipt(txn_hash)
     assert txn_receipt is not None
 
     final_value = call(contract=fallback_function_contract,

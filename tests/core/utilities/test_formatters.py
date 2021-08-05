@@ -1,11 +1,11 @@
 
 import pytest
 
-from eth_utils.curried import (
+from platon_utils.curried import (
     apply_formatters_to_dict,
 )
 
-from web3._utils.formatters import (
+from platon._utils.formatters import (
     map_collection,
     recursive_map,
 )

@@ -1,4 +1,4 @@
-from web3.gas_strategies.rpc import (
+from platon.gas_strategies.rpc import (
     rpc_gas_price_strategy,
 )
 

@@ -26,7 +26,7 @@ library_dirs=/usr/local/lib
 ```
 sudo pkg install python3 py36-virtualenv git leveldb libxml2 libxslt pkgconf gmake secp256k1
 
-# hack around https://github.com/ethereum/ethash/pull/107#issuecomment-445072692
+# hack around https://github.com/platonnetwork/ethash/pull/107#issuecomment-445072692
 sudo touch /usr/local/include/alloca.h
 
 mkdir -p /tmp/venv_python
@@ -36,7 +36,7 @@ source /tmp/venv_python/python3/bin/activate.csh
 pip install coincurve
 
 cd /tmp
-git clone https://github.com/ethereum/web3.py.git
+git clone https://github.com/platonnetwork/web3.py.git
 cd web3.py
 
 # assuming you're using tcsh
@@ -47,14 +47,14 @@ pip install -e .\[dev\]
 
 #### Prerequisites for integration tests:
 
-##### geth (https://github.com/ethereum/go-ethereum/wiki/Installation-Instructions-for-FreeBSD)
+##### gplaton (https://github.com/platonnetwork/platon-go/wiki/Installation-Instructions-for-FreeBSD)
 ```
 pkg install go
 cd /tmp
-git clone https://github.com/ethereum/go-ethereum
-cd go-ethereum
-make geth
-cp build/bin/geth /usr/local/bin/
+git clone https://github.com/platonnetwork/platon-go
+cd PlatON-Go
+make gplaton
+cp build/bin/gplaton /usr/local/bin/
 ```
 
 ##### parity (https://github.com/paukstis/freebsd_parity/blob/v1.6/README.md)

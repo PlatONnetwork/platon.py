@@ -1,9 +1,9 @@
 import time
 
-from web3._utils.decorators import (
+from platon._utils.decorators import (
     reject_recursive_repeats,
 )
-from web3._utils.threads import (
+from platon._utils.threads import (
     spawn,
 )
 

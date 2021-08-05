@@ -1,8 +1,8 @@
-from eth_utils import (
+from platon_utils import (
     is_address,
 )
 
-from web3.pm import (
+from platon.pm import (
     ERC1319Registry,
     SimpleRegistry,
 )

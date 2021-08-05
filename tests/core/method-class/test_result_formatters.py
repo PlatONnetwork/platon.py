@@ -1,20 +1,20 @@
 import pytest
 
-from eth_utils.toolz import (
+from platon_utils.toolz import (
     compose,
 )
 
-from web3 import Web3
-from web3.method import (
+from platon import Web3
+from platon.method import (
     Method,
 )
-from web3.middleware.fixture import (
+from platon.middleware.fixture import (
     construct_result_generator_middleware,
 )
-from web3.module import (
+from platon.module import (
     Module,
 )
-from web3.providers import (
+from platon.providers import (
     BaseProvider,
 )
 

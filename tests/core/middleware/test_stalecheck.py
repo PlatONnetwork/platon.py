@@ -5,13 +5,13 @@ from unittest.mock import (
     patch,
 )
 
-from web3.datastructures import (
+from platon.datastructures import (
     AttributeDict,
 )
-from web3.middleware import (
+from platon.middleware import (
     make_stalecheck_middleware,
 )
-from web3.middleware.stalecheck import (
+from platon.middleware.stalecheck import (
     StaleBlockchain,
     _isfresh,
 )
@@ -64,15 +64,15 @@ def test_is_fresh(now):
 
 
 def test_stalecheck_pass(request_middleware):
-    with patch('web3.middleware.stalecheck._isfresh', return_value=True):
+    with patch('platon.middleware.stalecheck._isfresh', return_value=True):
         method, params = object(), object()
         request_middleware(method, params)
         request_middleware.make_request.assert_called_once_with(method, params)
 
 
 def test_stalecheck_fail(request_middleware, now):
-    with patch('web3.middleware.stalecheck._isfresh', return_value=False):
-        request_middleware.web3.eth.get_block.return_value = stub_block(now)
+    with patch('platon.middleware.stalecheck._isfresh', return_value=False):
+        request_middleware.web3.platon.get_block.return_value = stub_block(now)
         with pytest.raises(StaleBlockchain):
             request_middleware('', [])
 
@@ -80,20 +80,20 @@ def test_stalecheck_fail(request_middleware, now):
 @pytest.mark.parametrize(
     'rpc_method',
     [
-        'eth_getBlockByNumber',
+        'platon_getBlockByNumber',
     ]
 )
 def test_stalecheck_ignores_get_by_block_methods(request_middleware, rpc_method):
     # This is especially critical for get_block('latest') which would cause infinite recursion
-    with patch('web3.middleware.stalecheck._isfresh', side_effect=[False, True]):
+    with patch('platon.middleware.stalecheck._isfresh', side_effect=[False, True]):
         request_middleware(rpc_method, [])
-        assert not request_middleware.web3.eth.get_block.called
+        assert not request_middleware.web3.platon.get_block.called
 
 
 def test_stalecheck_calls_isfresh_with_empty_cache(request_middleware, allowable_delay):
-    with patch('web3.middleware.stalecheck._isfresh', side_effect=[False, True]) as freshspy:
+    with patch('platon.middleware.stalecheck._isfresh', side_effect=[False, True]) as freshspy:
         block = object()
-        request_middleware.web3.eth.get_block.return_value = block
+        request_middleware.web3.platon.get_block.return_value = block
         request_middleware('', [])
         cache_call, live_call = freshspy.call_args_list
         assert cache_call[0] == (None, allowable_delay)
@@ -101,9 +101,9 @@ def test_stalecheck_calls_isfresh_with_empty_cache(request_middleware, allowable
 
 
 def test_stalecheck_adds_block_to_cache(request_middleware, allowable_delay):
-    with patch('web3.middleware.stalecheck._isfresh', side_effect=[False, True, True]) as freshspy:
+    with patch('platon.middleware.stalecheck._isfresh', side_effect=[False, True, True]) as freshspy:
         block = object()
-        request_middleware.web3.eth.get_block.return_value = block
+        request_middleware.web3.platon.get_block.return_value = block
 
         # cache miss
         request_middleware('', [])

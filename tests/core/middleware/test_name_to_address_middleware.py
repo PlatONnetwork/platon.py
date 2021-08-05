@@ -1,18 +1,18 @@
 import pytest
 
-from web3 import Web3
-from web3.exceptions import (
+from platon import Web3
+from platon.exceptions import (
     InvalidAddress,
 )
-from web3.middleware import (  # noqa: F401
+from platon.middleware import (  # noqa: F401
     construct_fixture_middleware,
     name_to_address_middleware,
 )
-from web3.providers.base import (
+from platon.providers.base import (
     BaseProvider,
 )
 
-NAME = "dump.eth"
+NAME = "dump.platon"
 ADDRESS = "0x0000000000000000000000000000000000000000"
 BALANCE = 0
 
@@ -38,11 +38,11 @@ def test_pass_name_resolver(w3):
         'net_version': '1',
     })
     return_balance = construct_fixture_middleware({
-        'eth_getBalance': BALANCE
+        'platon_getBalance': BALANCE
     })
     w3.middleware_onion.inject(return_chain_on_mainnet, layer=0)
     w3.middleware_onion.inject(return_balance, layer=0)
-    assert w3.eth.get_balance(NAME) == BALANCE
+    assert w3.platon.get_balance(NAME) == BALANCE
 
 
 def test_fail_name_resolver(w3):
@@ -50,5 +50,5 @@ def test_fail_name_resolver(w3):
         'net_version': '2',
     })
     w3.middleware_onion.inject(return_chain_on_mainnet, layer=0)
-    with pytest.raises(InvalidAddress, match=r'.*ethereum\.eth.*'):
-        w3.eth.get_balance("ethereum.eth")
+    with pytest.raises(InvalidAddress, match=r'.*platon\.platon.*'):
+        w3.platon.get_balance("platon.platon")

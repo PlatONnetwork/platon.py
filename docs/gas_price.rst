@@ -8,7 +8,7 @@ Gas Price API
     introduced ``maxFeePerGas`` and ``maxPriorityFeePerGas`` transaction parameters
     which should be used over ``gasPrice`` whenever possible.
 
-For Ethereum (legacy) transactions, gas price is a delicate property. For this reason,
+For Platon (legacy) transactions, gas price is a delicate property. For this reason,
 Web3 includes an API for configuring it.
 
 The Gas Price API allows you to define Web3's behaviour for populating the gas price.
@@ -19,11 +19,11 @@ Retrieving gas price
 --------------------
 
 To retrieve the gas price using the selected strategy simply call
-:meth:`~web3.eth.Eth.generate_gas_price`
+:meth:`~web3.platon.Platon.generate_gas_price`
 
 .. code-block:: python
 
-    >>> web3.eth.generate_gas_price()
+    >>> web3.platon.generate_gas_price()
     20000000000
 
 Creating a gas price strategy
@@ -45,7 +45,7 @@ returns a higher gas price when the value of the transaction is higher than
 
 .. code-block:: python
 
-    from web3 import Web3
+    from platon import Web3
 
     def value_based_gas_price_strategy(web3, transaction_params):
         if transaction_params['value'] > Web3.toWei(1, 'ether'):
@@ -56,17 +56,17 @@ returns a higher gas price when the value of the transaction is higher than
 Selecting the gas price strategy
 --------------------------------
 
-The gas price strategy can be set by calling :meth:`~web3.eth.Eth.set_gas_price_strategy`.
+The gas price strategy can be set by calling :meth:`~web3.platon.Platon.set_gas_price_strategy`.
 
 .. code-block:: python
 
-    from web3 import Web3
+    from platon import Web3
 
     def value_based_gas_price_strategy(web3, transaction_params):
         ...
 
     w3 = Web3(...)
-    w3.eth.set_gas_price_strategy(value_based_gas_price_strategy)
+    w3.platon.set_gas_price_strategy(value_based_gas_price_strategy)
 
 Available gas price strategies
 ------------------------------
@@ -75,9 +75,9 @@ Available gas price strategies
 
 .. py:method:: rpc_gas_price_strategy(web3, transaction_params=None)
 
-    Makes a call to the `JSON-RPC eth_gasPrice
-    method <https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gasprice>`_ which returns
-    the gas price configured by the connected Ethereum node.
+    Makes a call to the `JSON-RPC platon_gasPrice
+    method <https://github.com/platonnetwork/wiki/wiki/JSON-RPC#platon_gasprice>`_ which returns
+    the gas price configured by the connected Platon node.
 
 .. py:module:: web3.gas_strategies.time_based
 
@@ -110,11 +110,11 @@ Available gas price strategies
 
     .. code-block:: python
 
-        from web3 import Web3, middleware
-        from web3.gas_strategies.time_based import medium_gas_price_strategy
+        from platon import Web3, middleware
+        from platon.gas_strategies.time_based import medium_gas_price_strategy
 
         w3 = Web3()
-        w3.eth.set_gas_price_strategy(medium_gas_price_strategy)
+        w3.platon.set_gas_price_strategy(medium_gas_price_strategy)
 
         w3.middleware_onion.add(middleware.time_based_cache_middleware)
         w3.middleware_onion.add(middleware.latest_block_based_cache_middleware)

@@ -1,7 +1,7 @@
-from web3.manager import (
+from platon.manager import (
     RequestManager,
 )
-from web3.providers import (
+from platon.providers import (
     BaseProvider,
 )
 

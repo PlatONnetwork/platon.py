@@ -1,27 +1,27 @@
 import pytest
 
-from eth_utils import (
+from platon_utils import (
     is_same_address,
 )
 
-from web3._utils.events import (
+from platon._utils.events import (
     get_event_data,
 )
 
 
 @pytest.fixture()
 def Emitter(web3, EMITTER):
-    return web3.eth.contract(**EMITTER)
+    return web3.platon.contract(**EMITTER)
 
 
 @pytest.fixture()
 def emitter(web3, Emitter, wait_for_transaction, wait_for_block, address_conversion_func):
     wait_for_block(web3)
-    deploy_txn_hash = Emitter.constructor().transact({'from': web3.eth.coinbase, 'gas': 1000000})
-    deploy_receipt = web3.eth.wait_for_transaction_receipt(deploy_txn_hash)
+    deploy_txn_hash = Emitter.constructor().transact({'from': web3.platon.coinbase, 'gas': 1000000})
+    deploy_receipt = web3.platon.wait_for_transaction_receipt(deploy_txn_hash)
     contract_address = address_conversion_func(deploy_receipt['contractAddress'])
 
-    bytecode = web3.eth.get_code(contract_address)
+    bytecode = web3.platon.get_code(contract_address)
     assert bytecode == Emitter.bytecode_runtime
     _emitter = Emitter(address=contract_address)
     assert _emitter.address == contract_address

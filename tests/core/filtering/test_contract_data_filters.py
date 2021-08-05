@@ -6,17 +6,17 @@ from hypothesis import (
     strategies as st,
 )
 
-from web3 import Web3
-from web3._utils.module_testing.emitter_contract import (
+from platon import Web3
+from platon._utils.module_testing.emitter_contract import (
     CONTRACT_EMITTER_ABI,
     CONTRACT_EMITTER_CODE,
     CONTRACT_EMITTER_RUNTIME,
 )
-from web3.middleware import (
+from platon.middleware import (
     local_filter_middleware,
 )
-from web3.providers.eth_tester import (
-    EthereumTesterProvider,
+from platon.providers.platon_tester import (
+    PlatonTesterProvider,
 )
 
 
@@ -26,7 +26,7 @@ from web3.providers.eth_tester import (
     ids=["local_filter_middleware", "node_based_filter"])
 def web3(request):
     use_filter_middleware = request.param
-    provider = EthereumTesterProvider()
+    provider = PlatonTesterProvider()
     w3 = Web3(provider)
     if use_filter_middleware:
         w3.middleware_onion.add(local_filter_middleware)
@@ -61,20 +61,20 @@ def EMITTER(EMITTER_CODE,
 
 @pytest.fixture(scope="module")
 def Emitter(web3, EMITTER):
-    return web3.eth.contract(**EMITTER)
+    return web3.platon.contract(**EMITTER)
 
 
 @pytest.fixture(scope="module")
 def emitter(web3, Emitter, wait_for_transaction, wait_for_block, address_conversion_func):
     wait_for_block(web3)
     deploy_txn_hash = Emitter.constructor().transact({
-        'from': web3.eth.coinbase,
+        'from': web3.platon.coinbase,
         'gas': 1000000,
         'gasPrice': 1})
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     contract_address = address_conversion_func(deploy_receipt['contractAddress'])
 
-    bytecode = web3.eth.get_code(contract_address)
+    bytecode = web3.platon.get_code(contract_address)
     assert bytecode == Emitter.bytecode_runtime
     _emitter = Emitter(address=contract_address)
     assert _emitter.address == contract_address
@@ -135,7 +135,7 @@ def clear_chain_state(web3, snapshot):
     Hypothesis doesn't allow function scoped fixtures to re-run between test runs
     so chain state needs to be explicitly cleared
     """
-    web3.provider.ethereum_tester.revert_to_snapshot(snapshot)
+    web3.provider.platon_tester.revert_to_snapshot(snapshot)
 
 
 @pytest.mark.parametrize('api_style', ('v4', 'build_filter'))

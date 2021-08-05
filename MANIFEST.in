@@ -6,6 +6,6 @@ include requirements.txt
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 
-recursive-include ethpm/assets/ *
-recursive-include ethpm/ethpm-spec/examples *
-recursive-include ethpm/ethpm-spec/spec *
+recursive-include platonpm/assets/ *
+recursive-include platonpm/platonpm-spec/examples *
+recursive-include platonpm/platonpm-spec/spec *

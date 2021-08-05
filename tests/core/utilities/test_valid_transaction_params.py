@@ -1,6 +1,6 @@
 import pytest
 
-from web3._utils.transactions import (
+from platon._utils.transactions import (
     assert_valid_transaction_params,
     extract_valid_transaction_params,
 )
@@ -15,7 +15,7 @@ def test_assert_valid_transaction_params_all_params():
         'value': 1,
         'data': '0x0',
         'nonce': 2,
-        'chainId': 1,
+        'chain_id': 1,
     })
 
 
@@ -45,7 +45,7 @@ FULL_TXN_DICT = {
     'data': '0x2',
     'value': 3,
     'nonce': 2,
-    'chainId': 1,
+    'chain_id': 1,
 }
 
 

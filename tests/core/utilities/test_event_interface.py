@@ -1,6 +1,6 @@
 import pytest
 
-from web3.exceptions import (
+from platon.exceptions import (
     MismatchedABI,
     NoABIEventsFound,
 )
@@ -17,18 +17,18 @@ EVENT_1_ABI = {
 
 
 def test_access_event_with_no_abi(web3):
-    contract = web3.eth.contract()
+    contract = web3.platon.contract()
     with pytest.raises(NoABIEventsFound):
         contract.events.thisEventDoesNotExist()
 
 
 def test_access_event_abi_with_no_events(web3):
-    contract = web3.eth.contract(abi=[])
+    contract = web3.platon.contract(abi=[])
     with pytest.raises(NoABIEventsFound):
         contract.events.thisEventDoesNotExist()
 
 
 def test_access_nonexistent_event(web3):
-    contract = web3.eth.contract(abi=[EVENT_1_ABI])
+    contract = web3.platon.contract(abi=[EVENT_1_ABI])
     with pytest.raises(MismatchedABI):
         contract.events.thisEventDoesNotExist()

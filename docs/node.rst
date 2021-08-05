@@ -1,4 +1,4 @@
-Your Ethereum Node
+Your Platon Node
 ===================
 
 .. _why_need_connection:
@@ -6,7 +6,7 @@ Your Ethereum Node
 Why do I need to connect to a node?
 -----------------------------------
 
-The Ethereum protocol defines a way for people to interact with
+The Platon protocol defines a way for people to interact with
 smart contracts and each other over a network.
 In order to have up-to-date information about the status of contracts,
 balances, and new transactions, the protocol requires a connection
@@ -21,7 +21,7 @@ not run its own node internally.
 How do I choose which node to use?
 ----------------------------------
 
-Due to the nature of Ethereum, this is largely a question of personal preference, but
+Due to the nature of Platon, this is largely a question of personal preference, but
 it has significant ramifications on security and usability. Further, node software is
 evolving quickly, so please do your own research about the current options.
 We won't advocate for any particular node,
@@ -49,22 +49,22 @@ the node software with any accounts you create on the node.
 
 The most popular self-run node options are:
 
-- `geth (go-ethereum) <https://ethereum.github.io/go-ethereum/>`_
+- `gplaton (platon) <https://platon.github.io/platon/>`_
 - `parity <https://www.parity.io/>`_
 
 You can find a fuller list of node software at `ethdocs.org
-<http://ethdocs.org/en/latest/ethereum-clients/>`_.
+<http://ethdocs.org/en/latest/platon-clients/>`_.
 
 Some people decide that the time it takes to sync a local node from scratch is too
-high, especially if they are just exploring Ethereum for the first time. One way to
+high, especially if they are just exploring Platon for the first time. One way to
 work around this issue is to use a hosted node.
 
 The most popular hosted node option is `Infura <infura.io>`_.
 You can connect to it as if it were a local node,
 with a few caveats. It cannot (and *should not*) host private keys for
-you, meaning that some common methods like :meth:`w3.eth.send_transaction()
-<web3.eth.Eth.send_transaction>` are not directly available. To send transactions
-to a hosted node, read about :ref:`eth-account`.
+you, meaning that some common methods like :meth:`w3.platon.send_transaction()
+<web3.platon.Platon.send_transaction>` are not directly available. To send transactions
+to a hosted node, read about :ref:`platon-account`.
 
 Once you decide what node option you want, you need to choose which network to connect to.
 Typically, you are choosing between the main network and one of the available test networks.
@@ -90,7 +90,7 @@ Which network should I connect to?
 Once you have answered :ref:`choosing_node` you have to pick which network
 to connect to. This is easy for some scenarios: if you have ether and you want
 to spend it, or you want to interact with any production smart contracts,
-then you connect to the main Ethereum network.
+then you connect to the main Platon network.
 
 If you want to test these things without using real ether, though, then you
 need to connect to a test network. There are several test networks to
@@ -99,14 +99,14 @@ However, spam and mining attacks have happened,
 which is disruptive when you want to test out a contract.
 
 There are some alternative networks that limit the damage of spam attacks, but
-they are not standardized across node software. Geth runs their own (Rinkeby),
+they are not standardized across node software. Gplaton runs their own (Rinkeby),
 and Parity runs their own (Kovan). See a full comparison in this `Stackexchange Q&A
-<https://ethereum.stackexchange.com/a/30072/1461>`_.
+<https://platon.stackexchange.com/a/30072/1461>`_.
 
 So roughly, choose this way:
 
 - If using Parity, connect to Kovan
-- If using Geth, connect to Rinkeby
+- If using Gplaton, connect to Rinkeby
 - If using a different node, or testing mining, connect to Ropsten
 
 Each of their networks has their own version of Ether. Main network ether must

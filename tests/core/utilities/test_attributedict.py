@@ -1,6 +1,6 @@
 import pytest
 
-from web3.datastructures import (
+from platon.datastructures import (
     AttributeDict,
 )
 

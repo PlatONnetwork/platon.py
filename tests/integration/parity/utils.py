@@ -3,7 +3,7 @@ import socket
 import subprocess
 import time
 
-from eth_utils import (
+from platon_utils import (
     to_text,
 )
 import requests

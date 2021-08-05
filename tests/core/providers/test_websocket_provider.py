@@ -10,11 +10,11 @@ import websockets
 from tests.utils import (
     wait_for_ws,
 )
-from web3 import Web3
-from web3.exceptions import (
+from platon import Web3
+from platon.exceptions import (
     ValidationError,
 )
-from web3.providers.websocket import (
+from platon.providers.websocket import (
     WebsocketProvider,
 )
 
@@ -61,7 +61,7 @@ def w3(open_port, start_websocket_server):
 
 def test_websocket_provider_timeout(w3):
     with pytest.raises(TimeoutError):
-        w3.eth.accounts
+        w3.platon.accounts
 
 
 def test_restricted_websocket_kwargs():

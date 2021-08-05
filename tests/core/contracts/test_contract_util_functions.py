@@ -1,4 +1,4 @@
-from web3.contract import (
+from platon.contract import (
     parse_block_identifier_int,
 )
 
@@ -9,5 +9,5 @@ from web3.contract import (
 #  get_block() does not allow negative block identifiers. Support for negative block identifier
 #  will likely be removed in v5.
 def test_parse_block_identifier_int(web3):
-    last_num = web3.eth.get_block('latest').number
+    last_num = web3.platon.get_block('latest').number
     assert 0 == parse_block_identifier_int(web3, -1 - last_num)

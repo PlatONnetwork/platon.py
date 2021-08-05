@@ -1,7 +1,7 @@
 import json
 import pytest
 
-from web3.exceptions import (
+from platon.exceptions import (
     ValidationError,
 )
 
@@ -54,13 +54,13 @@ ABI_D = json.loads('[{ "constant": false, "inputs": [ { "name": "b", "type": "by
     ),
 )
 def test_contract_abi_encoding(web3, abi, arguments, data, expected):
-    contract = web3.eth.contract(abi=abi)
+    contract = web3.platon.contract(abi=abi)
     actual = contract.encodeABI('a', arguments, data=data)
     assert actual == expected
 
 
 def test_contract_abi_encoding_warning(web3):
-    contract = web3.eth.contract(abi=ABI_C)
+    contract = web3.platon.contract(abi=ABI_C)
 
     with pytest.warns(
         DeprecationWarning,
@@ -72,7 +72,7 @@ def test_contract_abi_encoding_warning(web3):
 
 
 def test_contract_abi_encoding_kwargs(web3):
-    contract = web3.eth.contract(abi=ABI_D)
+    contract = web3.platon.contract(abi=ABI_D)
     kwargs = {
         'b': [
             '0x5595c210956e7721f9b692e702708556aa9aabb14ea163e96afa56ffbe9fa809',
@@ -85,7 +85,7 @@ def test_contract_abi_encoding_kwargs(web3):
 
 @pytest.mark.parametrize('arguments', ([b'a'], ['0x61'], ['61'],))
 def test_contract_abi_encoding_strict_with_error(w3_strict_abi, arguments):
-    contract = w3_strict_abi.eth.contract(abi=ABI_C)
+    contract = w3_strict_abi.platon.contract(abi=ABI_C)
     with pytest.raises(ValidationError):
         contract.encodeABI('a', arguments, data=None)
 
@@ -133,6 +133,6 @@ def test_contract_abi_encoding_strict_with_error(w3_strict_abi, arguments):
     ),
 )
 def test_contract_abi_encoding_strict(w3_strict_abi, abi, arguments, data, expected):
-    contract = w3_strict_abi.eth.contract(abi=abi)
+    contract = w3_strict_abi.platon.contract(abi=abi)
     actual = contract.encodeABI('a', arguments, data=data)
     assert actual == expected

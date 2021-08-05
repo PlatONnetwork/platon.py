@@ -16,7 +16,7 @@ Without code:
 * Answer user questions within GitHub issues, Stack Overflow, or the `Python Discord server`_.
 * Write or record tutorial content.
 * Improve our documentation (including typo fixes).
-* `Open an issue <https://github.com/ethereum/web3.py/issues/new>`_ on GitHub to document a bug. Include as much detail as possible, e.g., how to reproduce the issue and any exception messages.
+* `Open an issue <https://github.com/platonnetwork/web3.py/issues/new>`_ on GitHub to document a bug. Include as much detail as possible, e.g., how to reproduce the issue and any exception messages.
 
 With code:
 
@@ -75,14 +75,14 @@ Python test code.
 
 .. note::
 
-    This container does not have `go-ethereum` installed, so you cannot run
-    the go-ethereum test suite.
+    This container does not have `platon` installed, so you cannot run
+    the platon test suite.
 
 To run the Python tests from your local machine:
 
 .. code:: sh
 
-    $ docker-compose exec sandbox bash -c 'pytest -n 4 -f -k "not goethereum"'
+    $ docker-compose exec sandbox bash -c 'pytest -n 4 -f -k "not platon"'
 
 
 You can run arbitrary commands inside the Docker container by using the
@@ -150,7 +150,7 @@ Typically, you'll just want to run a subset instead, like:
 
 .. code:: sh
 
-    $ pytest tests/core/eth-module/test_accounts.py
+    $ pytest tests/core/platon-module/test_accounts.py
 
 
 You can use ``tox`` to run all the tests for a given version of Python:
@@ -216,7 +216,7 @@ Though the setup lives in ``/tests/integration``, our integration module tests a
 written across different files within ``/web3/_utils/module_testing``. The tests
 are written there but run configurations exist across the different files within
 ``/tests/integration/``. The parent ``/integration`` directory houses some common
-configuration shared across all client tests, whereas the ``/go_ethereum`` and
+configuration shared across all client tests, whereas the ``/platon`` and
 ``/parity`` directories house common code to be shared among each respective client
 tests.
 
@@ -227,7 +227,7 @@ tests.
   be *used* by all test files that exist within the same directory as the :file:`conftest.py`
   file. This is mostly used to house pytest fixtures to be shared among our tests. Refer to
   the `pytest documentation on fixtures`_ for more information.
-* :file:`test_{client}_{provider}.py` (e.g. :file:`test_goethereum_http.py`) files are where
+* :file:`test_{client}_{provider}.py` (e.g. :file:`test_goplaton_http.py`) files are where
   client-and-provider-specific test configurations exist. This is mostly used to override tests
   specific to the provider type for the respective client.
 
@@ -247,7 +247,7 @@ Documentation
 ~~~~~~~~~~~~~
 
 Good documentation will lead to quicker adoption and happier users. Please
-check out our guide on `how to create documentation`_ for the Python Ethereum
+check out our guide on `how to create documentation`_ for the Python Platon
 ecosystem.
 
 Pull requests generate their own preview of the latest documentation at
@@ -270,7 +270,7 @@ requested.
 
 If the pull request introduces changes that should be reflected in the release
 notes, please add a **newsfragment** file as explained
-`here <https://github.com/ethereum/web3.py/blob/master/newsfragments/README.md>`_.
+`here <https://github.com/platonnetwork/web3.py/blob/master/newsfragments/README.md>`_.
 
 If possible, the change to the release notes file should be included in the
 commit that introduces the feature or bugfix.
@@ -279,7 +279,7 @@ commit that introduces the feature or bugfix.
 Generating New Fixtures
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Our integration tests make use of Geth and Parity/OpenEthereum private networks.
+Our integration tests make use of Gplaton and Parity/OpenPlaton private networks.
 When new versions of the client software are introduced, new fixtures should be
 generated.
 
@@ -296,61 +296,61 @@ Before generating new fixtures, make sure you have the test dependencies install
     testing Web3.py functionality against.
 
 
-Geth Fixtures
+Gplaton Fixtures
 ^^^^^^^^^^^^^
 
-1. Install the desired Geth version on your machine locally. We recommend `py-geth`_ for
-   this purpose, because it enables you to easily manage multiple versions of Geth.
+1. Install the desired Gplaton version on your machine locally. We recommend `py-gplaton`_ for
+   this purpose, because it enables you to easily manage multiple versions of Gplaton.
 
-   Note that ``py-geth`` will need updating to support each new Geth version as well.
-   Adding newer Geth versions to py-geth is straightforward; see past commits for a template.
+   Note that ``py-gplaton`` will need updating to support each new Gplaton version as well.
+   Adding newer Gplaton versions to py-gplaton is straightforward; see past commits for a template.
 
-   If py-geth has the Geth version you need, install that version locally. For example:
-
-   .. code:: sh
-
-       $ python -m geth.install v1.10.4
-
-2. Specify the Geth binary and run the fixture creation script (from within the web3.py directory):
+   If py-gplaton has the Gplaton version you need, install that version locally. For example:
 
    .. code:: sh
 
-       $ GETH_BINARY=~/.py-geth/geth-v1.10.4/bin/geth python ./tests/integration/generate_fixtures/go_ethereum.py ./tests/integration/geth-1.10.4-fixture
+       $ python -m gplaton.install v1.10.4
+
+2. Specify the Gplaton binary and run the fixture creation script (from within the web3.py directory):
+
+   .. code:: sh
+
+       $ GPLATON_BINARY=~/.py-gplaton/gplaton-v1.10.4/bin/gplaton python ./tests/integration/generate_fixtures/platon.py ./tests/integration/gplaton-1.10.4-fixture
 
 3. The output of this script is your fixture, a zip file, which is now stored in ``/tests/integration/``.
-   Update the ``/tests/integration/go_ethereum/conftest.py`` file to point to this new fixture. Delete the old fixture.
+   Update the ``/tests/integration/platon/conftest.py`` file to point to this new fixture. Delete the old fixture.
 
-4. Run the tests. To ensure that the tests run with the correct Geth version locally,
-   you may again include the ``GETH_BINARY`` environment variable.
+4. Run the tests. To ensure that the tests run with the correct Gplaton version locally,
+   you may again include the ``GPLATON_BINARY`` environment variable.
 
 
-CI Testing With a Nightly Geth Build
+CI Testing With a Nightly Gplaton Build
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Occasionally you'll want to have CI run the test suite against an unreleased version of Geth,
+Occasionally you'll want to have CI run the test suite against an unreleased version of Gplaton,
 for example, to test upcoming hard fork changes. The workflow described below is for testing only,
 i.e., open a PR, let CI run the tests, but the changes should only be merged into master once the
-Geth release is published or you have some workaround that doesn't require test fixtures built from
+Gplaton release is published or you have some workaround that doesn't require test fixtures built from
 an unstable client.
 
-1. Configure ``tests/integration/generate_fixtures/go_ethereum/common.py`` as needed.
+1. Configure ``tests/integration/generate_fixtures/platon/common.py`` as needed.
 
-2. Geth automagically compiles new builds for every commit that gets merged into the codebase.
-   Download the desired build from the `develop builds <https://geth.ethereum.org/downloads/>`_.
+2. Gplaton automagically compiles new builds for every commit that gets merged into the codebase.
+   Download the desired build from the `develop builds <https://gplaton.platon.org/downloads/>`_.
 
-3. Build your test fixture, passing in the binary you just downloaded via ``GETH_BINARY``. Don't forget
-   to update the ``/tests/integration/go_ethereum/conftest.py`` file to point to your new fixture.
+3. Build your test fixture, passing in the binary you just downloaded via ``GPLATON_BINARY``. Don't forget
+   to update the ``/tests/integration/platon/conftest.py`` file to point to your new fixture.
 
 4. Our CI runs on Ubuntu, so download the corresponding 64-bit Linux
-   `develop build <https://geth.ethereum.org/downloads/>`_, then
-   add it to the root of your Web3.py directory. Rename the binary ``custom_geth``.
+   `develop build <https://gplaton.platon.org/downloads/>`_, then
+   add it to the root of your Web3.py directory. Rename the binary ``custom_gplaton``.
 
-5. In ``.circleci/config.yml``, update jobs relying on ``geth_steps``, to instead use ``custom_geth_steps``.
+5. In ``.circleci/config.yml``, update jobs relying on ``gplaton_steps``, to instead use ``custom_gplaton_steps``.
 
 6. Create a PR and let CI do its thing.
 
 
-Parity/OpenEthereum Fixtures
+Parity/OpenPlaton Fixtures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1. The most reliable way to get a specific Parity/OE binary is to download
@@ -372,7 +372,7 @@ Parity/OpenEthereum Fixtures
    file to point the new fixture.
 
 6. By this point, you may have noticed that Parity fixture generation relies
-   on a Geth network to sync from. In the output of the generation script are
+   on a Gplaton network to sync from. In the output of the generation script are
    the hashes of the various contracts that it mined. Update the corresponding
    values in the ``/parity/conftest.py`` file with those hashes.
 
@@ -393,6 +393,34 @@ virtualenv for smoke testing:
 
     $ git checkout master && git pull
 
+        $ make package
+
+        # in another shell, navigate to the virtualenv mentioned in output of ^
+
+        # load the virtualenv with the packaged web3.py release
+        $ source package-smoke-test/bin/activate
+
+        # smoke test the release
+        $ pip install ipython
+        $ ipython
+        >>> from platon.auto import w3
+        >>> w3.isConnected()
+        >>> ...
+
+        $ make package
+
+        # in another shell, navigate to the virtualenv mentioned in output of ^
+
+        # load the virtualenv with the packaged web3.py release
+        $ source package-smoke-test/bin/activate
+
+        # smoke test the release
+        $ pip install ipython
+        $ ipython
+        >>> from platon.auto import w3
+        >>> w3.isConnected()
+        >>> ...
+
     $ make package
 
     # in another shell, navigate to the virtualenv mentioned in output of ^
@@ -403,7 +431,7 @@ virtualenv for smoke testing:
     # smoke test the release
     $ pip install ipython
     $ ipython
-    >>> from web3.auto import w3
+    >>> from platon.auto import w3
     >>> w3.isConnected()
     >>> ...
 
@@ -470,12 +498,12 @@ version explicitly, like ``make release bump="--new-version 4.0.0-alpha.1 devnum
 
 
 .. _Python Discord server: https://discord.gg/GHryRvPB84
-.. _style guide: https://github.com/pipermerriam/ethereum-dev-tactical-manual/blob/master/style-guide.md
+.. _style guide: https://github.com/pipermerriam/platon-dev-tactical-manual/blob/master/style-guide.md
 .. _type hints: https://www.python.org/dev/peps/pep-0484/
-.. _how to create documentation: https://github.com/ethereum/snake-charmers-tactical-manual/blob/master/documentation.md
+.. _how to create documentation: https://github.com/platonnetwork/snake-charmers-tactical-manual/blob/master/documentation.md
 .. _working on pull requests: https://help.github.com/articles/about-pull-requests/
-.. _py-geth: https://github.com/ethereum/py-geth
-.. _Github releases: https://github.com/openethereum/openethereum/releases
-.. _Build the binary: https://github.com/openethereum/openethereum/#3-building-
+.. _py-gplaton: https://github.com/platonnetwork/py-gplaton
+.. _Github releases: https://github.com/platonnetwork/platon-go/releases
+.. _Build the binary: https://github.com/platonnetwork/platon-go/#3-building-
 .. _pytest documentation: https://docs.pytest.org/en/latest
 .. _pytest documentation on fixtures: https://docs.pytest.org/en/latest/how-to/fixtures.html

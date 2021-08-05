@@ -1,9 +1,9 @@
 .. _ens_overview:
 
-Ethereum Name Service
+Platon Name Service
 ================================
 
-The Ethereum Name Service is analogous to the Domain Name Service. It
+The Platon Name Service is analogous to the Domain Name Service. It
 enables users and developers to use human-friendly names in place of error-prone
 hexadecimal addresses, content hashes, and more.
 
@@ -26,7 +26,7 @@ Create an :class:`~ens.main.ENS` object (named ``ns`` below) in one of three way
 
 
     # or, with a provider
-    from web3 import IPCProvider
+    from platon import IPCProvider
     from ens import ENS
 
     provider = IPCProvider(...)
@@ -58,9 +58,9 @@ Look up the address for an ENS name
 
     # look up the hex representation of the address for a name
 
-    eth_address = ns.address('jasoncarver.eth')
+    platon_address = ns.address('jasoncarver.platon')
 
-    assert eth_address == '0x5B2063246F2191f18F2675ceDB8b28102e957458'
+    assert platon_address == '0x5B2063246F2191f18F2675ceDB8b28102e957458'
 
 
 The ``ENS`` module has no opinion as to which TLD you can use,
@@ -89,7 +89,7 @@ Get owner of name
 
 ::
 
-    eth_address = ns.owner('exchange.eth')
+    platon_address = ns.owner('exchange.platon')
 
 Set up your name
 ~~~~~~~~~~~~~~~~
@@ -102,7 +102,7 @@ address it points to?
 
 ::
 
-    ns.setup_address('jasoncarver.eth', '0x5B2063246F2191f18F2675ceDB8b28102e957458')
+    ns.setup_address('jasoncarver.platon', '0x5B2063246F2191f18F2675ceDB8b28102e957458')
 
 You must already be the owner of the domain (or its parent).
 
@@ -111,20 +111,20 @@ address, you can skip the address
 
 ::
 
-    ns.setup_address('jasoncarver.eth')
+    ns.setup_address('jasoncarver.platon')
 
 You can claim arbitrarily deep subdomains. *Gas costs scale up with the
 number of subdomains!*
 
 ::
 
-    ns.setup_address('supreme.executive.power.derives.from.a.mandate.from.the.masses.jasoncarver.eth')
+    ns.setup_address('supreme.executive.power.derives.from.a.mandate.from.the.masses.jasoncarver.platon')
 
 Wait for the transaction to be mined, then:
 
 ::
 
-    assert ns.address('supreme.executive.power.derives.from.a.mandate.from.the.masses.jasoncarver.eth') == \
+    assert ns.address('supreme.executive.power.derives.from.a.mandate.from.the.masses.jasoncarver.platon') == \
         '0x5B2063246F2191f18F2675ceDB8b28102e957458'
 
 Allow people to find your name using your address
@@ -139,7 +139,7 @@ determine what name points to it. Sometimes this is referred to as
 
 ::
 
-    ns.setup_name('jasoncarver.eth', '0x5B2063246F2191f18F2675ceDB8b28102e957458')
+    ns.setup_name('jasoncarver.platon', '0x5B2063246F2191f18F2675ceDB8b28102e957458')
 
 .. note:: Do not rely on reverse resolution for security.
 
@@ -151,7 +151,7 @@ address returned by :meth:`~ens.main.ENS.address`.
 
 ::
 
-    ns.setup_name('jasoncarver.eth')
+    ns.setup_name('jasoncarver.platon')
 
 If the name doesn't already point to an address, :meth:`~ens.main.ENS.setup_name` will
 call :meth:`~ens.main.ENS.setup_address` for you.
@@ -160,4 +160,4 @@ Wait for the transaction to be mined, then:
 
 ::
 
-    assert ns.name('0x5B2063246F2191f18F2675ceDB8b28102e957458') == 'jasoncarver.eth'
+    assert ns.name('0x5B2063246F2191f18F2675ceDB8b28102e957458') == 'jasoncarver.platon'

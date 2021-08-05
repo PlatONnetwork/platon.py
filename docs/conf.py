@@ -80,17 +80,17 @@ release = __version__
 # directories to ignore when looking for source files.
 exclude_patterns = [
     '_build',
-    'web3.rst',
+    'platon.rst',
     'modules.rst',
-    'web3.auto.rst',
-    'web3.auto.infura.rst',
-    'web3.gas_strategies.rst',
-    'web3.middleware.rst',
-    'web3.providers.rst',
-    'web3.providers.eth_tester.rst',
-    'web3.scripts.*',
-    'web3.testing.rst',
-    'web3.tools.*',
+    'platon.auto.rst',
+    'platon.auto.infura.rst',
+    'platon.gas_strategies.rst',
+    'platon.middleware.rst',
+    'platon.providers.rst',
+    'platon.providers.platon_tester.rst',
+    'platon.scripts.*',
+    'platon.testing.rst',
+    'platon.tools.*',
 ]
 
 # The reST default role (used for this markup: `text`) to use for all
@@ -253,7 +253,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'web3', u'Web3.py Documentation',
+    ('index', 'platon', u'Web3.py Documentation',
      [u'Piper Merriam'], 1)
 ]
 
@@ -268,7 +268,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'Web3.py', u'Web3.py Documentation',
-   u'Piper Merriam', 'Web3.py', 'Backend agnostic Ethereum client interactions.',
+   u'Piper Merriam', 'Web3.py', 'Backend agnostic Platon client interactions.',
    'Miscellaneous'),
 ]
 
@@ -288,8 +288,8 @@ texinfo_documents = [
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3.5', None),
-    'eth-account': ('http://eth-account.readthedocs.io/en/latest/', None),
-    # does not exist yet: 'eth-tester': ('http://eth-tester.readthedocs.io/en/latest/', None),
+    'platon-account': ('http://platon-account.readthedocs.io/en/latest/', None),
+    # does not exist yet: 'platon-tester': ('http://platon-tester.readthedocs.io/en/latest/', None),
     'hexbytes': ('http://hexbytes.readthedocs.io/en/latest/', None),
 }
 

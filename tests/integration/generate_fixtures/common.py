@@ -7,12 +7,12 @@ import subprocess
 import tempfile
 import time
 
-from eth_utils import (
-    is_checksum_address,
+from platon_utils import (
+    is_bech32_address,
     to_text,
 )
 
-from web3.exceptions import (
+from platon.exceptions import (
     TransactionNotFound,
 )
 
@@ -32,7 +32,7 @@ UNLOCKABLE_ACCOUNT_PW = KEYFILE_PW
 
 GENESIS_DATA = {
     "config": {
-        "chainId": 131277322940537,  # the string 'web3py' as an integer
+        "chain_id": 131277322940537,  # the string 'web3py' as an integer
         "homesteadBlock": 0,
         "byzantiumBlock": 0,
         "constantinopleBlock": 0,
@@ -85,23 +85,23 @@ def tempdir():
         shutil.rmtree(dir_path)
 
 
-def get_geth_binary():
-    from geth.install import (
+def get_gplaton_binary():
+    from gplaton.install import (
         get_executable_path,
-        install_geth,
+        install_gplaton,
     )
 
-    if 'GETH_BINARY' in os.environ:
-        return os.environ['GETH_BINARY']
-    elif 'GETH_VERSION' in os.environ:
-        geth_version = os.environ['GETH_VERSION']
-        _geth_binary = get_executable_path(geth_version)
-        if not os.path.exists(_geth_binary):
-            install_geth(geth_version)
-        assert os.path.exists(_geth_binary)
-        return _geth_binary
+    if 'GPLATON_BINARY' in os.environ:
+        return os.environ['GPLATON_BINARY']
+    elif 'GPLATON_VERSION' in os.environ:
+        gplaton_version = os.environ['GPLATON_VERSION']
+        _gplaton_binary = get_executable_path(gplaton_version)
+        if not os.path.exists(_gplaton_binary):
+            install_gplaton(gplaton_version)
+        assert os.path.exists(_gplaton_binary)
+        return _gplaton_binary
     else:
-        return 'geth'
+        return 'gplaton'
 
 
 def wait_for_popen(proc, timeout):
@@ -141,7 +141,7 @@ def wait_for_socket(ipc_path, timeout=30):
 
 
 @contextlib.contextmanager
-def get_geth_process(geth_binary,
+def get_gplaton_process(gplaton_binary,
                      datadir,
                      genesis_file_path,
                      ipc_path,
@@ -150,8 +150,8 @@ def get_geth_process(geth_binary,
                      skip_init=False):
     if not skip_init:
         init_datadir_command = (
-            geth_binary,
-            '--datadir', datadir,
+            gplaton_binary,
+            '--data_dir', datadir,
             'init',
             genesis_file_path,
         )
@@ -162,24 +162,24 @@ def get_geth_process(geth_binary,
             stderr=subprocess.PIPE,
         )
 
-    run_geth_command = (
-        geth_binary,
-        '--datadir', datadir,
+    run_gplaton_command = (
+        gplaton_binary,
+        '--data_dir', datadir,
         '--ipcpath', ipc_path,
         '--nodiscover',
         '--port', port,
         '--networkid', networkid,
         '--etherbase', COINBASE[2:],
     )
-    print(' '.join(run_geth_command))
+    print(' '.join(run_gplaton_command))
     try:
-        proc = get_process(run_geth_command)
+        proc = get_process(run_gplaton_command)
         yield proc
     finally:
         kill_proc_gracefully(proc)
         output, errors = proc.communicate()
         print(
-            "Geth Process Exited:\n"
+            "Gplaton Process Exited:\n"
             "stdout:{0}\n\n"
             "stderr:{1}\n\n".format(
                 to_text(output),
@@ -199,14 +199,14 @@ def get_process(run_command):
 
 
 def mine_block(web3):
-    origin_block_number = web3.eth.block_number
+    origin_block_number = web3.platon.block_number
 
     start_time = time.time()
-    web3.geth.miner.start(1)
+    web3.gplaton.miner.start(1)
     while time.time() < start_time + 120:
-        block_number = web3.eth.block_number
+        block_number = web3.platon.block_number
         if block_number > origin_block_number:
-            web3.geth.miner.stop()
+            web3.gplaton.miner.stop()
             return block_number
         else:
             time.sleep(0.1)
@@ -216,14 +216,14 @@ def mine_block(web3):
 
 def mine_transaction_hash(web3, txn_hash):
     start_time = time.time()
-    web3.geth.miner.start(1)
+    web3.gplaton.miner.start(1)
     while time.time() < start_time + 120:
         try:
-            receipt = web3.eth.get_transaction_receipt(txn_hash)
+            receipt = web3.platon.get_transaction_receipt(txn_hash)
         except TransactionNotFound:
             continue
         if receipt is not None:
-            web3.geth.miner.stop()
+            web3.gplaton.miner.stop()
             return receipt
         else:
             time.sleep(0.1)
@@ -232,12 +232,12 @@ def mine_transaction_hash(web3, txn_hash):
 
 
 def deploy_contract(web3, name, factory):
-    web3.geth.personal.unlock_account(web3.eth.coinbase, KEYFILE_PW)
-    deploy_txn_hash = factory.constructor().transact({'from': web3.eth.coinbase})
+    web3.gplaton.personal.unlock_account(web3.platon.coinbase, KEYFILE_PW)
+    deploy_txn_hash = factory.constructor().transact({'from': web3.platon.coinbase})
     print('{0}_CONTRACT_DEPLOY_HASH: '.format(name.upper()), deploy_txn_hash)
     deploy_receipt = mine_transaction_hash(web3, deploy_txn_hash)
     print('{0}_CONTRACT_DEPLOY_TRANSACTION_MINED'.format(name.upper()))
     contract_address = deploy_receipt['contractAddress']
-    assert is_checksum_address(contract_address)
+    assert is_bech32_address(contract_address)
     print('{0}_CONTRACT_ADDRESS:'.format(name.upper()), contract_address)
     return deploy_receipt

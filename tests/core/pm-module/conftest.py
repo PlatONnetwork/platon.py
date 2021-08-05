@@ -1,27 +1,27 @@
 import pytest
 
-from eth_tester import (
-    EthereumTester,
+from platon_tester import (
+    PlatonTester,
     PyEVMBackend,
 )
-from eth_utils import (
+from platon_utils import (
     to_bytes,
 )
 
-from ethpm import (
+from platonpm import (
     Package,
 )
-from ethpm.contract import (
+from platonpm.contract import (
     LinkableContract,
 )
-from ethpm.tools import (
-    get_ethpm_local_manifest,
+from platonpm.tools import (
+    get_platonpm_local_manifest,
 )
-from web3 import Web3
-from web3.pm import (
+from platon import Web3
+from platon.pm import (
     SimpleRegistry,
 )
-from web3.tools.pytest_ethereum.deployer import (
+from platon.tools.pytest_platon.deployer import (
     Deployer,
 )
 
@@ -40,16 +40,16 @@ def setup_w3():
         overrides=genesis_overrides
     )
     pyevm_backend = PyEVMBackend(genesis_parameters=custom_genesis_params)
-    t = EthereumTester(backend=pyevm_backend)
-    w3 = Web3(Web3.EthereumTesterProvider(ethereum_tester=t))
-    w3.eth.default_account = w3.eth.accounts[0]
-    w3.eth.defaultContractFactory = LinkableContract
+    t = PlatonTester(backend=pyevm_backend)
+    w3 = Web3(Web3.PlatonTesterProvider(platon_tester=t))
+    w3.platon.default_account = w3.platon.accounts[0]
+    w3.platon.defaultContractFactory = LinkableContract
     w3.enable_unstable_package_management_api()
     return w3
 
 
 def sol_registry(w3):
-    manifest = get_ethpm_local_manifest("simple-registry", "v3.json")
+    manifest = get_platonpm_local_manifest("simple-registry", "v3.json")
     registry_package = Package(manifest, w3)
     registry_deployer = Deployer(registry_package)
     deployed_registry_package = registry_deployer.deploy("PackageRegistry")

@@ -2,16 +2,16 @@ import itertools
 import pytest
 import uuid
 
-from web3 import Web3
-from web3._utils.caching import (
+from platon import Web3
+from platon._utils.caching import (
     generate_cache_key,
 )
-from web3.middleware import (
+from platon.middleware import (
     construct_error_generator_middleware,
     construct_result_generator_middleware,
     construct_simple_cache_middleware,
 )
-from web3.providers.base import (
+from platon.providers.base import (
     BaseProvider,
 )
 

@@ -5,8 +5,8 @@ Contracts
 
 .. py:module:: web3.contract
 
-Smart contracts are programs deployed to the Ethereum network. See the
-`ethereum.org docs <https://ethereum.org/en/developers/docs/smart-contracts>`_
+Smart contracts are programs deployed to the Platon network. See the
+`platon.org docs <https://platon.org/en/developers/docs/smart-contracts>`_
 for a proper introduction.
 
 .. _contract_example:
@@ -16,7 +16,7 @@ Contract Deployment Example
 
 To run this example, you will need to install a few extra features:
 
-- The sandbox node provided by eth-tester. You can install it with:
+- The sandbox node provided by platon-tester. You can install it with:
 
 .. code-block:: bash
 
@@ -39,7 +39,7 @@ You should now be set up to run the contract deployment example below:
 
 .. code-block:: python
 
-    >>> from web3 import Web3
+    >>> from platon import Web3
     >>> from solcx import compile_source
 
     # Solidity source code
@@ -75,20 +75,20 @@ You should now be set up to run the contract deployment example below:
     >>> abi = contract_interface['abi']
 
     # web3.py instance
-    >>> w3 = Web3(Web3.EthereumTesterProvider())
+    >>> w3 = Web3(Web3.PlatonTesterProvider())
 
     # set pre-funded account as sender
-    >>> w3.eth.default_account = w3.eth.accounts[0]
+    >>> w3.platon.default_account = w3.platon.accounts[0]
 
-    >>> Greeter = w3.eth.contract(abi=abi, bytecode=bytecode)
+    >>> Greeter = w3.platon.contract(abi=abi, bytecode=bytecode)
 
     # Submit the transaction that deploys the contract
     >>> tx_hash = Greeter.constructor().transact()
 
     # Wait for the transaction to be mined, and get the transaction receipt
-    >>> tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+    >>> tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
 
-    >>> greeter = w3.eth.contract(
+    >>> greeter = w3.platon.contract(
     ...     address=tx_receipt.contractAddress,
     ...     abi=abi
     ... )
@@ -97,7 +97,7 @@ You should now be set up to run the contract deployment example below:
     'Hello'
 
     >>> tx_hash = greeter.functions.setGreeting('Nihao').transact()
-    >>> tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+    >>> tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
     >>> greeter.functions.greet().call()
     'Nihao'
 
@@ -106,16 +106,16 @@ Contract Factories
 ------------------
 
 These factories are not intended to be initialized directly.
-Instead, create contract objects using the :meth:`w3.eth.contract() <web3.eth.Eth.contract>`
+Instead, create contract objects using the :meth:`w3.platon.contract() <web3.platon.Platon.contract>`
 method. By default, the contract factory is :class:`Contract`. See the
 example in :class:`ConciseContract` for specifying an alternate factory.
 
 .. py:class:: Contract(address)
 
     Contract provides a default interface for deploying and interacting with
-    Ethereum smart contracts.
+    Platon smart contracts.
 
-    The address parameter can be a hex address or an ENS name, like ``mycontract.eth``.
+    The address parameter can be a hex address or an ENS name, like ``mycontract.platon``.
 
 .. py:class:: ConciseContract(Contract())
 
@@ -148,11 +148,11 @@ example in :class:`ConciseContract` for specifying an alternate factory.
 
     .. code-block:: python
 
-        >>> concise.withdraw(amount, transact={'from': eth.accounts[1], 'gas': 100000, ...})
+        >>> concise.withdraw(amount, transact={'from': platon.accounts[1], 'gas': 100000, ...})
 
         >>>  # which is equivalent to this transaction in the classic contract:
 
-        >>> contract.functions.withdraw(amount).transact({'from': eth.accounts[1], 'gas': 100000, ...})
+        >>> contract.functions.withdraw(amount).transact({'from': platon.accounts[1], 'gas': 100000, ...})
 
 .. py:class:: ImplicitContract(Contract())
 
@@ -221,7 +221,7 @@ Each Contract Factory exposes the following methods.
     Construct and deploy a contract by sending a new public transaction.
 
     If provided ``transaction`` should be a dictionary conforming to the
-    ``web3.eth.send_transaction(transaction)`` method.  This value may not
+    ``web3.platon.send_transaction(transaction)`` method.  This value may not
     contain the keys ``data`` or ``to``.
 
     If the contract takes constructor parameters they should be provided as
@@ -231,15 +231,15 @@ Each Contract Factory exposes the following methods.
     will accept ENS names.
 
     If a ``gas`` value is not provided, then the ``gas`` value for the
-    deployment transaction will be created using the ``web3.eth.estimate_gas()``
+    deployment transaction will be created using the ``web3.platon.estimate_gas()``
     method.
 
     Returns the transaction hash for the deploy transaction.
 
     .. code-block:: python
 
-        >>> deploy_txn = token_contract.constructor(web3.eth.coinbase, 12345).transact()
-        >>> txn_receipt = web3.eth.get_transaction_receipt(deploy_txn)
+        >>> deploy_txn = token_contract.constructor(web3.platon.coinbase, 12345).transact()
+        >>> txn_receipt = web3.platon.get_transaction_receipt(deploy_txn)
         >>> txn_receipt['contractAddress']
         '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318'
 
@@ -263,7 +263,7 @@ Each Contract Factory exposes the following methods.
 
     .. code-block:: python
 
-        >>> token_contract.constructor(web3.eth.coinbase, 12345).estimateGas()
+        >>> token_contract.constructor(web3.platon.coinbase, 12345).estimateGas()
         12563
 
 .. py:classmethod:: Contract.constructor(*args, **kwargs).buildTransaction(transaction=None)
@@ -282,11 +282,11 @@ Each Contract Factory exposes the following methods.
     .. code-block:: python
 
         >>> transaction = {
-        'gasPrice': w3.eth.gas_price,
+        'gasPrice': w3.platon.gas_price,
         'chainId': None
         }
-        >>> contract_data = token_contract.constructor(web3.eth.coinbase, 12345).buildTransaction(transaction)
-        >>> web3.eth.send_transaction(contract_data)
+        >>> contract_data = token_contract.constructor(web3.platon.coinbase, 12345).buildTransaction(transaction)
+        >>> web3.platon.send_transaction(contract_data)
 
 .. _contract_createFilter:
 
@@ -299,7 +299,7 @@ Each Contract Factory exposes the following methods.
     - ``toBlock`` optional. Defaults to 'latest'. Defines the ending block (inclusive) in the filter block range.  Special values 'latest' and 'pending' set a dynamic range that always includes the 'latest' or 'pending' blocks for the filter's upper block range.
     - ``address`` optional. Defaults to the contract address. The filter matches the event logs emanating from ``address``.
     - ``argument_filters``, optional. Expects a dictionary of argument names and values. When provided event logs are filtered for the event argument values. Event arguments can be both indexed or unindexed. Indexed values with be translated to their corresponding topic arguments. Unindexed arguments will be filtered using a regular expression.
-    - ``topics`` optional, accepts the standard JSON-RPC topics argument.  See the JSON-RPC documentation for `eth_newFilter <https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_newfilter>`_ more information on the ``topics`` parameters.
+    - ``topics`` optional, accepts the standard JSON-RPC topics argument.  See the JSON-RPC documentation for `platon_newFilter <https://github.com/platonnetwork/wiki/wiki/JSON-RPC#platon_newfilter>`_ more information on the ``topics`` parameters.
 
 .. py:classmethod:: Contract.events.your_event_name.build_filter()
 
@@ -337,7 +337,7 @@ Each Contract Factory exposes the following methods.
     Construct and send a transaction to deploy the contract.
 
     If provided ``transaction`` should be a dictionary conforming to the
-    ``web3.eth.send_transaction(transaction)`` method.  This value may not
+    ``web3.platon.send_transaction(transaction)`` method.  This value may not
     contain the keys ``data`` or ``to``.
 
     If the contract takes constructor arguments they should be provided as a
@@ -347,7 +347,7 @@ Each Contract Factory exposes the following methods.
     will accept ENS names.
 
     If a ``gas`` value is not provided, then the ``gas`` value for the
-    deployment transaction will be created using the ``web3.eth.estimate_gas()``
+    deployment transaction will be created using the ``web3.platon.estimate_gas()``
     method.
 
     Returns the transaction hash for the deploy transaction.
@@ -355,7 +355,7 @@ Each Contract Factory exposes the following methods.
 
 .. py:classmethod:: Contract.encodeABI(fn_name, args=None, kwargs=None, data=None)
 
-   Encodes the arguments using the Ethereum ABI for the contract function that
+   Encodes the arguments using the Platon ABI for the contract function that
    matches the given ``fn_name`` and arguments ``args``. The ``data`` parameter
    defaults to the function selector.
 
@@ -596,8 +596,8 @@ Taking the following contract code as an example:
 
 .. testsetup:: arrayscontract
 
-    from web3 import Web3
-    w3 = Web3(Web3.EthereumTesterProvider())
+    from platon import Web3
+    w3 = Web3(Web3.PlatonTesterProvider())
     bytecode = "608060405234801561001057600080fd5b506040516106103803806106108339810180604052602081101561003357600080fd5b81019080805164010000000081111561004b57600080fd5b8281019050602081018481111561006157600080fd5b815185602082028301116401000000008211171561007e57600080fd5b5050929190505050806000908051906020019061009c9291906100a3565b505061019c565b82805482825590600052602060002090600f0160109004810192821561015a5791602002820160005b8382111561012a57835183826101000a81548161ffff02191690837e010000000000000000000000000000000000000000000000000000000000009004021790555092602001926002016020816001010492830192600103026100cc565b80156101585782816101000a81549061ffff021916905560020160208160010104928301926001030261012a565b505b509050610167919061016b565b5090565b61019991905b8082111561019557600081816101000a81549061ffff021916905550600101610171565b5090565b90565b610465806101ab6000396000f3fe608060405260043610610051576000357c0100000000000000000000000000000000000000000000000000000000900480633b3230ee14610056578063d7c8a410146100e7578063dfe3136814610153575b600080fd5b34801561006257600080fd5b5061008f6004803603602081101561007957600080fd5b8101908080359060200190929190505050610218565b60405180827dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff19167dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200191505060405180910390f35b3480156100f357600080fd5b506100fc61026c565b6040518080602001828103825283818151815260200191508051906020019060200280838360005b8381101561013f578082015181840152602081019050610124565b505050509050019250505060405180910390f35b34801561015f57600080fd5b506102166004803603602081101561017657600080fd5b810190808035906020019064010000000081111561019357600080fd5b8201836020820111156101a557600080fd5b803590602001918460208302840111640100000000831117156101c757600080fd5b919080806020026020016040519081016040528093929190818152602001838360200280828437600081840152601f19601f820116905080830192505050505050509192919290505050610326565b005b60008181548110151561022757fe5b9060005260206000209060109182820401919006600202915054906101000a90047e010000000000000000000000000000000000000000000000000000000000000281565b6060600080548060200260200160405190810160405280929190818152602001828054801561031c57602002820191906000526020600020906000905b82829054906101000a90047e01000000000000000000000000000000000000000000000000000000000000027dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200190600201906020826001010492830192600103820291508084116102a95790505b5050505050905090565b806000908051906020019061033c929190610340565b5050565b82805482825590600052602060002090600f016010900481019282156103f75791602002820160005b838211156103c757835183826101000a81548161ffff02191690837e01000000000000000000000000000000000000000000000000000000000000900402179055509260200192600201602081600101049283019260010302610369565b80156103f55782816101000a81549061ffff02191690556002016020816001010492830192600103026103c7565b505b5090506104049190610408565b5090565b61043691905b8082111561043257600081816101000a81549061ffff02191690555060010161040e565b5090565b9056fea165627a7a72305820a8f9f1f4815c1eedfb8df31298a5cd13b198895de878871328b5d96296b69b4e0029"
     abi = '''
       [
@@ -687,12 +687,33 @@ Taking the following contract code as an example:
 
 .. doctest:: arrayscontract
 
-    >>> ArraysContract = w3.eth.contract(abi=abi, bytecode=bytecode)
+    >>> ArraysContract = w3.platon.contract(abi=abi, bytecode=bytecode)
+
+        >>> tx_hash = ArraysContract.constructor([b'b']).transact()
+        >>> tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
+
+        >>> array_contract = w3.platon.contract(
+        ...     address=tx_receipt.contractAddress,
+        ...     abi=abi
+        ... )
+
+        >>> array_contract.functions.getBytes2Value().call()
+        [b'b\x00']
+        >>> array_contract.functions.setBytes2Value([b'a']).transact({'gas': 420000, 'gasPrice': 21000})
+        HexBytes('0x89f9b3a00651e406c568e85c1d2336c66b4ec40ba82c5e72726fbd072230a41c')
+        >>> array_contract.functions.getBytes2Value().call()
+        [b'a\x00']
+        >>> w3.enable_strict_bytes_type_checking()
+        >>> array_contract.functions.setBytes2Value([b'a']).transact()
+        Traceback (most recent call last):
+           ...
+        ValidationError:
+        Could not identify the intended function with name
 
     >>> tx_hash = ArraysContract.constructor([b'b']).transact()
-    >>> tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+    >>> tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
 
-    >>> array_contract = w3.eth.contract(
+    >>> array_contract = w3.platon.contract(
     ...     address=tx_receipt.contractAddress,
     ...     abi=abi
     ... )
@@ -726,7 +747,7 @@ For example:
 
     .. code-block:: python
 
-        myContract = web3.eth.contract(address=contract_address, abi=contract_abi)
+        myContract = web3.platon.contract(address=contract_address, abi=contract_abi)
         twentyone = myContract.functions.multiply7(3).call()
 
 If you have the function name in a variable, you might prefer this alternative:
@@ -762,28 +783,28 @@ Methods
 
     The end portion of this function call ``transact(transaction)`` takes a
     single parameter which should be a python dictionary conforming to
-    the same format as the ``web3.eth.send_transaction(transaction)`` method.
+    the same format as the ``web3.platon.send_transaction(transaction)`` method.
     This dictionary may not contain the keys ``data``.
 
     If any of the ``args`` or ``kwargs`` specified in the ABI are an ``address`` type, they
     will accept ENS names.
 
     If a ``gas`` value is not provided, then the ``gas`` value for the
-    method transaction will be created using the ``web3.eth.estimate_gas()``
+    method transaction will be created using the ``web3.platon.estimate_gas()``
     method.
 
     Returns the transaction hash.
 
     .. code-block:: python
 
-        >>> token_contract.functions.transfer(web3.eth.accounts[1], 12345).transact()
+        >>> token_contract.functions.transfer(web3.platon.accounts[1], 12345).transact()
         "0x4e3a3754410177e6937ef1f84bba68ea139e8d1a2258c5f85db9f1cd715a1bdd"
 
 
 .. py:method:: ContractFunction.call(transaction, block_identifier='latest')
 
     Call a contract function, executing the transaction locally using the
-    ``eth_call`` API.  This will not create a new public transaction.
+    ``platon_call`` API.  This will not create a new public transaction.
 
     Refer to the following invocation:
 
@@ -801,10 +822,10 @@ Methods
 
         >>> my_contract.functions.multiply7(3).call()
         21
-        >>> token_contract.functions.myBalance().call({'from': web3.eth.coinbase})
-        12345  # the token balance for `web3.eth.coinbase`
-        >>> token_contract.functions.myBalance().call({'from': web3.eth.accounts[1]})
-        54321  # the token balance for the account `web3.eth.accounts[1]`
+        >>> token_contract.functions.myBalance().call({'from': web3.platon.coinbase})
+        12345  # the token balance for `web3.platon.coinbase`
+        >>> token_contract.functions.myBalance().call({'from': web3.platon.accounts[1]})
+        54321  # the token balance for the account `web3.platon.accounts[1]`
 
     You can call the method at a historical block using ``block_identifier``. Some examples:
 
@@ -827,15 +848,15 @@ Methods
         # You can check the state after your pending transactions (if supported by your node):
         >>> token_contract.functions.myBalance().call(block_identifier='pending')
 
-    Passing the ``block_identifier`` parameter for past block numbers requires that your Ethereum API node
-    is running in the more expensive archive node mode. Normally synced Ethereum nodes will fail with
-    a "missing trie node" error, because Ethereum node may have purged the past state from its database.
-    `More information about archival nodes here <https://ethereum.stackexchange.com/a/84200/620>`_.
+    Passing the ``block_identifier`` parameter for past block numbers requires that your Platon API node
+    is running in the more expensive archive node mode. Normally synced Platon nodes will fail with
+    a "missing trie node" error, because Platon node may have purged the past state from its database.
+    `More information about archival nodes here <https://platon.stackexchange.com/a/84200/620>`_.
 
 .. py:method:: ContractFunction.estimateGas(transaction, block_identifier=None)
 
     Call a contract function, executing the transaction locally using the
-    ``eth_call`` API.  This will not create a new public transaction.
+    ``platon_call`` API.  This will not create a new public transaction.
 
     Refer to the following invocation:
 
@@ -856,8 +877,8 @@ Methods
         42650
 
     .. note::
-        The parameter ``block_identifier`` is not enabled in geth nodes,
-        hence passing a value of ``block_identifier`` when connected to a geth
+        The parameter ``block_identifier`` is not enabled in gplaton nodes,
+        hence passing a value of ``block_identifier`` when connected to a gplaton
         nodes would result in an error like:  ``ValueError: {'code': -32602, 'message': 'too many arguments, want at most 1'}``
 
 .. py:method:: ContractFunction.buildTransaction(transaction)
@@ -882,19 +903,19 @@ Methods
 
             >>> math_contract.functions.increment(5).buildTransaction({'nonce': 10})
 
-        You may use :meth:`~web3.eth.Eth.getTransactionCount` to get the current nonce
+        You may use :meth:`~web3.platon.Platon.getTransactionCount` to get the current nonce
         for an account. Therefore a shortcut for producing a transaction dictionary with
         nonce included looks like:
 
         .. code-block:: python
 
-            >>> math_contract.functions.increment(5).buildTransaction({'nonce': web3.eth.get_transaction_count('0xF5...')})
+            >>> math_contract.functions.increment(5).buildTransaction({'nonce': web3.platon.get_transaction_count('0xF5...')})
 
     Returns a transaction dictionary. This transaction dictionary can then be sent using
-    :meth:`~web3.eth.Eth.send_transaction`.
+    :meth:`~web3.platon.Platon.send_transaction`.
 
     Additionally, the dictionary may be used for offline transaction signing using
-    :meth:`~web3.eth.account.Account.sign_transaction`.
+    :meth:`~web3.platon.account.Account.sign_transaction`.
 
     .. code-block:: python
 
@@ -919,7 +940,7 @@ Fallback Function
 .. py:method:: Contract.fallback.call(transaction)
 
     Call fallback function, executing the transaction locally using the
-    ``eth_call`` API.  This will not create a new public transaction.
+    ``platon_call`` API.  This will not create a new public transaction.
 
 .. py:method:: Contract.fallback.estimateGas(transaction)
 
@@ -944,9 +965,9 @@ For example:
 
     .. code-block:: python
 
-        myContract = web3.eth.contract(address=contract_address, abi=contract_abi)
+        myContract = web3.platon.contract(address=contract_address, abi=contract_abi)
         tx_hash = myContract.functions.myFunction().transact()
-        receipt = web3.eth.get_transaction_receipt(tx_hash)
+        receipt = web3.platon.get_transaction_receipt(tx_hash)
         myContract.events.myEvent().processReceipt(receipt)
 
 :py:class:`ContractEvent` provides methods to interact with contract events. Positional and keyword arguments supplied to the contract event subclass will be used to find the contract event by signature.
@@ -964,7 +985,7 @@ For example:
    .. code-block:: python
 
        >>> tx_hash = contract.functions.myFunction(12345).transact({'to':contract_address})
-       >>> tx_receipt = w3.eth.get_transaction_receipt(tx_hash)
+       >>> tx_receipt = w3.platon.get_transaction_receipt(tx_hash)
        >>> rich_logs = contract.events.myEvent().processReceipt(tx_receipt)
        >>> rich_logs[0]['args']
        {'myArg': 12345}
@@ -981,7 +1002,7 @@ For example:
    .. code-block:: python
 
        >>> tx_hash = contract.functions.myFunction(12345).transact({'to':contract_address})
-       >>> tx_receipt = w3.eth.get_transaction_receipt(tx_hash)
+       >>> tx_receipt = w3.platon.get_transaction_receipt(tx_hash)
        >>> processed_logs = contract.events.myEvent().processReceipt(tx_receipt)
        >>> processed_logs
        (
@@ -999,7 +1020,7 @@ For example:
 
 
        # Or, if there were errors encountered during processing:
-       >>> from web3.logs import STRICT, IGNORE, DISCARD, WARN
+       >>> from platon.logs import STRICT, IGNORE, DISCARD, WARN
        >>> processed_logs = contract.events.myEvent().processReceipt(tx_receipt, errors=IGNORE)
        >>> processed_logs
        (
@@ -1030,7 +1051,7 @@ For example:
    .. code-block:: python
 
        >>> tx_hash = contract.functions.myFunction(12345).transact({'to':contract_address})
-       >>> tx_receipt = w3.eth.get_transaction_receipt(tx_hash)
+       >>> tx_receipt = w3.platon.get_transaction_receipt(tx_hash)
        >>> log_to_process = tx_receipt['logs'][0]
        >>> processed_log = contract.events.myEvent().processLog(log_to_process)
        >>> processed_log
@@ -1068,30 +1089,124 @@ Event Log Object
 
 .. testsetup:: createFilter
 
-    from web3 import Web3
+    from platon import Web3
     from hexbytes import HexBytes
-    w3 = Web3(Web3.EthereumTesterProvider())
+    w3 = Web3(Web3.PlatonTesterProvider())
     bytecode = '6060604052341561000c57fe5b604051602080610acb833981016040528080519060200190919050505b620f42408114151561003b5760006000fd5b670de0b6b3a76400008102600281905550600254600060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020819055505b505b610a27806100a46000396000f30060606040523615610097576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806306fdde0314610099578063095ea7b31461013257806318160ddd1461018957806323b872dd146101af578063313ce5671461022557806370a082311461025157806395d89b411461029b578063a9059cbb14610334578063dd62ed3e1461038b575bfe5b34156100a157fe5b6100a96103f4565b60405180806020018281038252838181518152602001915080519060200190808383600083146100f8575b8051825260208311156100f8576020820191506020810190506020830392506100d4565b505050905090810190601f1680156101245780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561013a57fe5b61016f600480803573ffffffffffffffffffffffffffffffffffffffff1690602001909190803590602001909190505061042e565b604051808215151515815260200191505060405180910390f35b341561019157fe5b610199610521565b6040518082815260200191505060405180910390f35b34156101b757fe5b61020b600480803573ffffffffffffffffffffffffffffffffffffffff1690602001909190803573ffffffffffffffffffffffffffffffffffffffff16906020019091908035906020019091905050610527565b604051808215151515815260200191505060405180910390f35b341561022d57fe5b610235610791565b604051808260ff1660ff16815260200191505060405180910390f35b341561025957fe5b610285600480803573ffffffffffffffffffffffffffffffffffffffff16906020019091905050610796565b6040518082815260200191505060405180910390f35b34156102a357fe5b6102ab6107e0565b60405180806020018281038252838181518152602001915080519060200190808383600083146102fa575b8051825260208311156102fa576020820191506020810190506020830392506102d6565b505050905090810190601f1680156103265780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561033c57fe5b610371600480803573ffffffffffffffffffffffffffffffffffffffff1690602001909190803590602001909190505061081a565b604051808215151515815260200191505060405180910390f35b341561039357fe5b6103de600480803573ffffffffffffffffffffffffffffffffffffffff1690602001909190803573ffffffffffffffffffffffffffffffffffffffff16906020019091905050610973565b6040518082815260200191505060405180910390f35b604060405190810160405280600981526020017f54657374546f6b656e000000000000000000000000000000000000000000000081525081565b600081600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020819055508273ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925846040518082815260200191505060405180910390a3600190505b92915050565b60025481565b600081600060008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205410806105f1575081600160008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054105b156105fc5760006000fd5b81600060008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828254019250508190555081600060008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828254039250508190555081600160008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825403925050819055508273ffffffffffffffffffffffffffffffffffffffff168473ffffffffffffffffffffffffffffffffffffffff167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef846040518082815260200191505060405180910390a3600190505b9392505050565b601281565b6000600060008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205490505b919050565b604060405190810160405280600481526020017f544553540000000000000000000000000000000000000000000000000000000081525081565b600081600060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205410156108695760006000fd5b81600060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828254039250508190555081600060008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825401925050819055508273ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef846040518082815260200191505060405180910390a3600190505b92915050565b6000600160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205490505b929150505600a165627a7a723058205071371ee2a4a1be3c96e77d939cdc26161a256fdd638efc08bd33dfc65d3b850029'
     ABI = '[{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"nonpayable"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"nonpayable"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"nonpayable"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function","stateMutability":"view"},{"inputs":[{"name":"_totalSupply","type":"uint256"}],"payable":false,"type":"constructor","stateMutability":"nonpayable"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}]'
-    my_token_contract = w3.eth.contract(abi=ABI, bytecode=bytecode)
-    alice, bob = w3.eth.accounts[0], w3.eth.accounts[1]
+    my_token_contract = w3.platon.contract(abi=ABI, bytecode=bytecode)
+    alice, bob = w3.platon.accounts[0], w3.platon.accounts[1]
     assert alice == '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf', alice
     assert bob == '0x2B5AD5c4795c026514f8317c7a215E218DcCD6cF', bob
     tx_hash = my_token_contract.constructor(1000000).transact({'from': alice, 'gas': 899000, 'gasPrice': 320000})
     assert tx_hash == HexBytes('0x611aa2d5c3e51f08d0665c4529c5520ed32520d8a48ba2cf2aff3f2fce3f26e4'), tx_hash
-    txn_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+    txn_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
     assert txn_receipt['contractAddress'] == '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b', txn_receipt['contractAddress']
     contract_address = txn_receipt['contractAddress']
-    contract = w3.eth.contract(contract_address, abi=ABI)
+    contract = w3.platon.contract(contract_address, abi=ABI)
     total_supply = contract.functions.totalSupply().call()
     decimals = 10 ** 18
     assert total_supply == 1000000 * decimals, total_supply
     tx_hash = contract.functions.transfer(alice, 10).transact({'gas': 899000, 'gasPrice': 200000})
-    tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+    tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
 
 .. doctest:: createFilter
 
      >>> transfer_filter = my_token_contract.events.Transfer.createFilter(fromBlock="0x0", argument_filters={'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf'})
+          >>> transfer_filter.get_new_entries()
+          [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'value': 10}),
+           'event': 'Transfer',
+           'logIndex': 0,
+           'transactionIndex': 0,
+           'transactionHash': HexBytes('0x0005643c2425552308b4a28814a4dedafb5d340a811b3d2b1c019b290ffd7410'),
+           'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+           'blockHash': HexBytes('...'),
+           'blockNumber': 2})]
+          >>> transfer_filter.get_new_entries()
+          []
+          >>> tx_hash = contract.functions.transfer(alice, 10).transact({'gas': 899000, 'gasPrice': 200000})
+          >>> tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
+          >>> transfer_filter.get_new_entries()
+          [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'value': 10}),
+           'event': 'Transfer',
+           'logIndex': 0,
+           'transactionIndex': 0,
+           'transactionHash': HexBytes('0xea111a49b82b0a0729d49f9ad924d8f87405d01e3fa87463cf2903848aacf7d9'),
+           'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+           'blockHash': HexBytes('...'),
+           'blockNumber': 3})]
+          >>> transfer_filter.get_all_entries()
+          [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'value': 10}),
+           'event': 'Transfer',
+           'logIndex': 0,
+           'transactionIndex': 0,
+           'transactionHash': HexBytes('0x0005643c2425552308b4a28814a4dedafb5d340a811b3d2b1c019b290ffd7410'),
+           'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+           'blockHash': HexBytes('...'),
+           'blockNumber': 2}),
+           AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'value': 10}),
+           'event': 'Transfer',
+           'logIndex': 0,
+           'transactionIndex': 0,
+           'transactionHash': HexBytes('0xea111a49b82b0a0729d49f9ad924d8f87405d01e3fa87463cf2903848aacf7d9'),
+           'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+           'blockHash': HexBytes('...'),
+           'blockNumber': 3})]
+          >>> transfer_filter.get_new_entries()
+          [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'value': 10}),
+           'event': 'Transfer',
+           'logIndex': 0,
+           'transactionIndex': 0,
+           'transactionHash': HexBytes('0x0005643c2425552308b4a28814a4dedafb5d340a811b3d2b1c019b290ffd7410'),
+           'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+           'blockHash': HexBytes('...'),
+           'blockNumber': 2})]
+          >>> transfer_filter.get_new_entries()
+          []
+          >>> tx_hash = contract.functions.transfer(alice, 10).transact({'gas': 899000, 'gasPrice': 200000})
+          >>> tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
+          >>> transfer_filter.get_new_entries()
+          [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'value': 10}),
+           'event': 'Transfer',
+           'logIndex': 0,
+           'transactionIndex': 0,
+           'transactionHash': HexBytes('0xea111a49b82b0a0729d49f9ad924d8f87405d01e3fa87463cf2903848aacf7d9'),
+           'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+           'blockHash': HexBytes('...'),
+           'blockNumber': 3})]
+          >>> transfer_filter.get_all_entries()
+          [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'value': 10}),
+           'event': 'Transfer',
+           'logIndex': 0,
+           'transactionIndex': 0,
+           'transactionHash': HexBytes('0x0005643c2425552308b4a28814a4dedafb5d340a811b3d2b1c019b290ffd7410'),
+           'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+           'blockHash': HexBytes('...'),
+           'blockNumber': 2}),
+           AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'value': 10}),
+           'event': 'Transfer',
+           'logIndex': 0,
+           'transactionIndex': 0,
+           'transactionHash': HexBytes('0xea111a49b82b0a0729d49f9ad924d8f87405d01e3fa87463cf2903848aacf7d9'),
+           'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+           'blockHash': HexBytes('...'),
+           'blockNumber': 3})]
      >>> transfer_filter.get_new_entries()
      [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
       'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
@@ -1106,7 +1221,7 @@ Event Log Object
      >>> transfer_filter.get_new_entries()
      []
      >>> tx_hash = contract.functions.transfer(alice, 10).transact({'gas': 899000, 'gasPrice': 200000})
-     >>> tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+     >>> tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
      >>> transfer_filter.get_new_entries()
      [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
       'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
@@ -1150,7 +1265,7 @@ Utils
 
     .. code-block:: python
 
-        >>> transaction = w3.eth.get_transaction('0x5798fbc45e3b63832abc4984b0f3574a13545f415dd672cd8540cd71f735db56')
+        >>> transaction = w3.platon.get_transaction('0x5798fbc45e3b63832abc4984b0f3574a13545f415dd672cd8540cd71f735db56')
         >>> transaction.input
         '0x612e45a3000000000000000000000000b656b2a9c3b2416437a811e07466ca712f5a5b5a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000093a80000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000116c6f6e656c792c20736f206c6f6e656c7900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
         >>> contract.decode_function_input(transaction.input)
@@ -1177,18 +1292,23 @@ For example:
 .. testsetup:: contractcaller
 
    import json
-   from web3 import Web3
-   w3 = Web3(Web3.EthereumTesterProvider())
+   from platon import Web3
+   w3 = Web3(Web3.PlatonTesterProvider())
    bytecode = "0x606060405261022e806100126000396000f360606040523615610074576000357c01000000000000000000000000000000000000000000000000000000009004806316216f391461007657806361bc221a146100995780637cf5dab0146100bc578063a5f3c23b146100e8578063d09de08a1461011d578063dcf537b11461014057610074565b005b610083600480505061016c565b6040518082815260200191505060405180910390f35b6100a6600480505061017f565b6040518082815260200191505060405180910390f35b6100d26004808035906020019091905050610188565b6040518082815260200191505060405180910390f35b61010760048080359060200190919080359060200190919050506101ea565b6040518082815260200191505060405180910390f35b61012a6004805050610201565b6040518082815260200191505060405180910390f35b6101566004808035906020019091905050610217565b6040518082815260200191505060405180910390f35b6000600d9050805080905061017c565b90565b60006000505481565b6000816000600082828250540192505081905550600060005054905080507f3496c3ede4ec3ab3686712aa1c238593ea6a42df83f98a5ec7df9834cfa577c5816040518082815260200191505060405180910390a18090506101e5565b919050565b6000818301905080508090506101fb565b92915050565b600061020d6001610188565b9050610214565b90565b60006007820290508050809050610229565b91905056"
    ABI = json.loads('[{"constant":false,"inputs":[],"name":"return13","outputs":[{"name":"result","type":"int256"}],"type":"function"},{"constant":true,"inputs":[],"name":"counter","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"amt","type":"uint256"}],"name":"increment","outputs":[{"name":"result","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"a","type":"int256"},{"name":"b","type":"int256"}],"name":"add","outputs":[{"name":"result","type":"int256"}],"type":"function"},{"constant":false,"inputs":[],"name":"increment","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"a","type":"int256"}],"name":"multiply7","outputs":[{"name":"result","type":"int256"}],"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"value","type":"uint256"}],"name":"increased","type":"event"}]')
-   contract = w3.eth.contract(abi=ABI, bytecode=bytecode)
+   contract = w3.platon.contract(abi=ABI, bytecode=bytecode)
    deploy_txn = contract.constructor().transact()
-   deploy_receipt = w3.eth.wait_for_transaction_receipt(deploy_txn)
+   deploy_receipt = w3.platon.wait_for_transaction_receipt(deploy_txn)
    address = deploy_receipt.contractAddress
 
 .. doctest:: contractcaller
 
-   >>> myContract = w3.eth.contract(address=address, abi=ABI)
+   >>> myContract = w3.platon.contract(address=address, abi=ABI)
+      >>> twentyone = myContract.caller.multiply7(3)
+      >>> twentyone
+      21
+
+   It can also be invoked using parentheses:
    >>> twentyone = myContract.caller.multiply7(3)
    >>> twentyone
    21
@@ -1206,7 +1326,18 @@ You can also optionally include a block identifier. For example:
 
 .. doctest:: contractcaller
 
-   >>> from_address = w3.eth.accounts[1]
+   >>> from_address = w3.platon.accounts[1]
+      >>> twentyone = myContract.caller({'from': from_address}).multiply7(3)
+      >>> twentyone
+      21
+      >>> twentyone = myContract.caller(transaction={'from': from_address}).multiply7(3)
+      >>> twentyone
+      21
+      >>> twentyone = myContract.caller(block_identifier='latest').multiply7(3)
+      >>> twentyone
+      21
+
+   Like :py
    >>> twentyone = myContract.caller({'from': from_address}).multiply7(3)
    >>> twentyone
    21

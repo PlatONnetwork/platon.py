@@ -14,7 +14,7 @@ def test_nameprep_basic_unicode(ens):
     assert ens.nameprep("O\u0308bb.at") == "öbb.at"
     assert ens.nameprep("faß.de") == "faß.de"
     assert ens.nameprep("fass.de") == "fass.de"
-    assert ens.nameprep("🌈rainbow.eth") == "🌈rainbow.eth"
+    assert ens.nameprep("🌈rainbow.platon") == "🌈rainbow.platon"
     assert ens.nameprep("🐔🐔.tk") == "🐔🐔.tk"
     assert ens.nameprep("√.com") == "√.com"
     assert ens.nameprep("ԛәлп.com") == "ԛәлп.com"
@@ -27,7 +27,7 @@ def test_nameprep_basic_unicode(ens):
 @pytest.mark.parametrize(
     'url', [
         ('not=std3'),
-        ('not_std3.eth'),  # underscores not allowed
+        ('not_std3.platon'),  # underscores not allowed
     ]
 )
 def test_nameprep_std3_rules(ens, url):

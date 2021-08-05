@@ -9,13 +9,13 @@ from threading import (
 import time
 import uuid
 
-from web3.auto.gethdev import (
+from platon.auto.gplatondev import (
     w3,
 )
-from web3.middleware import (
+from platon.middleware import (
     construct_fixture_middleware,
 )
-from web3.providers.ipc import (
+from platon.providers.ipc import (
     IPCProvider,
 )
 
@@ -86,12 +86,12 @@ def test_sync_waits_for_full_result(jsonrpc_ipc_pipe_path, serve_empty_result):
     provider._socket.sock.close()
 
 
-def test_web3_auto_gethdev():
+def test_web3_auto_gplatondev():
     assert isinstance(w3.provider, IPCProvider)
     return_block_with_long_extra_data = construct_fixture_middleware({
-        'eth_getBlockByNumber': {'extraData': '0x' + 'ff' * 33},
+        'platon_getBlockByNumber': {'extraData': '0x' + 'ff' * 33},
     })
     w3.middleware_onion.inject(return_block_with_long_extra_data, layer=0)
-    block = w3.eth.get_block('latest')
+    block = w3.platon.get_block('latest')
     assert 'extraData' not in block
     assert block.proofOfAuthorityData == b'\xff' * 33

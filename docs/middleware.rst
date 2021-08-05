@@ -2,7 +2,7 @@ Middleware
 ==========
 
 Web3 manages layers of middlewares by default. They sit between the public Web3 methods and the
-:doc:`providers`, which handle native communication with the Ethereum client. Each layer
+:doc:`providers`, which handle native communication with the Platon client. Each layer
 can modify the request and/or response. Some middlewares are enabled by default, and
 others are available for optional use.
 
@@ -30,17 +30,17 @@ AttributeDict
 .. py:method:: web3.middleware.attrdict_middleware
 
     This middleware converts the output of a function from a dictionary to an ``AttributeDict``
-    which enables dot-syntax access, like ``eth.get_block('latest').number``
-    in addition to ``eth.get_block('latest')['number']``.
+    which enables dot-syntax access, like ``platon.get_block('latest').number``
+    in addition to ``platon.get_block('latest')['number']``.
 
-.eth Name Resolution
+.platon Name Resolution
 ~~~~~~~~~~~~~~~~~~~~~
 
 .. py:method:: web3.middleware.name_to_address_middleware
 
-    This middleware converts Ethereum Name Service (ENS) names into the
-    address that the name points to. For example :meth:`w3.eth.send_transaction <web3.eth.Eth.send_transaction>` will
-    accept .eth names in the 'from' and 'to' fields.
+    This middleware converts Platon Name Service (ENS) names into the
+    address that the name points to. For example :meth:`w3.platon.send_transaction <web3.platon.Platon.send_transaction>` will
+    accept .platon names in the 'from' and 'to' fields.
 
 .. note::
     This middleware only converts ENS names if invoked with the mainnet
@@ -54,7 +54,7 @@ Pythonic
 
     This converts arguments and returned values to python primitives,
     where appropriate. For example, it converts the raw hex string returned by the RPC call
-    ``eth_blockNumber`` into an ``int``.
+    ``platon_blockNumber`` into an ``int``.
 
 Gas Price Strategy
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -78,7 +78,7 @@ HTTPRequestRetry
     requests that return the following errors: ``ConnectionError``, ``HTTPError``, ``Timeout``,
     ``TooManyRedirects``. Additionally there is a whitelist that only allows certain
     methods to be retried in order to not resend transactions, excluded methods are:
-    ``eth_sendTransaction``, ``personal_signAndSendTransaction``, ``personal_sendTransaction``.
+    ``platon_sendTransaction``, ``personal_signAndSendTransaction``, ``personal_sendTransaction``.
 
 .. _Modifying_Middleware:
 
@@ -93,12 +93,12 @@ Middleware Order
 ~~~~~~~~~~~~~~~~~~
 
 Think of the middleware as being layered in an onion, where you initiate a web3.py request at
-the outermost layer of the onion, and the Ethereum node (like geth or parity) receives and responds
+the outermost layer of the onion, and the Platon node (like gplaton or parity) receives and responds
 to the request inside the innermost layer of the onion. Here is a (simplified) diagram:
 
 .. code-block:: none
 
-                                         New request from web3.py
+                                         New request from platon.py
 
                                                      |
                                                      |
@@ -122,7 +122,7 @@ to the request inside the innermost layer of the onion. Here is a (simplified) d
               .         .            ``              |              .            ``          .
              ``         .            .               v               .            .          .
              .         .`           .                                .            .          ``
-             .         .            .          Ethereum node         .`           .           .
+             .         .            .          Platon node         .`           .           .
              .         .            .                                .            .           .
              .         ``           `.               |               .            .           .
              .          .            .`              |              .`            .          .
@@ -214,7 +214,7 @@ To add or remove items in different layers, use the following API:
 
     .. code-block:: python
 
-        >>> from web3.middleware import pythonic_middleware, attrdict_middleware
+        >>> from platon.middleware import pythonic_middleware, attrdict_middleware
         >>> w3 = Web3(...)
 
         >>> w3.middleware_onion.replace(pythonic_middleware, attrdict_middleware)
@@ -277,7 +277,7 @@ Stalecheck
 
     If the latest block in the blockchain is older than 2 days in this example, then the
     middleware will raise a ``StaleBlockchain`` exception on every call except
-    ``web3.eth.get_block()``.
+    ``web3.platon.get_block()``.
 
 
 Cache
@@ -330,53 +330,53 @@ All of the caching middlewares accept these common arguments.
     A ready to use version of this middleware can be found at
     ``web3.middlewares.latest_block_based_cache_middleware``.
 
-.. _geth-poa:
+.. _gplaton-poa:
 
-Geth-style Proof of Authority
+Gplaton-style Proof of Authority
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This middleware is required to connect to ``geth --dev`` or the Rinkeby public network.
+This middleware is required to connect to ``gplaton --dev`` or the Rinkeby public network.
 
-The easiest way to connect to a default ``geth --dev`` instance which loads the middleware is:
+The easiest way to connect to a default ``gplaton --dev`` instance which loads the middleware is:
 
 
 .. code-block:: python
 
-    >>> from web3.auto.gethdev import w3
+    >>> from platon.auto.gplatondev import w3
 
     # confirm that the connection succeeded
     >>> w3.clientVersion
-    'Geth/v1.7.3-stable-4bb3c89d/linux-amd64/go1.9'
+    'Gplaton/v1.7.3-stable-4bb3c89d/linux-amd64/go1.9'
 
-This example connects to a local ``geth --dev`` instance on Linux with a
+This example connects to a local ``gplaton --dev`` instance on Linux with a
 unique IPC location and loads the middleware:
 
 
 .. code-block:: python
 
-    >>> from web3 import Web3, IPCProvider
+    >>> from platon import Web3, IPCProvider
 
-    # connect to the IPC location started with 'geth --dev --datadir ~/mynode'
-    >>> w3 = Web3(IPCProvider('~/mynode/geth.ipc'))
+    # connect to the IPC location started with 'gplaton --dev --datadir ~/mynode'
+    >>> w3 = Web3(IPCProvider('~/mynode/gplaton.ipc'))
 
-    >>> from web3.middleware import geth_poa_middleware
+    >>> from platon.middleware import gplaton_poa_middleware
 
     # inject the poa compatibility middleware to the innermost layer
-    >>> w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+    >>> w3.middleware_onion.inject(gplaton_poa_middleware, layer=0)
 
     # confirm that the connection succeeded
     >>> w3.clientVersion
-    'Geth/v1.7.3-stable-4bb3c89d/linux-amd64/go1.9'
+    'Gplaton/v1.7.3-stable-4bb3c89d/linux-amd64/go1.9'
 
-Why is ``geth_poa_middleware`` necessary?
+Why is ``gplaton_poa_middleware`` necessary?
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 There is no strong community consensus on a single Proof-of-Authority (PoA) standard yet.
-Some nodes have successful experiments running, though. One is go-ethereum (geth),
+Some nodes have successful experiments running, though. One is platon (gplaton),
 which uses a prototype PoA for it's development mode and the Rinkeby test network.
 
 Unfortunately, it does deviate from the yellow paper specification, which constrains the
-``extraData`` field in each block to a maximum of 32-bytes. Geth's PoA uses more than
+``extraData`` field in each block to a maximum of 32-bytes. Gplaton's PoA uses more than
 32 bytes, so this middleware modifies the block data a bit before returning it.
 
 .. _local-filter:
@@ -384,21 +384,24 @@ Unfortunately, it does deviate from the yellow paper specification, which constr
 Locally Managed Log and Block Filters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This middleware provides an alternative to ethereum node managed filters. When used, Log and
+This middleware provides an alternative to platon node managed filters. When used, Log and
 Block filter logic are handled locally while using the same web3 filter api. Filter results are
 retrieved using JSON-RPC endpoints that don't rely on server state.
 
 .. doctest::
 
-    >>> from web3 import Web3, EthereumTesterProvider
-    >>> w3 = Web3(EthereumTesterProvider())
-    >>> from web3.middleware import local_filter_middleware
+    >>> from platon import Web3, PlatonTesterProvider
+        >>> w3 = Web3(PlatonTesterProvider())
+        >>> from platon.middleware import local_filter_middleware
+        >>> w3.middleware_onion.add(local_filter_middleware)
+    >>> w3 = Web3(PlatonTesterProvider())
+    >>> from platon.middleware import local_filter_middleware
     >>> w3.middleware_onion.add(local_filter_middleware)
 
 .. code-block:: python
 
     #  Normal block and log filter apis behave as before.
-    >>> block_filter = w3.eth.filter("latest")
+    >>> block_filter = w3.platon.filter("latest")
 
     >>> log_filter = myContract.events.myEvent.build_filter().deploy()
 
@@ -407,23 +410,23 @@ Signing
 
 .. py:method:: web3.middleware.construct_sign_and_send_raw_middleware(private_key_or_account)
 
-This middleware automatically captures transactions, signs them, and sends them as raw transactions. The from field on the transaction, or ``w3.eth.default_account`` must be set to the address of the private key for this middleware to have any effect.
+This middleware automatically captures transactions, signs them, and sends them as raw transactions. The from field on the transaction, or ``w3.platon.default_account`` must be set to the address of the private key for this middleware to have any effect.
 
    * ``private_key_or_account`` A single private key or a tuple, list or set of private keys.
 
       Keys can be in any of the following formats:
 
-      * An ``eth_account.LocalAccount`` object
-      * An ``eth_keys.PrivateKey`` object
+      * An ``platon_account.LocalAccount`` object
+      * An ``platon_keys.PrivateKey`` object
       * A raw private key as a hex string or byte string
 
 .. code-block:: python
 
-   >>> from web3 import Web3, EthereumTesterProvider
-   >>> w3 = Web3(EthereumTesterProvider)
-   >>> from web3.middleware import construct_sign_and_send_raw_middleware
-   >>> from eth_account import Account
+   >>> from platon import Web3, PlatonTesterProvider
+   >>> w3 = Web3(PlatonTesterProvider)
+   >>> from platon.middleware import construct_sign_and_send_raw_middleware
+   >>> from platon_account import Account
    >>> acct = Account.create('KEYSMASH FJAFJKLDSKF7JKFDJ 1530')
    >>> w3.middleware_onion.add(construct_sign_and_send_raw_middleware(acct))
-   >>> w3.eth.default_account = acct.address
+   >>> w3.platon.default_account = acct.address
    # Now you can send a tx from acct.address without having to build and sign each raw transaction

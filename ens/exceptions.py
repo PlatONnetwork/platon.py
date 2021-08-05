@@ -14,7 +14,7 @@ class InvalidName(idna.IDNAError):
     """
     This exception is raised if the provided name does not meet
     the syntax standards specified in `EIP 137 name syntax
-    <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_.
+    <https://github.com/platonnetwork/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_.
 
     For example: names may not start with a dot, or include a space.
     """

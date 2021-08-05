@@ -1,6 +1,6 @@
 import pytest
 
-from web3._utils.datatypes import (
+from platon._utils.datatypes import (
     PropertyCheckingFactory,
 )
 

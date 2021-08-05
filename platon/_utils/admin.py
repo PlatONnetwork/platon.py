@@ -1,0 +1,87 @@
+from typing import (
+    Callable,
+    List,
+    Tuple,
+)
+
+from platon._utils.compat import (
+    Protocol,
+)
+from platon._utils.rpc_abi import (
+    RPC,
+)
+from platon.method import (
+    Method,
+    default_root_munger,
+)
+from platon.module import (
+    Module,
+)
+from platon.types import (
+    EnodeURI,
+    NodeInfo,
+    Peer,
+)
+
+
+def admin_start_params_munger(
+    module: Module, host: str = 'localhost', port: int = 8546, cors: str = '',
+    apis: str = 'platon,net,platon'
+) -> Tuple[str, int, str, str]:
+    return (host, port, cors, apis)
+
+
+add_peer: Method[Callable[[EnodeURI], bool]] = Method(
+    RPC.admin_addPeer,
+    mungers=[default_root_munger],
+)
+
+
+data_dir: Method[Callable[[], str]] = Method(
+    RPC.admin_datadir,
+    mungers=None,
+)
+
+
+node_info: Method[Callable[[], NodeInfo]] = Method(
+    RPC.admin_nodeInfo,
+    mungers=None,
+)
+
+
+peers: Method[Callable[[], List[Peer]]] = Method(
+    RPC.admin_peers,
+    mungers=None,
+)
+
+
+class ServerConnection(Protocol):
+    def __call__(
+        self, host: str = "localhost", port: int = 8546, cors: str = "", apis: str = "platon,net,platon"
+    ) -> bool:
+        pass
+
+
+start_rpc: Method[ServerConnection] = Method(
+    RPC.admin_startRPC,
+    mungers=[admin_start_params_munger],
+)
+
+
+start_ws: Method[ServerConnection] = Method(
+    RPC.admin_startWS,
+    mungers=[admin_start_params_munger],
+)
+
+
+stop_rpc: Method[Callable[[], bool]] = Method(
+    RPC.admin_stopRPC,
+    mungers=None,
+)
+
+
+stop_ws: Method[Callable[[], bool]] = Method(
+    RPC.admin_stopWS,
+    mungers=None,
+)
+

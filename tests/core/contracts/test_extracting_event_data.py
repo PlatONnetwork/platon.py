@@ -1,21 +1,21 @@
 import pytest
 import re
 
-from eth_utils import (
+from platon_utils import (
     is_same_address,
 )
-from eth_utils.toolz import (
+from platon_utils.toolz import (
     dissoc,
 )
 
-from web3._utils.events import (
+from platon._utils.events import (
     get_event_data,
 )
-from web3.exceptions import (
+from platon.exceptions import (
     LogTopicError,
     ValidationError,
 )
-from web3.logs import (
+from platon.logs import (
     DISCARD,
     IGNORE,
     STRICT,
@@ -25,17 +25,17 @@ from web3.logs import (
 
 @pytest.fixture()
 def Emitter(web3, EMITTER):
-    return web3.eth.contract(**EMITTER)
+    return web3.platon.contract(**EMITTER)
 
 
 @pytest.fixture()
 def emitter(web3, Emitter, wait_for_transaction, wait_for_block, address_conversion_func):
     wait_for_block(web3)
-    deploy_txn_hash = Emitter.constructor().transact({'from': web3.eth.coinbase, 'gas': 1000000})
-    deploy_receipt = web3.eth.wait_for_transaction_receipt(deploy_txn_hash)
+    deploy_txn_hash = Emitter.constructor().transact({'from': web3.platon.coinbase, 'gas': 1000000})
+    deploy_receipt = web3.platon.wait_for_transaction_receipt(deploy_txn_hash)
     contract_address = address_conversion_func(deploy_receipt['contractAddress'])
 
-    bytecode = web3.eth.get_code(contract_address)
+    bytecode = web3.platon.get_code(contract_address)
     assert bytecode == Emitter.bytecode_runtime
     _emitter = Emitter(address=contract_address)
     assert _emitter.address == contract_address
@@ -44,7 +44,7 @@ def emitter(web3, Emitter, wait_for_transaction, wait_for_block, address_convers
 
 @pytest.fixture()
 def EventContract(web3, EVENT_CONTRACT):
-    return web3.eth.contract(**EVENT_CONTRACT)
+    return web3.platon.contract(**EVENT_CONTRACT)
 
 
 @pytest.fixture()
@@ -57,12 +57,12 @@ def event_contract(
 
     wait_for_block(web3)
     deploy_txn_hash = EventContract.constructor().transact({
-        'from': web3.eth.coinbase, 'gas': 1000000
+        'from': web3.platon.coinbase, 'gas': 1000000
     })
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     contract_address = address_conversion_func(deploy_receipt['contractAddress'])
 
-    bytecode = web3.eth.get_code(contract_address)
+    bytecode = web3.platon.get_code(contract_address)
     assert bytecode == EventContract.bytecode_runtime
     event_contract = EventContract(address=contract_address)
     assert event_contract.address == contract_address
@@ -71,7 +71,7 @@ def event_contract(
 
 @pytest.fixture()
 def IndexedEventContract(web3, INDEXED_EVENT_CONTRACT):
-    return web3.eth.contract(**INDEXED_EVENT_CONTRACT)
+    return web3.platon.contract(**INDEXED_EVENT_CONTRACT)
 
 
 @pytest.fixture()
@@ -84,12 +84,12 @@ def indexed_event_contract(
 
     wait_for_block(web3)
     deploy_txn_hash = IndexedEventContract.constructor().transact({
-        'from': web3.eth.coinbase, 'gas': 1000000
+        'from': web3.platon.coinbase, 'gas': 1000000
     })
     deploy_receipt = wait_for_transaction(web3, deploy_txn_hash)
     contract_address = address_conversion_func(deploy_receipt['contractAddress'])
 
-    bytecode = web3.eth.get_code(contract_address)
+    bytecode = web3.platon.get_code(contract_address)
     assert bytecode == IndexedEventContract.bytecode_runtime
     indexed_event_contract = IndexedEventContract(address=contract_address)
     assert indexed_event_contract.address == contract_address
