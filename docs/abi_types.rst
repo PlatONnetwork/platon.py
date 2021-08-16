@@ -43,7 +43,7 @@ for an example and more details.
 Types by Example
 ----------------
 
-Let's use a contrived contract to demonstrate input types in Web3.py:
+Let's use a contrived contract to demonstrate input types in platon.py:
 
 .. code-block:: none
 

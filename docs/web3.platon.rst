@@ -585,7 +585,7 @@ The following methods are available on the ``web3.platon`` namespace.
 
     .. code-block:: python
 
-        # simple example (Web3.py determines gas and fee)
+        # simple example (platon.py determines gas and fee)
         >>> web3.platon.send_transaction({
           'to': '0xd3CdA913deB6f67967B99D67aCDFa1712C293601',
           'from': web3.platon.coinbase,

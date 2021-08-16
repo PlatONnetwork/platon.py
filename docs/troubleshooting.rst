@@ -30,7 +30,7 @@ Often, the best way to guarantee a correct environment is with ``virtualenv``, l
     # With virtualenv active, make sure you have the latest packaging tools
     $ pip install --upgrade pip setuptools
 
-    # Now we can install web3.py...
+    # Now we can install platon.py...
     $ pip install --upgrade web3
 
 .. NOTE:: Remember that each new terminal session requires you to reactivate your virtualenv, like:
@@ -42,11 +42,11 @@ Often, the best way to guarantee a correct environment is with ``virtualenv``, l
 Why can't I use a particular function?
 --------------------------------------
 
-Note that a Web3.py instance must be configured before you can use most of its capabilities.
+Note that a platon.py instance must be configured before you can use most of its capabilities.
 One symptom of not configuring the instance first is an error that looks something like this:
 ``AttributeError: type object 'Web3' has no attribute 'platon'``.
 
-To properly configure your Web3.py instance, specify which provider you're using to connect to the
+To properly configure your platon.py instance, specify which provider you're using to connect to the
 Platon network. An example configuration, if you're connecting to a locally run node, might be:
 
 .. code-block:: python
@@ -82,13 +82,13 @@ If that does not address your issue, it's probable that you still have a
 Provider configuration issue. There are several options for configuring
 a Provider, detailed :ref:`here<providers>`.
 
-How do I use my MetaMask accounts from Web3.py?
+How do I use my MetaMask accounts from platon.py?
 -----------------------------------------------
-Often you don't need to do this, just make a new account in Web3.py,
+Often you don't need to do this, just make a new account in platon.py,
 and transfer funds from your MetaMask account into it. But if you must...
 
 Export your private key from MetaMask, and use
-the local private key tools in Web3.py to sign and send transactions.
+the local private key tools in platon.py to sign and send transactions.
 
 See `how to export your private key
 <https://platon.stackexchange.com/questions/33053/what-is-a-private-key-in-an-platon-wallet-like-metamask-and-how-do-i-find-it>`_
@@ -143,17 +143,17 @@ In general, your options for accounts are:
 Making Platon JSON-RPC API access faster
 ------------------------------------------
 
-Your Platon node JSON-RPC API might be slow when fetching multiple and large requests, especially when running batch jobs. Here are some tips for how to speed up your web3.py application.
+Your Platon node JSON-RPC API might be slow when fetching multiple and large requests, especially when running batch jobs. Here are some tips for how to speed up your platon.py application.
 
 - Run your client locally, e.g., `Go Platon <https://github.com/platonnetwork/platon-go>`_ or `TurboGplaton <https://github.com/ledgerwatch/turbo-gplaton>`_. The network latency and speed are the major limiting factors for fast API access.
 
 - Use IPC communication instead of HTTP/WebSockets. See :ref:`choosing_provider`.
 
-- Use an optimised JSON decoder. A future iteration of Web3.py may change the default decoder or provide an API to configure one, but for now, you may patch the provider class to use `ujson <https://pypi.org/project/ujson/>`_.
+- Use an optimised JSON decoder. A future iteration of platon.py may change the default decoder or provide an API to configure one, but for now, you may patch the provider class to use `ujson <https://pypi.org/project/ujson/>`_.
 
 .. code-block:: python
 
-    """JSON-RPC decoding optimised for web3.py"""
+    """JSON-RPC decoding optimised for platon.py"""
 
     from typing import cast
 
@@ -169,7 +169,7 @@ Your Platon node JSON-RPC API might be slow when fetching multiple and large req
 
 
     def patch_provider(provider: JSONBaseProvider):
-        """Monkey-patch web3.py provider for faster JSON decoding.
+        """Monkey-patch platon.py provider for faster JSON decoding.
 
         Call this on your provider after construction.
 

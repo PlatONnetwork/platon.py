@@ -39,7 +39,7 @@ def ens_setup(deployer):
 
     # create ENS contract
     # values borrowed from:
-    # https://github.com/platonnetwork/web3.py/blob/master/tests/ens/conftest.py#L109
+    # https://github.com/platonnetwork/platon.py/blob/master/tests/ens/conftest.py#L109
     platon_labelhash = w3.keccak(text='platon')
     platon_namehash = bytes32(0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae)
     resolver_namehash = bytes32(0xfdd5d5de6dd63db72bbc2d487944ba13bf775b50a80805fe6fcaba9b0fba88f5)

@@ -192,7 +192,7 @@ There are a few options for making transactions:
 - :ref:`contract-functions`
 
   Use these methods if:
-    - you want to interact with a contract. Web3.py parses the contract ABI and makes those functions available via the ``functions`` property.
+    - you want to interact with a contract. platon.py parses the contract ABI and makes those functions available via the ``functions`` property.
 
 - :meth:`~web3.middleware.construct_sign_and_send_raw_middleware`
 
@@ -661,7 +661,7 @@ When someone has an allowance they can transfer those tokens using the
 Contract Unit Tests in Python
 -----------------------------
 
-Here is an example of how one can use the `pytest`_ framework in python, Web3.py,
+Here is an example of how one can use the `pytest`_ framework in python, platon.py,
 platon-tester, and PyEVM to perform unit tests entirely in python without any
 additional need for a full featured platon node/client. To install needed
 dependencies you can use the pinned extra for platon_tester in web3 and pytest:
@@ -730,7 +730,7 @@ Tip : afterwards you can use the value stored in ``txn_hash``, in an explorer li
 Adjusting log levels
 --------------------
 
-Web3.py internally uses `Python logging subsystem <https://docs.python.org/3/library/logging.html>`_.
+platon.py internally uses `Python logging subsystem <https://docs.python.org/3/library/logging.html>`_.
 
 If you want to run your application logging in debug mode, below is an example of how to make some JSON-RPC traffic quieter.
 
@@ -814,7 +814,7 @@ The script can be run with: ``python ./eventscanner.py <your JSON-RPC API URL>``
 
 .. code-block:: python
 
-    """A stateful event scanner for Platon-based blockchains using Web3.py.
+    """A stateful event scanner for Platon-based blockchains using platon.py.
 
     With the stateful mechanism, you can do one batch scan or incremental scans,
     where events are added wherever the scanner left off.
@@ -1183,7 +1183,7 @@ The script can be run with: ``python ./eventscanner.py <your JSON-RPC API URL>``
         if from_block is None:
             raise TypeError("Missing mandatory keyword argument to getLogs: fromBlock")
 
-        # Currently no way to poke this using a public Web3.py API.
+        # Currently no way to poke this using a public platon.py API.
         # This will return raw underlying ABI JSON object for the event
         abi = event._get_event_abi()
 
@@ -1199,7 +1199,7 @@ The script can be run with: ``python ./eventscanner.py <your JSON-RPC API URL>``
         # Construct JSON-RPC raw filter presentation based on human readable Python descriptions
         # Namely, convert event names to their keccak signatures
         # More information here:
-        # https://github.com/platonnetwork/web3.py/blob/e176ce0793dafdd0573acc8d4b76425b6eb604ca/web3/_utils/filters.py#L71
+        # https://github.com/platonnetwork/platon.py/blob/e176ce0793dafdd0573acc8d4b76425b6eb604ca/web3/_utils/filters.py#L71
         data_filter_set, event_filter_params = construct_event_filter_params(
             abi,
             codec,
@@ -1220,7 +1220,7 @@ The script can be run with: ``python ./eventscanner.py <your JSON-RPC API URL>``
         for log in logs:
             # Convert raw JSON-RPC log result to human readable event by using ABI data
             # More information how processLog works here
-            # https://github.com/platonnetwork/web3.py/blob/fbaf1ad11b0c7fac09ba34baff2c256cffe0a148/web3/_utils/events.py#L200
+            # https://github.com/platonnetwork/platon.py/blob/fbaf1ad11b0c7fac09ba34baff2c256cffe0a148/web3/_utils/events.py#L200
             evt = get_event_data(codec, abi, log)
             # Note: This was originally yield,
             # but deferring the timeout exception caused the throttle logic not to work

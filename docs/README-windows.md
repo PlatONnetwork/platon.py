@@ -1,4 +1,4 @@
-# Web3.py on Windows
+# platon.py on Windows
 
 ## Developer Setup
 

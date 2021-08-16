@@ -12,7 +12,7 @@ Quickstart
 Installation
 ------------
 
-Web3.py can be installed (preferably in a :ref:`virtualenv <setup_environment>`)
+platon.py can be installed (preferably in a :ref:`virtualenv <setup_environment>`)
 using ``pip`` as follows:
 
 .. code-block:: shell
@@ -102,7 +102,7 @@ Note that this requires your Infura Project ID to be set as the environment vari
 Getting Blockchain Info
 -----------------------
 
-It's time to start using Web3.py! Once properly configured, the ``w3`` instance will allow you
+It's time to start using platon.py! Once properly configured, the ``w3`` instance will allow you
 to interact with the Platon blockchain. Try getting all the information about the latest block:
 
 .. code-block:: python
@@ -128,7 +128,7 @@ to interact with the Platon blockchain. Try getting all the information about th
      'transactions': [],
      'transactionsRoot': HexBytes('0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421'),
 
-Web3.py can help you read block data, sign and send transactions, deploy and interact with contracts,
+platon.py can help you read block data, sign and send transactions, deploy and interact with contracts,
 and a number of other features.
 
 Many of the typical things you'll want to do will be in the :class:`w3.platon <web3.platon.Platon>` API,

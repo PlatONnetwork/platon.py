@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Web3.py documentation build configuration file, created by
+# platon.py documentation build configuration file, created by
 # sphinx-quickstart on Thu Oct 16 20:43:24 2014.
 #
 # This file is execfile()d with the current directory set to its
@@ -53,7 +53,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Web3.py'
+project = u'platon.py'
 copyright = u'2018, Piper Merriam, Jason Carver'
 
 __version__ = setup_version
@@ -253,7 +253,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'platon', u'Web3.py Documentation',
+    ('index', 'platon', u'platon.py Documentation',
      [u'Piper Merriam'], 1)
 ]
 
@@ -267,8 +267,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Web3.py', u'Web3.py Documentation',
-   u'Piper Merriam', 'Web3.py', 'Backend agnostic Platon client interactions.',
+  ('index', 'platon.py', u'platon.py Documentation',
+   u'Piper Merriam', 'platon.py', 'Backend agnostic Platon client interactions.',
    'Miscellaneous'),
 ]
 

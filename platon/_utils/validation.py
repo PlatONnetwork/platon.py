@@ -110,13 +110,13 @@ def validate_abi_value(abi_type: TypeStr, value: Any) -> None:
                 raise TypeError(
                     "Invalid abi-type: {abi_type}. Length of fixed sized arrays"
                     "must be greater than 0."
-                    .format(abi_type=abi_type)
+                        .format(abi_type=abi_type)
                 )
             if specified_length != len(value):
                 raise TypeError(
                     "The following array length does not the length specified"
                     "by the abi-type, {abi_type}: {value}"
-                    .format(abi_type=abi_type, value=value)
+                        .format(abi_type=abi_type, value=value)
                 )
 
         # validate sub_types
@@ -149,12 +149,12 @@ def validate_abi_value(abi_type: TypeStr, value: Any) -> None:
 
     raise TypeError(
         "The following abi value is not a '{abi_type}': {value}"
-        .format(abi_type=abi_type, value=value)
+            .format(abi_type=abi_type, value=value)
     )
 
 
 def is_not_address_string(value: Any) -> bool:
-    return is_string(value) and not is_bytes(value) and not is_bech32_address(value)
+    return is_string(value) and not is_bech32_address(value)
 
 
 def validate_address(value: Any) -> None:

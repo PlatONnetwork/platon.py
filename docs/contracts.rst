@@ -74,7 +74,7 @@ You should now be set up to run the contract deployment example below:
     # get abi
     >>> abi = contract_interface['abi']
 
-    # web3.py instance
+    # platon.py instance
     >>> w3 = Web3(Web3.PlatonTesterProvider())
 
     # set pre-funded account as sender
@@ -459,7 +459,7 @@ Each Contract Factory exposes the following methods.
 
 
 .. note::
-    Web3.py rejects the initialization of contracts that have more than one function
+    platon.py rejects the initialization of contracts that have more than one function
     with the same selector or signature.
     eg. ``blockHashAddendsInexpansible(uint256)`` and ``blockHashAskewLimitary(uint256)`` have the
     same selector value equal to ``0x00000000``. A contract containing both of these functions
@@ -1361,7 +1361,7 @@ Contract FAQs
 How do I pass in a struct as a function argument?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Web3.py accepts struct arguments as dictionaries. This format also supports nested structs.
+platon.py accepts struct arguments as dictionaries. This format also supports nested structs.
 Let's take a look at a quick example. Given the following Solidity contract:
 
 .. code-block:: none
@@ -1394,7 +1394,7 @@ Let's take a look at a quick example. Given the following Solidity contract:
      }
    }
 
-You can interact with Web3.py contract API as follows:
+You can interact with platon.py contract API as follows:
 
 .. code-block:: python
 

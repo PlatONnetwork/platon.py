@@ -122,7 +122,7 @@ will return a new :class:`BlockFilter` object.
 Event Log Filters
 -----------------
 
-You can set up a filter for event logs using the web3.py contract api:
+You can set up a filter for event logs using the platon.py contract api:
 :meth:`web3.contract.Contract.events.your_event_name.createFilter`, which provides some conveniences for
 creating event log filters. Refer to the following example:
 

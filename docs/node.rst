@@ -13,7 +13,7 @@ balances, and new transactions, the protocol requires a connection
 to nodes on the network. These nodes are constantly sharing new data
 with each other.
 
-Web3.py is a python library for connecting to these nodes. It does
+platon.py is a python library for connecting to these nodes. It does
 not run its own node internally.
 
 .. _choosing_node:
@@ -74,7 +74,7 @@ Can I use MetaMask as a node?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 MetaMask is not a node. It is an interface for interacting with a node.
-Roughly, it's what you get if you turn Web3.py into a browser extension.
+Roughly, it's what you get if you turn platon.py into a browser extension.
 
 By default, MetaMask connects to an Infura node.
 You can also set up MetaMask to use a node that you run locally.

@@ -7,7 +7,7 @@ The Platon Name Service is analogous to the Domain Name Service. It
 enables users and developers to use human-friendly names in place of error-prone
 hexadecimal addresses, content hashes, and more.
 
-The :mod:`ens` module is included with web3.py. It provides an interface to look up
+The :mod:`ens` module is included with platon.py. It provides an interface to look up
 an address from a name, set up your own address, and more.
 
 Setup

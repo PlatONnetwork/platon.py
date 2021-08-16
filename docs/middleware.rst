@@ -92,7 +92,7 @@ middleware itself.
 Middleware Order
 ~~~~~~~~~~~~~~~~~~
 
-Think of the middleware as being layered in an onion, where you initiate a web3.py request at
+Think of the middleware as being layered in an onion, where you initiate a platon.py request at
 the outermost layer of the onion, and the Platon node (like gplaton or parity) receives and responds
 to the request inside the innermost layer of the onion. Here is a (simplified) diagram:
 
@@ -146,7 +146,7 @@ to the request inside the innermost layer of the onion. Here is a (simplified) d
                                                      |
                                                      v
 
-                                          Returned value in Web3.py
+                                          Returned value in platon.py
 
 
 The middlewares are maintained in ``Web3.middleware_onion``. See

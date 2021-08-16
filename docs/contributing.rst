@@ -3,7 +3,7 @@
 Contributing
 ------------
 
-Thanks for your interest in contributing to Web3.py! Read on to learn what
+Thanks for your interest in contributing to platon.py! Read on to learn what
 would be helpful and how to go about it. If you get stuck along the way, reach
 for help in the `Python Discord server`_.
 
@@ -16,7 +16,7 @@ Without code:
 * Answer user questions within GitHub issues, Stack Overflow, or the `Python Discord server`_.
 * Write or record tutorial content.
 * Improve our documentation (including typo fixes).
-* `Open an issue <https://github.com/platonnetwork/web3.py/issues/new>`_ on GitHub to document a bug. Include as much detail as possible, e.g., how to reproduce the issue and any exception messages.
+* `Open an issue <https://github.com/platonnetwork/platon.py/issues/new>`_ on GitHub to document a bug. Include as much detail as possible, e.g., how to reproduce the issue and any exception messages.
 
 With code:
 
@@ -41,13 +41,13 @@ Your Development Environment
   for usage patterns.
 
 All pull requests are made from a fork of the repository; use the GitHub UI to create a fork.
-Web3.py depends on `submodules <https://gist.github.com/gitaarik/8735255>`_, so when you clone
+platon.py depends on `submodules <https://gist.github.com/gitaarik/8735255>`_, so when you clone
 your fork to your local machine, include the ``--recursive`` flag:
 
 .. code:: sh
 
-    $ git clone --recursive https://github.com/<your-github-username>/web3.py.git
-    $ cd web3.py
+    $ git clone --recursive https://github.com/<your-github-username>/platon.py.git
+    $ cd platon.py
 
 
 Finally, install all development dependencies:
@@ -235,7 +235,7 @@ tests.
 Manual Testing
 ~~~~~~~~~~~~~~
 
-To import and test an unreleased version of Web3.py in another context,
+To import and test an unreleased version of platon.py in another context,
 you can install it from your development directory:
 
 .. code:: sh
@@ -270,7 +270,7 @@ requested.
 
 If the pull request introduces changes that should be reflected in the release
 notes, please add a **newsfragment** file as explained
-`here <https://github.com/platonnetwork/web3.py/blob/master/newsfragments/README.md>`_.
+`here <https://github.com/platonnetwork/platon.py/blob/master/newsfragments/README.md>`_.
 
 If possible, the change to the release notes file should be included in the
 commit that introduces the feature or bugfix.
@@ -293,7 +293,7 @@ Before generating new fixtures, make sure you have the test dependencies install
 
     A "fixture" is a pre-synced network. It's the result of configuring and running
     a client, deploying the test contracts, and saving the resulting state for
-    testing Web3.py functionality against.
+    testing platon.py functionality against.
 
 
 Gplaton Fixtures
@@ -311,7 +311,7 @@ Gplaton Fixtures
 
        $ python -m gplaton.install v1.10.4
 
-2. Specify the Gplaton binary and run the fixture creation script (from within the web3.py directory):
+2. Specify the Gplaton binary and run the fixture creation script (from within the platon.py directory):
 
    .. code:: sh
 
@@ -343,7 +343,7 @@ an unstable client.
 
 4. Our CI runs on Ubuntu, so download the corresponding 64-bit Linux
    `develop build <https://gplaton.platon.org/downloads/>`_, then
-   add it to the root of your Web3.py directory. Rename the binary ``custom_gplaton``.
+   add it to the root of your platon.py directory. Rename the binary ``custom_gplaton``.
 
 5. In ``.circleci/config.yml``, update jobs relying on ``gplaton_steps``, to instead use ``custom_gplaton_steps``.
 
@@ -397,7 +397,7 @@ virtualenv for smoke testing:
 
         # in another shell, navigate to the virtualenv mentioned in output of ^
 
-        # load the virtualenv with the packaged web3.py release
+        # load the virtualenv with the packaged platon.py release
         $ source package-smoke-test/bin/activate
 
         # smoke test the release
@@ -411,7 +411,7 @@ virtualenv for smoke testing:
 
         # in another shell, navigate to the virtualenv mentioned in output of ^
 
-        # load the virtualenv with the packaged web3.py release
+        # load the virtualenv with the packaged platon.py release
         $ source package-smoke-test/bin/activate
 
         # smoke test the release
@@ -425,7 +425,7 @@ virtualenv for smoke testing:
 
     # in another shell, navigate to the virtualenv mentioned in output of ^
 
-    # load the virtualenv with the packaged web3.py release
+    # load the virtualenv with the packaged platon.py release
     $ source package-smoke-test/bin/activate
 
     # smoke test the release

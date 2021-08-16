@@ -1,4 +1,4 @@
-# Web3.py on FreeBSD (11.2)
+# platon.py on FreeBSD (11.2)
 
 ## Developer Setup
 
@@ -36,8 +36,8 @@ source /tmp/venv_python/python3/bin/activate.csh
 pip install coincurve
 
 cd /tmp
-git clone https://github.com/platonnetwork/web3.py.git
-cd web3.py
+git clone https://github.com/platonnetwork/platon.py.git
+cd platon.py
 
 # assuming you're using tcsh
 pip install -e .\[dev\]
@@ -63,7 +63,7 @@ BROKEN (build crashes on FreeBSD 11.2)
 ```
 
 ```
-cd web3.py
+cd platon.py
 tox -e py36-core
 tox -e py36-ens
 tox -e py36-integration

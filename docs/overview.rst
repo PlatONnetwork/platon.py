@@ -3,7 +3,7 @@
 Overview
 ========
 
-The purpose of this page is to give you a sense of everything Web3.py can do
+The purpose of this page is to give you a sense of everything platon.py can do
 and to serve as a quick reference guide. You'll find a summary of each feature
 with links to learn more. You may also be interested in the
 :ref:`Examples <examples>` page, which demonstrates some of these features in
@@ -13,14 +13,14 @@ greater detail.
 Configuration
 ~~~~~~~~~~~~~
 
-After installing Web3.py (via ``pip install web3``), you'll need to specify the
+After installing platon.py (via ``pip install web3``), you'll need to specify the
 provider and any middleware you want to use beyond the defaults.
 
 
 Providers
 ---------
 
-Providers are how Web3.py connects to the blockchain. The library comes with the
+Providers are how platon.py connects to the blockchain. The library comes with the
 following built-in providers:
 
 - ``Web3.IPCProvider`` for connecting to ipc socket based JSON-RPC servers.
@@ -50,9 +50,9 @@ using a test provider) see the :ref:`Providers <providers>` documentation.
 Middleware
 ----------
 
-Your Web3.py instance may be further configured via middleware.
+Your platon.py instance may be further configured via middleware.
 
-Web3.py middleware is described using an onion metaphor, where each layer of
+platon.py middleware is described using an onion metaphor, where each layer of
 middleware may affect both the incoming request and outgoing response from your
 provider. The documentation includes a :ref:`visualization <Modifying_Middleware>`
 of this idea.
@@ -68,7 +68,7 @@ Your Keys
 ~~~~~~~~~
 
 Private keys are required to approve any transaction made on your behalf. The manner in
-which your key is secured will determine how you create and send transactions in Web3.py.
+which your key is secured will determine how you create and send transactions in platon.py.
 
 A local node, like `Gplaton <https://gplaton.platon.org/>`_, may manage your keys for you.
 You can reference those keys using the :attr:`web3.platon.accounts <web3.platon.Platon.accounts>`
@@ -134,7 +134,7 @@ Fetching Data
 Viewing account balances (:meth:`get_balance <web3.platon.Platon.get_balance>`), transactions
 (:meth:`get_transaction <web3.platon.Platon.get_transaction>`), and block data
 (:meth:`get_block <web3.platon.Platon.get_block>`) are some of the most common starting
-points in Web3.py.
+points in platon.py.
 
 
 API
@@ -254,7 +254,7 @@ Logs and Filters
 ----------------
 
 If you want to react to new blocks being mined or specific events being emitted by
-a contract, you can leverage Web3.py filters.
+a contract, you can leverage platon.py filters.
 
 .. code-block:: python
 
@@ -311,5 +311,5 @@ ENS
 `Platon Name Service (ENS) <https://ens.domains/>`_ provides the infrastructure
 for human-readable addresses. As an example, instead of
 ``0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359``, you can send funds to
-``platonfoundation.platon``. Web3.py has support for ENS, documented
+``platonfoundation.platon``. platon.py has support for ENS, documented
 :ref:`here <ens_overview>`.

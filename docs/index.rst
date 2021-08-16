@@ -1,7 +1,7 @@
 Introduction
 ============
 
-Web3.py is a Python library for interacting with Platon.
+platon.py is a Python library for interacting with Platon.
 
 It's commonly found in `decentralized apps (dapps)`_ to help with
 sending transactions, interacting with smart contracts, reading
@@ -88,5 +88,5 @@ Indices and tables
 .. _Web3.js: https://web3js.readthedocs.io/
 .. _platon.org: https://platon.org/what-is-platon/
 .. _platon.org/python: https://platon.org/python/
-.. _StackExchange: https://platon.stackexchange.com/questions/tagged/web3.py
+.. _StackExchange: https://platon.stackexchange.com/questions/tagged/platon.py
 .. _Discord: https://discord.gg/GHryRvPB84

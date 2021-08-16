@@ -60,15 +60,15 @@ with open('./README.md') as readme:
     long_description = readme.read()
 
 setup(
-    name='platon',
+    name='platon.py',
     # *IMPORTANT*: Don't manually change the version here. Use the 'bumpversion' utility.
     version='5.21.0',
-    description="""Web3.py""",
+    description="""platon.py""",
     long_description_content_type='text/markdown',
     long_description=long_description,
-    author='Piper Merriam',
-    author_email='pipermerriam@gmail.com',
-    url='https://github.com/platonnetwork/web3.py',
+    author='Shinnng',
+    author_email='shinnng@outlook.com',
+    url='https://github.com/platonnetwork/platon.py',
     include_package_data=True,
     install_requires=[
         "aiohttp>=3.7.4.post0,<4",

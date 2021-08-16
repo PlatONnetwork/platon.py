@@ -1,4 +1,4 @@
-# Web3.py on OSX
+# platon.py on OSX
 
 ## Developer Setup
 
