@@ -243,7 +243,7 @@ Each Contract Factory exposes the following methods.
         >>> txn_receipt['contractAddress']
         '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318'
 
-.. py:classmethod:: Contract.constructor(*args, **kwargs).estimateGas(transaction=None, block_identifier=None)
+.. py:classmethod:: Contract.constructor(*args, **kwargs).estimate_gas(transaction=None, block_identifier=None)
     :noindex:
 
     Estimate gas for constructing and deploying the contract.
@@ -263,10 +263,10 @@ Each Contract Factory exposes the following methods.
 
     .. code-block:: python
 
-        >>> token_contract.constructor(web3.platon.coinbase, 12345).estimateGas()
+        >>> token_contract.constructor(web3.platon.coinbase, 12345).estimate_gas()
         12563
 
-.. py:classmethod:: Contract.constructor(*args, **kwargs).buildTransaction(transaction=None)
+.. py:classmethod:: Contract.constructor(*args, **kwargs).build_transaction(transaction=None)
     :noindex:
 
     Construct the contract deploy transaction bytecode data.
@@ -285,12 +285,12 @@ Each Contract Factory exposes the following methods.
         'gasPrice': w3.platon.gas_price,
         'chainId': None
         }
-        >>> contract_data = token_contract.constructor(web3.platon.coinbase, 12345).buildTransaction(transaction)
+        >>> contract_data = token_contract.constructor(web3.platon.coinbase, 12345).build_transaction(transaction)
         >>> web3.platon.send_transaction(contract_data)
 
-.. _contract_createFilter:
+.. _contract_create_filter:
 
-.. py:classmethod:: Contract.events.your_event_name.createFilter(fromBlock=block, toBlock=block, \
+.. py:classmethod:: Contract.events.your_event_name.create_filter(fromBlock=block, toBlock=block, \
                     argument_filters={"arg1": "value"}, topics=[])
 
     Creates a new event filter, an instance of :py:class:`web3.utils.filters.LogFilter`.
@@ -853,7 +853,7 @@ Methods
     a "missing trie node" error, because Platon node may have purged the past state from its database.
     `More information about archival nodes here <https://platon.stackexchange.com/a/84200/620>`_.
 
-.. py:method:: ContractFunction.estimateGas(transaction, block_identifier=None)
+.. py:method:: ContractFunction.estimate_gas(transaction, block_identifier=None)
 
     Call a contract function, executing the transaction locally using the
     ``platon_call`` API.  This will not create a new public transaction.
@@ -862,7 +862,7 @@ Methods
 
     .. code-block:: python
 
-        myContract.functions.myMethod(*args, **kwargs).estimateGas(transaction)
+        myContract.functions.myMethod(*args, **kwargs).estimate_gas(transaction)
 
     This method behaves the same as the :py:meth:`ContractFunction.transact` method,
     with transaction details being passed into the end portion of the
@@ -873,15 +873,15 @@ Methods
 
     .. code-block:: python
 
-        >>> my_contract.functions.multiply7(3).estimateGas()
+        >>> my_contract.functions.multiply7(3).estimate_gas()
         42650
 
     .. note::
-        The parameter ``block_identifier`` is not enabled in gplaton nodes,
-        hence passing a value of ``block_identifier`` when connected to a gplaton
+        The parameter ``block_identifier`` is not enabled in node nodes,
+        hence passing a value of ``block_identifier`` when connected to a node
         nodes would result in an error like:  ``ValueError: {'code': -32602, 'message': 'too many arguments, want at most 1'}``
 
-.. py:method:: ContractFunction.buildTransaction(transaction)
+.. py:method:: ContractFunction.build_transaction(transaction)
 
     Builds a transaction dictionary based on the contract function call specified.
 
@@ -889,7 +889,7 @@ Methods
 
     .. code-block:: python
 
-        myContract.functions.myMethod(*args, **kwargs).buildTransaction(transaction)
+        myContract.functions.myMethod(*args, **kwargs).build_transaction(transaction)
 
     This method behaves the same as the :py:meth:`Contract.transact` method,
     with transaction details being passed into the end portion of the
@@ -901,7 +901,7 @@ Methods
 
         .. code-block:: python
 
-            >>> math_contract.functions.increment(5).buildTransaction({'nonce': 10})
+            >>> math_contract.functions.increment(5).build_transaction({'nonce': 10})
 
         You may use :meth:`~web3.platon.Platon.getTransactionCount` to get the current nonce
         for an account. Therefore a shortcut for producing a transaction dictionary with
@@ -909,7 +909,7 @@ Methods
 
         .. code-block:: python
 
-            >>> math_contract.functions.increment(5).buildTransaction({'nonce': web3.platon.get_transaction_count('0xF5...')})
+            >>> math_contract.functions.increment(5).build_transaction({'nonce': web3.platon.get_transaction_count('0xF5...')})
 
     Returns a transaction dictionary. This transaction dictionary can then be sent using
     :meth:`~web3.platon.Platon.send_transaction`.
@@ -919,7 +919,7 @@ Methods
 
     .. code-block:: python
 
-        >>> math_contract.functions.increment(5).buildTransaction({'gasPrice': 21000000000})
+        >>> math_contract.functions.increment(5).build_transaction({'gasPrice': 21000000000})
         {
             'to': '0x6Bc272FCFcf89C14cebFC57B8f1543F5137F97dE',
             'data': '0x7cf5dab00000000000000000000000000000000000000000000000000000000000000005',
@@ -942,7 +942,7 @@ Fallback Function
     Call fallback function, executing the transaction locally using the
     ``platon_call`` API.  This will not create a new public transaction.
 
-.. py:method:: Contract.fallback.estimateGas(transaction)
+.. py:method:: Contract.fallback.estimate_gas(transaction)
 
     Call fallback function and return the gas estimation.
 
@@ -950,7 +950,7 @@ Fallback Function
 
     Execute fallback function by sending a new public transaction.
 
-.. py:method:: Contract.fallback.buildTransaction(transaction)
+.. py:method:: Contract.fallback.build_transaction(transaction)
 
     Builds a transaction dictionary based on the contract fallback function call.
 
@@ -1043,7 +1043,7 @@ For example:
        >>> assert processed_logs == ()
        True
 
-.. py:method:: ContractEvents.myEvent(*args, **kwargs).processLog(log)
+.. py:method:: ContractEvents.myEvent(*args, **kwargs).process_log(log)
 
    Similar to processReceipt_, but only processes one log at a time, instead of a whole transaction receipt.
    Will return a single :ref:`Event Log Object <event-log-object>` if there are no errors encountered during processing. If an error is encountered during processing, it will be raised.
@@ -1053,7 +1053,7 @@ For example:
        >>> tx_hash = contract.functions.myFunction(12345).transact({'to':contract_address})
        >>> tx_receipt = w3.platon.get_transaction_receipt(tx_hash)
        >>> log_to_process = tx_receipt['logs'][0]
-       >>> processed_log = contract.events.myEvent().processLog(log_to_process)
+       >>> processed_log = contract.events.myEvent().process_log(log_to_process)
        >>> processed_log
        AttributeDict({
            'args': AttributeDict({}),
@@ -1087,7 +1087,7 @@ Event Log Object
     * ``blockNumber``: Number - the block number where this log was in. null
       when it's pending.
 
-.. testsetup:: createFilter
+.. testsetup:: create_filter
 
     from platon import Web3
     from hexbytes import HexBytes
@@ -1110,9 +1110,150 @@ Event Log Object
     tx_hash = contract.functions.transfer(alice, 10).transact({'gas': 899000, 'gasPrice': 200000})
     tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
 
-.. doctest:: createFilter
+.. doctest:: create_filter
 
-     >>> transfer_filter = my_token_contract.events.Transfer.createFilter(fromBlock="0x0", argument_filters={'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf'})
+     >>> transfer_filter = my_token_contract.events.Transfer.create_filter(fromBlock="0x0", argument_filters={'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf'})
+               >>> transfer_filter.get_new_entries()
+               [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'value': 10}),
+                'event': 'Transfer',
+                'logIndex': 0,
+                'transactionIndex': 0,
+                'transactionHash': HexBytes('0x0005643c2425552308b4a28814a4dedafb5d340a811b3d2b1c019b290ffd7410'),
+                'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+                'blockHash': HexBytes('...'),
+                'blockNumber': 2})]
+               >>> transfer_filter.get_new_entries()
+               []
+               >>> tx_hash = contract.functions.transfer(alice, 10).transact({'gas': 899000, 'gasPrice': 200000})
+               >>> tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
+               >>> transfer_filter.get_new_entries()
+               [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'value': 10}),
+                'event': 'Transfer',
+                'logIndex': 0,
+                'transactionIndex': 0,
+                'transactionHash': HexBytes('0xea111a49b82b0a0729d49f9ad924d8f87405d01e3fa87463cf2903848aacf7d9'),
+                'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+                'blockHash': HexBytes('...'),
+                'blockNumber': 3})]
+               >>> transfer_filter.get_all_entries()
+               [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'value': 10}),
+                'event': 'Transfer',
+                'logIndex': 0,
+                'transactionIndex': 0,
+                'transactionHash': HexBytes('0x0005643c2425552308b4a28814a4dedafb5d340a811b3d2b1c019b290ffd7410'),
+                'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+                'blockHash': HexBytes('...'),
+                'blockNumber': 2}),
+                AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'value': 10}),
+                'event': 'Transfer',
+                'logIndex': 0,
+                'transactionIndex': 0,
+                'transactionHash': HexBytes('0xea111a49b82b0a0729d49f9ad924d8f87405d01e3fa87463cf2903848aacf7d9'),
+                'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+                'blockHash': HexBytes('...'),
+                'blockNumber': 3})]
+               >>> transfer_filter.get_new_entries()
+               [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'value': 10}),
+                'event': 'Transfer',
+                'logIndex': 0,
+                'transactionIndex': 0,
+                'transactionHash': HexBytes('0x0005643c2425552308b4a28814a4dedafb5d340a811b3d2b1c019b290ffd7410'),
+                'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+                'blockHash': HexBytes('...'),
+                'blockNumber': 2})]
+               >>> transfer_filter.get_new_entries()
+               []
+               >>> tx_hash = contract.functions.transfer(alice, 10).transact({'gas': 899000, 'gasPrice': 200000})
+               >>> tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
+               >>> transfer_filter.get_new_entries()
+               [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'value': 10}),
+                'event': 'Transfer',
+                'logIndex': 0,
+                'transactionIndex': 0,
+                'transactionHash': HexBytes('0xea111a49b82b0a0729d49f9ad924d8f87405d01e3fa87463cf2903848aacf7d9'),
+                'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+                'blockHash': HexBytes('...'),
+                'blockNumber': 3})]
+               >>> transfer_filter.get_all_entries()
+               [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'value': 10}),
+                'event': 'Transfer',
+                'logIndex': 0,
+                'transactionIndex': 0,
+                'transactionHash': HexBytes('0x0005643c2425552308b4a28814a4dedafb5d340a811b3d2b1c019b290ffd7410'),
+                'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+                'blockHash': HexBytes('...'),
+                'blockNumber': 2}),
+                AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+                'value': 10}),
+                'event': 'Transfer',
+                'logIndex': 0,
+                'transactionIndex': 0,
+                'transactionHash': HexBytes('0xea111a49b82b0a0729d49f9ad924d8f87405d01e3fa87463cf2903848aacf7d9'),
+                'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+                'blockHash': HexBytes('...'),
+                'blockNumber': 3})]
+          >>> transfer_filter.get_new_entries()
+          [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'value': 10}),
+           'event': 'Transfer',
+           'logIndex': 0,
+           'transactionIndex': 0,
+           'transactionHash': HexBytes('0x0005643c2425552308b4a28814a4dedafb5d340a811b3d2b1c019b290ffd7410'),
+           'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+           'blockHash': HexBytes('...'),
+           'blockNumber': 2})]
+          >>> transfer_filter.get_new_entries()
+          []
+          >>> tx_hash = contract.functions.transfer(alice, 10).transact({'gas': 899000, 'gasPrice': 200000})
+          >>> tx_receipt = w3.platon.wait_for_transaction_receipt(tx_hash)
+          >>> transfer_filter.get_new_entries()
+          [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'value': 10}),
+           'event': 'Transfer',
+           'logIndex': 0,
+           'transactionIndex': 0,
+           'transactionHash': HexBytes('0xea111a49b82b0a0729d49f9ad924d8f87405d01e3fa87463cf2903848aacf7d9'),
+           'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+           'blockHash': HexBytes('...'),
+           'blockNumber': 3})]
+          >>> transfer_filter.get_all_entries()
+          [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'value': 10}),
+           'event': 'Transfer',
+           'logIndex': 0,
+           'transactionIndex': 0,
+           'transactionHash': HexBytes('0x0005643c2425552308b4a28814a4dedafb5d340a811b3d2b1c019b290ffd7410'),
+           'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+           'blockHash': HexBytes('...'),
+           'blockNumber': 2}),
+           AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
+           'value': 10}),
+           'event': 'Transfer',
+           'logIndex': 0,
+           'transactionIndex': 0,
+           'transactionHash': HexBytes('0xea111a49b82b0a0729d49f9ad924d8f87405d01e3fa87463cf2903848aacf7d9'),
+           'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
+           'blockHash': HexBytes('...'),
+           'blockNumber': 3})]
           >>> transfer_filter.get_new_entries()
           [AttributeDict({'args': AttributeDict({'from': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',
            'to': '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf',

@@ -46,7 +46,7 @@ Attributes
     .. code-block:: python
 
        >>> web3.clientVersion
-       'Gplaton/v1.4.11-stable-fed692f6/darwin/go1.7'
+       'Pnode/v1.4.11-stable-fed692f6/darwin/go1.7'
 
 
 .. _overview_type_conversions:
@@ -299,7 +299,7 @@ Check Encodability
 
    .. code-block:: python
 
-        >>> from platon.auto.gplatondev import w3
+        >>> from platon.auto.nodedev import w3
         >>> w3.is_encodable('bytes2', b'12')
         True
         >>> w3.is_encodable('bytes2', b'1')
@@ -315,7 +315,7 @@ Check Encodability
 
     .. doctest::
 
-        >>> from platon.auto.gplatondev import w3
+        >>> from platon.auto.nodedev import w3
                 >>> w3.enable_strict_bytes_type_checking()
                 >>> w3.is_encodable('bytes2', b'12')
                 True
@@ -346,9 +346,9 @@ Each ``web3`` instance also exposes these namespaced APIs.
 
     See :doc:`./web3.pm`
 
-.. py:attribute:: Web3.gplaton
+.. py:attribute:: Web3.node
 
-    See :doc:`./web3.gplaton`
+    See :doc:`./web3.node`
 
 .. py:attribute:: Web3.parity
 

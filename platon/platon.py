@@ -136,9 +136,9 @@ class BasePlaton(Module):
         self.gasPriceStrategy = gas_price_strategy
 
     def estimate_gas_munger(
-        self,
-        transaction: TxParams,
-        block_identifier: Optional[BlockIdentifier] = None
+            self,
+            transaction: TxParams,
+            block_identifier: Optional[BlockIdentifier] = None
     ) -> Sequence[Union[TxParams, BlockIdentifier]]:
         if 'from' not in transaction and is_bech32_address(self.default_account):
             transaction = assoc(transaction, 'from', self.default_account)
@@ -156,7 +156,7 @@ class BasePlaton(Module):
     )
 
     def get_block_munger(
-        self, block_identifier: BlockIdentifier, full_transactions: bool = False
+            self, block_identifier: BlockIdentifier, full_transactions: bool = False
     ) -> Tuple[BlockIdentifier, bool]:
         return (block_identifier, full_transactions)
 
@@ -201,20 +201,20 @@ class AsyncPlaton(BasePlaton):
         return await self._get_transaction(transaction_hash)  # type: ignore
 
     async def generate_gas_price(
-        self, transaction_params: Optional[TxParams] = None
+            self, transaction_params: Optional[TxParams] = None
     ) -> Optional[Wei]:
         return self._generate_gas_price(transaction_params)
 
     async def estimate_gas(
-        self,
-        transaction: TxParams,
-        block_identifier: Optional[BlockIdentifier] = None
+            self,
+            transaction: TxParams,
+            block_identifier: Optional[BlockIdentifier] = None
     ) -> Wei:
         # types ignored b/c mypy conflict with BlockingPlaton properties
         return await self._estimate_gas(transaction, block_identifier)  # type: ignore
 
     async def get_block(
-        self, block_identifier: BlockIdentifier, full_transactions: bool = False
+            self, block_identifier: BlockIdentifier, full_transactions: bool = False
     ) -> BlockData:
         # types ignored b/c mypy conflict with BlockingPlaton properties
         return await self._get_block(block_identifier, full_transactions)  # type: ignore
@@ -287,6 +287,7 @@ class Platon(BasePlaton, Module):
         return self._chain_id()
 
     """ property default_account """
+
     @property
     def default_account(self) -> Union[Bech32Address, Empty]:
         return self._default_account
@@ -306,9 +307,9 @@ class Platon(BasePlaton, Module):
         self._default_block = value
 
     def block_id_munger(
-        self,
-        account: Union[Address, Bech32Address, ENS],
-        block_identifier: Optional[BlockIdentifier] = None
+            self,
+            account: Union[Address, Bech32Address, ENS],
+            block_identifier: Optional[BlockIdentifier] = None
     ) -> Tuple[Union[Address, Bech32Address, ENS], BlockIdentifier]:
         if block_identifier is None:
             block_identifier = self.default_block
@@ -320,10 +321,10 @@ class Platon(BasePlaton, Module):
     )
 
     def get_storage_at_munger(
-        self,
-        account: Union[Address, Bech32Address, ENS],
-        position: int,
-        block_identifier: Optional[BlockIdentifier] = None
+            self,
+            account: Union[Address, Bech32Address, ENS],
+            position: int,
+            block_identifier: Optional[BlockIdentifier] = None
     ) -> Tuple[Union[Address, Bech32Address, ENS], int, BlockIdentifier]:
         if block_identifier is None:
             block_identifier = self.default_block
@@ -335,10 +336,10 @@ class Platon(BasePlaton, Module):
     )
 
     def get_proof_munger(
-        self,
-        account: Union[Address, Bech32Address, ENS],
-        positions: Sequence[int],
-        block_identifier: Optional[BlockIdentifier] = None
+            self,
+            account: Union[Address, Bech32Address, ENS],
+            positions: Sequence[int],
+            block_identifier: Optional[BlockIdentifier] = None
     ) -> Tuple[Union[Address, Bech32Address, ENS], Sequence[int], Optional[BlockIdentifier]]:
         if block_identifier is None:
             block_identifier = self.default_block
@@ -368,7 +369,7 @@ class Platon(BasePlaton, Module):
         return self._get_address_hrp()
 
     def get_block(
-        self, block_identifier: BlockIdentifier, full_transactions: bool = False
+            self, block_identifier: BlockIdentifier, full_transactions: bool = False
     ) -> BlockData:
         return self._get_block(block_identifier, full_transactions)
 
@@ -398,7 +399,7 @@ class Platon(BasePlaton, Module):
     )
 
     def wait_for_transaction_receipt(
-        self, transaction_hash: _Hash32, timeout: int = 120, poll_latency: float = 0.1
+            self, transaction_hash: _Hash32, timeout: int = 120, poll_latency: float = 0.1
     ) -> TxReceipt:
         try:
             return wait_for_transaction_receipt(self.web3, transaction_hash, timeout, poll_latency)
@@ -425,7 +426,7 @@ class Platon(BasePlaton, Module):
         return replace_transaction(self.web3, current_transaction, new_transaction)
 
     def modify_transaction(
-        self, transaction_hash: _Hash32, **transaction_params: Any
+            self, transaction_hash: _Hash32, **transaction_params: Any
     ) -> HexBytes:
         assert_valid_transaction_params(cast(TxParams, transaction_params))
         current_transaction = get_required_transaction(self.web3, transaction_hash)
@@ -442,11 +443,11 @@ class Platon(BasePlaton, Module):
     )
 
     def sign_munger(
-        self,
-        account: Union[Address, Bech32Address, ENS],
-        data: Union[int, bytes] = None,
-        hexstr: HexStr = None,
-        text: str = None
+            self,
+            account: Union[Address, Bech32Address, ENS],
+            data: Union[int, bytes] = None,
+            hexstr: HexStr = None,
+            text: str = None
     ) -> Tuple[Union[Address, Bech32Address, ENS], HexStr]:
         message_hex = to_hex(data, hexstr=hexstr, text=text)
         return (account, message_hex)
@@ -467,10 +468,10 @@ class Platon(BasePlaton, Module):
     )
 
     def call_munger(
-        self,
-        transaction: TxParams,
-        block_identifier: Optional[BlockIdentifier] = None,
-        state_override: Optional[CallOverrideParams] = None,
+            self,
+            transaction: TxParams,
+            block_identifier: Optional[BlockIdentifier] = None,
+            state_override: Optional[CallOverrideParams] = None,
     ) -> Union[Tuple[TxParams, BlockIdentifier], Tuple[TxParams, BlockIdentifier, CallOverrideParams]]:  # noqa-E501
         # TODO: move to middleware
         if 'from' not in transaction and is_bech32_address(self.default_account):
@@ -491,16 +492,16 @@ class Platon(BasePlaton, Module):
     )
 
     def estimate_gas(
-        self,
-        transaction: TxParams,
-        block_identifier: Optional[BlockIdentifier] = None
+            self,
+            transaction: TxParams,
+            block_identifier: Optional[BlockIdentifier] = None
     ) -> Wei:
         return self._estimate_gas(transaction, block_identifier)
 
     def filter_munger(
-        self,
-        filter_params: Optional[Union[str, FilterParams]] = None,
-        filter_id: Optional[HexStr] = None
+            self,
+            filter_params: Optional[Union[str, FilterParams]] = None,
+            filter_id: Optional[HexStr] = None
     ) -> Union[List[FilterParams], List[HexStr], List[str]]:
         if filter_id and filter_params:
             raise TypeError(
@@ -564,13 +565,15 @@ class Platon(BasePlaton, Module):
     )
 
     @overload
-    def contract(self, address: None = None, **kwargs: Any) -> Type[Contract]: ...  # noqa: E704,E501
+    def contract(self, address: None = None, **kwargs: Any) -> Type[Contract]:
+        ...  # noqa: E704,E501
 
     @overload  # noqa: F811
-    def contract(self, address: Union[Address, Bech32Address, ENS], **kwargs: Any) -> Contract: ...  # noqa: E704,E501
+    def contract(self, address: Union[Address, Bech32Address, ENS], **kwargs: Any) -> Contract:
+        ...  # noqa: E704,E501
 
     def contract(  # noqa: F811
-        self, address: Optional[Union[Address, Bech32Address, ENS]] = None, **kwargs: Any
+            self, address: Optional[Union[Address, Bech32Address, ENS]] = None, **kwargs: Any
     ) -> Union[Type[Contract], Contract]:
         ContractFactoryClass = kwargs.pop('ContractFactoryClass', self.defaultContractFactory)
 
@@ -582,7 +585,7 @@ class Platon(BasePlaton, Module):
             return ContractFactory
 
     def set_contract_factory(
-        self, contractFactory: Type[Union[Contract, ConciseContract, ContractCaller]]
+            self, contractFactory: Type[Union[Contract, ConciseContract, ContractCaller]]
     ) -> None:
         self.defaultContractFactory = contractFactory
 

@@ -15,23 +15,23 @@ from typing import (
 )
 import zipfile
 
-from gplaton.install import (
+from node.install import (
     get_executable_path,
-    install_gplaton,
+    install_node,
 )
 
 from platon.tools.benchmark.utils import (
     kill_proc_gracefully,
 )
 
-GPLATON_FIXTURE_ZIP = "gplaton-1.10.4-fixture.zip"
+NODE_FIXTURE_ZIP = "node-1.10.4-fixture.zip"
 
 
-class GplatonBenchmarkFixture:
+class PnodeBenchmarkFixture:
     def __init__(self) -> None:
         self.rpc_port = self._rpc_port()
         self.endpoint_uri = self._endpoint_uri()
-        self.gplaton_binary = self._gplaton_binary()
+        self.node_binary = self._node_binary()
 
     def build(self) -> Generator[Any, None, None]:
         with TemporaryDirectory() as base_dir:
@@ -39,7 +39,7 @@ class GplatonBenchmarkFixture:
                 os.path.join(
                     os.path.dirname(__file__),
                     "../../../tests/integration/",
-                    GPLATON_FIXTURE_ZIP,
+                    NODE_FIXTURE_ZIP,
                 )
             )
             tmp_datadir = os.path.join(str(base_dir), "data_dir")
@@ -49,7 +49,7 @@ class GplatonBenchmarkFixture:
 
             genesis_file = os.path.join(self.datadir, "genesis.json")
 
-            yield self._gplaton_process(self.datadir, genesis_file, self.rpc_port)
+            yield self._node_process(self.datadir, genesis_file, self.rpc_port)
 
     def _rpc_port(self) -> str:
         sock = socket.socket()
@@ -61,22 +61,22 @@ class GplatonBenchmarkFixture:
     def _endpoint_uri(self) -> str:
         return "http://localhost:{0}".format(self.rpc_port)
 
-    def _gplaton_binary(self) -> str:
-        if "GPLATON_BINARY" in os.environ:
-            return os.environ["GPLATON_BINARY"]
-        elif "GPLATON_VERSION" in os.environ:
-            gplaton_version = os.environ["GPLATON_VERSION"]
-            _gplaton_binary = get_executable_path(gplaton_version)
-            if not os.path.exists(_gplaton_binary):
-                install_gplaton(gplaton_version)
-            assert os.path.exists(_gplaton_binary)
-            return _gplaton_binary
+    def _node_binary(self) -> str:
+        if "NODE_BINARY" in os.environ:
+            return os.environ["NODE_BINARY"]
+        elif "NODE_VERSION" in os.environ:
+            node_version = os.environ["NODE_VERSION"]
+            _node_binary = get_executable_path(node_version)
+            if not os.path.exists(_node_binary):
+                install_node(node_version)
+            assert os.path.exists(_node_binary)
+            return _node_binary
         else:
-            return "gplaton"
+            return "node"
 
-    def _gplaton_command_arguments(self, datadir: str) -> Sequence[str]:
+    def _node_command_arguments(self, datadir: str) -> Sequence[str]:
         return (
-            self.gplaton_binary,
+            self.node_binary,
             "--data_dir",
             str(datadir),
             "--nodiscover",
@@ -90,11 +90,11 @@ class GplatonBenchmarkFixture:
             "--allow-insecure-unlock",
         )
 
-    def _gplaton_process(
+    def _node_process(
         self, datadir: str, genesis_file: str, rpc_port: str
     ) -> Generator[Any, None, None]:
         init_datadir_command = (
-            self.gplaton_binary,
+            self.node_binary,
             "--data_dir",
             str(datadir),
             "init",
@@ -104,7 +104,7 @@ class GplatonBenchmarkFixture:
             init_datadir_command, stdin=PIPE, stderr=PIPE,
         )
         proc = Popen(
-            self._gplaton_command_arguments(datadir),
+            self._node_command_arguments(datadir),
             stdin=PIPE,
             stdout=PIPE,
             stderr=PIPE,

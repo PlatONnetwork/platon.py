@@ -49,13 +49,13 @@ def graceful_kill_on_exit(proc):
 
 
 @contextlib.contextmanager
-def get_gplaton_process(gplaton_binary,
+def get_node_process(node_binary,
                      datadir,
                      genesis_file_path,
-                     gplaton_ipc_path,
-                     gplaton_port):
+                     node_ipc_path,
+                     node_port):
     init_datadir_command = (
-        gplaton_binary,
+        node_binary,
         '--data_dir', datadir,
         'init',
         genesis_file_path,
@@ -66,19 +66,19 @@ def get_gplaton_process(gplaton_binary,
         stderr=subprocess.PIPE,
     )
 
-    run_gplaton_command = (
-        gplaton_binary,
+    run_node_command = (
+        node_binary,
         '--data_dir', datadir,
-        '--ipcpath', gplaton_ipc_path,
+        '--ipcpath', node_ipc_path,
         '--ethash.dagsondisk', '1',
         '--gcmode', 'archive',
         '--nodiscover',
-        '--port', gplaton_port,
+        '--port', node_port,
         '--miner.etherbase', common.COINBASE[2:],
     )
 
     popen_proc = subprocess.Popen(
-        run_gplaton_command,
+        run_node_command,
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -90,7 +90,7 @@ def get_gplaton_process(gplaton_binary,
         output, errors = proc.communicate()
 
     print(
-        "Gplaton Process Exited:\n"
+        "Node Process Exited:\n"
         "stdout:{0}\n\n"
         "stderr:{1}\n\n".format(
             to_text(output),
@@ -122,37 +122,37 @@ def generate_go_platon_fixture(destination_dir):
         with open(genesis_file_path, 'w') as genesis_file:
             genesis_file.write(json.dumps(common.GENESIS_DATA))
 
-        gplaton_ipc_path_dir = stack.enter_context(common.tempdir())
-        gplaton_ipc_path = os.path.join(gplaton_ipc_path_dir, 'gplaton.ipc')
+        node_ipc_path_dir = stack.enter_context(common.tempdir())
+        node_ipc_path = os.path.join(node_ipc_path_dir, 'node.ipc')
 
-        gplaton_port = get_open_port()
-        gplaton_binary = common.get_gplaton_binary()
+        node_port = get_open_port()
+        node_binary = common.get_node_binary()
 
-        with get_gplaton_process(
-                gplaton_binary=gplaton_binary,
+        with get_node_process(
+                node_binary=node_binary,
                 datadir=datadir,
                 genesis_file_path=genesis_file_path,
-                gplaton_ipc_path=gplaton_ipc_path,
-                gplaton_port=gplaton_port):
+                node_ipc_path=node_ipc_path,
+                node_port=node_port):
 
-            common.wait_for_socket(gplaton_ipc_path)
-            web3 = Web3(Web3.IPCProvider(gplaton_ipc_path))
+            common.wait_for_socket(node_ipc_path)
+            web3 = Web3(Web3.IPCProvider(node_ipc_path))
             chain_data = setup_chain_state(web3)
-            # close gplaton by exiting context
+            # close node by exiting context
             # must be closed before copying data dir
             verify_chain_state(web3, chain_data)
 
         # verify that chain state is still valid after closing
-        # and re-opening gplaton
-        with get_gplaton_process(
-                gplaton_binary=gplaton_binary,
+        # and re-opening node
+        with get_node_process(
+                node_binary=node_binary,
                 datadir=datadir,
                 genesis_file_path=genesis_file_path,
-                gplaton_ipc_path=gplaton_ipc_path,
-                gplaton_port=gplaton_port):
+                node_ipc_path=node_ipc_path,
+                node_port=node_port):
 
-            common.wait_for_socket(gplaton_ipc_path)
-            web3 = Web3(Web3.IPCProvider(gplaton_ipc_path))
+            common.wait_for_socket(node_ipc_path)
+            web3 = Web3(Web3.IPCProvider(node_ipc_path))
             verify_chain_state(web3, chain_data)
 
         static_data = {
@@ -173,22 +173,22 @@ def verify_chain_state(web3, chain_data):
 
 
 def mine_transaction_hash(web3, txn_hash):
-    web3.gplaton.miner.start(1)
+    web3.node.miner.start(1)
     try:
         return web3.platon.wait_for_transaction_receipt(txn_hash, timeout=120)
     finally:
-        web3.gplaton.miner.stop()
+        web3.node.miner.stop()
 
 
 def mine_block(web3):
     origin_block_number = web3.platon.block_number
 
     start_time = time.time()
-    web3.gplaton.miner.start(1)
+    web3.node.miner.start(1)
     while time.time() < start_time + 120:
         block_number = web3.platon.block_number
         if block_number > origin_block_number:
-            web3.gplaton.miner.stop()
+            web3.node.miner.stop()
             return block_number
         else:
             time.sleep(0.1)
@@ -274,8 +274,8 @@ def setup_chain_state(web3):
     #
     # Block with Transaction
     #
-    web3.gplaton.personal.unlock_account(coinbase, common.KEYFILE_PW)
-    web3.gplaton.miner.start(1)
+    web3.node.personal.unlock_account(coinbase, common.KEYFILE_PW)
+    web3.node.miner.start(1)
     mined_txn_hash = web3.platon.send_transaction({
         'from': coinbase,
         'to': coinbase,
@@ -288,7 +288,7 @@ def setup_chain_state(web3):
     block_with_txn = web3.platon.get_block(mined_txn_receipt['blockHash'])
     print('BLOCK_WITH_TXN_HASH:', block_with_txn['hash'])
 
-    gplaton_fixture = {
+    node_fixture = {
         'math_deploy_txn_hash': math_deploy_receipt['transactionHash'],
         'math_address': math_deploy_receipt['contractAddress'],
         'emitter_deploy_txn_hash': emitter_deploy_receipt['transactionHash'],
@@ -302,7 +302,7 @@ def setup_chain_state(web3):
         'block_hash_revert_with_msg': block_hash_revert_with_msg['hash'],
         'block_hash_revert_no_msg': block_hash_revert_no_msg['hash'],
     }
-    return gplaton_fixture
+    return node_fixture
 
 
 if __name__ == '__main__':

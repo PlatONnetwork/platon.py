@@ -32,7 +32,7 @@ following built-in providers:
    >>> from platon import Web3
 
    # IPCProvider:
-   >>> w3 = Web3(Web3.IPCProvider('./path/to/gplaton.ipc'))
+   >>> w3 = Web3(Web3.IPCProvider('./path/to/node.ipc'))
 
    # HTTPProvider:
    >>> w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:8545'))
@@ -70,7 +70,7 @@ Your Keys
 Private keys are required to approve any transaction made on your behalf. The manner in
 which your key is secured will determine how you create and send transactions in platon.py.
 
-A local node, like `Gplaton <https://gplaton.platon.org/>`_, may manage your keys for you.
+A local node, like `Pnode <https://node.platon.org/>`_, may manage your keys for you.
 You can reference those keys using the :attr:`web3.platon.accounts <web3.platon.Platon.accounts>`
 property.
 
@@ -262,7 +262,7 @@ a contract, you can leverage platon.py filters.
    >>> new_filter = web3.platon.filter('latest')
 
    # Use case: filter for contract event "MyEvent"
-   >>> new_filter = deployed_contract.events.MyEvent.createFilter(fromBlock='latest')
+   >>> new_filter = deployed_contract.events.MyEvent.create_filter(fromBlock='latest')
 
    # retrieve filter results:
    >>> new_filter.get_all_entries()
@@ -280,7 +280,7 @@ API
 - :meth:`web3.platon.get_filter_logs() <web3.platon.Platon.get_filter_logs>`
 - :meth:`web3.platon.uninstall_filter() <web3.platon.Platon.uninstall_filter>`
 - :meth:`web3.platon.get_logs() <web3.platon.Platon.get_logs>`
-- :meth:`Contract.events.your_event_name.createFilter() <web3.contract.Contract.events.your_event_name.createFilter>`
+- :meth:`Contract.events.your_event_name.create_filter() <web3.contract.Contract.events.your_event_name.create_filter>`
 - :meth:`Contract.events.your_event_name.build_filter() <web3.contract.Contract.events.your_event_name.build_filter>`
 - :meth:`Filter.get_new_entries() <web3.utils.filters.Filter.get_new_entries>`
 - :meth:`Filter.get_all_entries() <web3.utils.filters.Filter.get_all_entries>`

@@ -64,7 +64,7 @@ Table of Contents
     web3.pm
     web3.net
     web3.miner
-    web3.gplaton
+    web3.node
     web3.parity
     gas_price
     ens

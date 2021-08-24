@@ -3,6 +3,9 @@ from platon_typing import (
     HexAddress,
     HexStr,
 )
+from platon_utils.address import (
+    to_bech32_address
+)
 from hexbytes import (
     HexBytes,
 )
@@ -17,4 +20,5 @@ EMPTY_ADDR_HEX = HexAddress(HexStr('0x' + '00' * 20))
 
 REVERSE_REGISTRAR_DOMAIN = 'addr.reverse'
 
-ENS_MAINNET_ADDR = Bech32Address(HexAddress(HexStr('0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e')))
+# todo: update ens address
+ENS_MAINNET_ADDR = to_bech32_address(HexAddress(HexStr('0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e')), hrp='lat')

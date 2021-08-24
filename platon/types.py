@@ -28,6 +28,7 @@ from platon._utils.compat import (
     Literal,
     TypedDict,
 )
+
 from platon._utils.function_identifiers import (
     FallbackFn,
     ReceiveFn,
@@ -47,7 +48,54 @@ BlockParams = Literal["latest", "earliest", "pending"]
 BlockIdentifier = Union[BlockParams, BlockNumber, Hash32, HexStr, HexBytes, int]
 LatestBlockParam = Literal["latest"]
 
-FunctionIdentifier = Union[str, Type[FallbackFn], Type[ReceiveFn]]
+FunctionType = Union[str, Type[FallbackFn], Type[ReceiveFn]]
+
+FunctionIdentifier = NewType('FunctionIdentifier', int)  # Only used in inner contracts
+
+
+class InnerFn:
+    # staking
+    staking_createStaking = FunctionIdentifier(1000)
+    staking_editCandidate = FunctionIdentifier(1001)
+    staking_increaseStaking = FunctionIdentifier(1002)
+    staking_withdrewStaking = FunctionIdentifier(1003)
+    staking_delegate = FunctionIdentifier(1004)
+    staking_withdrewDelegation = FunctionIdentifier(1005)
+    staking_redeemDelegation = FunctionIdentifier(1006)
+    staking_getVerifierList = FunctionIdentifier(1100)
+    staking_getValidatorList = FunctionIdentifier(1101)
+    staking_getCandidateList = FunctionIdentifier(1102)
+    staking_getDelegateList = FunctionIdentifier(1103)
+    staking_getDelegateInfo = FunctionIdentifier(1104)
+    staking_getCandidateInfo = FunctionIdentifier(1105)
+    staking_getPackageReward = FunctionIdentifier(1200)
+    staking_getStakingReward = FunctionIdentifier(1201)
+    staking_getAvgPackTime = FunctionIdentifier(1202)
+    # govern
+    govern_submitTextProposal = FunctionIdentifier(2000)
+    govern_submitVersionProposal = FunctionIdentifier(2001)
+    govern_submitParamProposal = FunctionIdentifier(2002)
+    govern_vote = FunctionIdentifier(2003)
+    govern_declareVersion = FunctionIdentifier(2004)
+    govern_submitCancelProposal = FunctionIdentifier(2005)
+    govern_getProposal = FunctionIdentifier(2100)
+    govern_getTallyResult = FunctionIdentifier(2101)
+    govern_proposalList = FunctionIdentifier(2102)
+    govern_getChainVersion = FunctionIdentifier(2103)
+    govern_getGovernParam = FunctionIdentifier(2104)
+    govern_getProposalVotes = FunctionIdentifier(2105)
+    govern_governParamList = FunctionIdentifier(2106)
+    # slashing
+    slashing_reportDuplicateSign = FunctionIdentifier(3000)
+    slashing_checkDuplicateSign = FunctionIdentifier(3001)
+    slashing_zeroProduceNodeList = FunctionIdentifier(3002)
+    # restricting
+    restricting_createRestricting = FunctionIdentifier(4000)
+    restricting_getRestrictingInfo = FunctionIdentifier(4100)
+    # reward
+    reward_withdrawDelegateReward = FunctionIdentifier(5000)
+    reward_getDelegateReward = FunctionIdentifier(5100)
+
 
 # bytes, hexbytes, or hexstr representing a 32 byte hash
 _Hash32 = Union[Hash32, HexBytes, HexStr]
@@ -57,7 +105,10 @@ Nonce = NewType("Nonce", int)
 RPCEndpoint = NewType("RPCEndpoint", str)
 Timestamp = NewType("Timestamp", int)
 Wei = NewType('Wei', int)
+
 Formatters = Dict[RPCEndpoint, Callable[..., Any]]
+
+Version = NewType('Version', int)
 
 
 # todo: move these to platon_typing once platon is type hinted
@@ -167,10 +218,10 @@ TxData = TypedDict("TxData", {
     "from": Bech32Address,
     "gas": Wei,
     "gasPrice": Wei,
-    "maxFeePerGas": Wei,
-    "maxPriorityFeePerGas": Wei,
+    # "maxFeePerGas": Wei,
+    # "maxPriorityFeePerGas": Wei,
     "hash": HexBytes,
-    "input": HexStr,
+    # "input": HexStr,
     "nonce": Nonce,
     "r": HexBytes,
     "s": HexBytes,
@@ -185,16 +236,16 @@ TxParams = TypedDict("TxParams", {
     "chain_id": int,
     "data": Union[bytes, HexStr],
     # addr or ens
-    "from": Union[Address, Bech32Address, str],
+    "from": Bech32Address,
     "gas": Wei,
     # legacy pricing
     "gasPrice": Wei,
     # 1559 pricing
-    "maxFeePerGas": Union[str, Wei],
-    "maxPriorityFeePerGas": Union[str, Wei],
+    # "maxFeePerGas": Union[str, Wei],
+    # "maxPriorityFeePerGas": Union[str, Wei],
     "nonce": Nonce,
     # addr or ens
-    "to": Union[Address, Bech32Address, str],
+    "to": Bech32Address,
     "value": Wei,
 }, total=False)
 
@@ -316,8 +367,8 @@ PendingTx = TypedDict("PendingTx", {
     "blockNumber": None,
     "from": Bech32Address,
     "gas": HexBytes,
-    'maxFeePerGas': HexBytes,
-    'maxPriorityFeePerGas': HexBytes,
+    # 'maxFeePerGas': HexBytes,
+    # 'maxPriorityFeePerGas': HexBytes,
     "gasPrice": HexBytes,
     "hash": HexBytes,
     "input": HexBytes,
@@ -344,11 +395,11 @@ class TxPoolStatus(TypedDict, total=False):
 
 
 #
-# platon.gplaton types
+# platon.node types
 #
 
 
-class GplatonWallet(TypedDict):
+class PnodeWallet(TypedDict):
     accounts: Sequence[Dict[str, str]]
     status: str
     url: str
@@ -378,3 +429,47 @@ class ParityFilterParams(TypedDict, total=False):
     fromBlock: BlockIdentifier
     toAddress: Sequence[Union[Address, Bech32Address, ENS]]
     toBlock: BlockIdentifier
+
+
+class InnerFn:
+    # staking
+    staking_createStaking = FunctionIdentifier(1000)
+    staking_editCandidate = FunctionIdentifier(1001)
+    staking_increaseStaking = FunctionIdentifier(1002)
+    staking_withdrewStaking = FunctionIdentifier(1003)
+    staking_getVerifierList = FunctionIdentifier(1100)
+    staking_getValidatorList = FunctionIdentifier(1101)
+    staking_getCandidateList = FunctionIdentifier(1102)
+    staking_getCandidateInfo = FunctionIdentifier(1105)
+    staking_getPackageReward = FunctionIdentifier(1200)
+    staking_getStakingReward = FunctionIdentifier(1201)
+    staking_getAvgPackTime = FunctionIdentifier(1202)
+    # delegate
+    delegate_delegate = FunctionIdentifier(1004)
+    delegate_withdrewDelegation = FunctionIdentifier(1005)
+    delegate_redeemDelegation = FunctionIdentifier(1006)
+    delegate_getDelegateList = FunctionIdentifier(1103)
+    delegate_getDelegateInfo = FunctionIdentifier(1104)
+    delegate_withdrawDelegateReward = FunctionIdentifier(5000)
+    delegate_getDelegateReward = FunctionIdentifier(5100)
+    # govern
+    govern_submitTextProposal = FunctionIdentifier(2000)
+    govern_submitVersionProposal = FunctionIdentifier(2001)
+    govern_submitParamProposal = FunctionIdentifier(2002)
+    govern_vote = FunctionIdentifier(2003)
+    govern_declareVersion = FunctionIdentifier(2004)
+    govern_submitCancelProposal = FunctionIdentifier(2005)
+    govern_getProposal = FunctionIdentifier(2100)
+    govern_getTallyResult = FunctionIdentifier(2101)
+    govern_proposalList = FunctionIdentifier(2102)
+    govern_getChainVersion = FunctionIdentifier(2103)
+    govern_getGovernParam = FunctionIdentifier(2104)
+    govern_getProposalVotes = FunctionIdentifier(2105)
+    govern_governParamList = FunctionIdentifier(2106)
+    # slashing
+    slashing_reportDuplicateSign = FunctionIdentifier(3000)
+    slashing_checkDuplicateSign = FunctionIdentifier(3001)
+    slashing_zeroProduceNodeList = FunctionIdentifier(3002)
+    # restricting
+    restricting_createRestricting = FunctionIdentifier(4000)
+    restricting_getRestrictingInfo = FunctionIdentifier(4100)

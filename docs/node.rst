@@ -49,7 +49,7 @@ the node software with any accounts you create on the node.
 
 The most popular self-run node options are:
 
-- `gplaton (platon) <https://platon.github.io/platon/>`_
+- `node (platon) <https://platon.github.io/platon/>`_
 - `parity <https://www.parity.io/>`_
 
 You can find a fuller list of node software at `ethdocs.org
@@ -99,14 +99,14 @@ However, spam and mining attacks have happened,
 which is disruptive when you want to test out a contract.
 
 There are some alternative networks that limit the damage of spam attacks, but
-they are not standardized across node software. Gplaton runs their own (Rinkeby),
+they are not standardized across node software. Pnode runs their own (Rinkeby),
 and Parity runs their own (Kovan). See a full comparison in this `Stackexchange Q&A
 <https://platon.stackexchange.com/a/30072/1461>`_.
 
 So roughly, choose this way:
 
 - If using Parity, connect to Kovan
-- If using Gplaton, connect to Rinkeby
+- If using Pnode, connect to Rinkeby
 - If using a different node, or testing mining, connect to Ropsten
 
 Each of their networks has their own version of Ether. Main network ether must

@@ -47,3 +47,8 @@ class Version(BaseVersion):
     @property
     def platon(self) -> str:
         return self._get_protocol_version()
+
+    # todo: no qa
+    @property
+    def chain(self) -> str:
+        return self.web3.pip.get_chain_version()

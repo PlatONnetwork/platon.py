@@ -20,54 +20,54 @@ class MockPlaton(Module):
         return 42
 
 
-class MockGplaton(Module):
+class MockPnode(Module):
     pass
 
 
-class MockGplatonAdmin(Module):
+class MockAdmin(Module):
     def start_ws(self):
         return True
 
 
-class MockGplatonPersonal(Module):
+class MockPersonal(Module):
     def unlock_account(self):
         return True
 
 
 def test_attach_modules():
     mods = {
-        "gplaton": (MockGplaton, {
-            "personal": (MockGplatonPersonal,),
-            "admin": (MockGplatonAdmin,),
+        "node": (MockPnode, {
+            "personal": (MockPersonal,),
+            "admin": (MockAdmin,),
         }),
         "platon": (MockPlaton,),
     }
     w3 = Web3(PlatonTesterProvider(), modules={})
     attach_modules(w3, mods)
     assert w3.platon.block_number() == 42
-    assert w3.gplaton.personal.unlock_account() is True
-    assert w3.gplaton.admin.start_ws() is True
+    assert w3.node.personal.unlock_account() is True
+    assert w3.node.admin.start_ws() is True
 
 
 def test_attach_modules_multiple_levels_deep():
     mods = {
         "platon": (MockPlaton,),
-        "gplaton": (MockGplaton, {
-            "personal": (MockGplatonPersonal, {
-                "admin": (MockGplatonAdmin,),
+        "node": (MockPnode, {
+            "personal": (MockPersonal, {
+                "admin": (MockAdmin,),
             }),
         }),
     }
     w3 = Web3(PlatonTesterProvider(), modules={})
     attach_modules(w3, mods)
     assert w3.platon.block_number() == 42
-    assert w3.gplaton.personal.unlock_account() is True
-    assert w3.gplaton.personal.admin.start_ws() is True
+    assert w3.node.personal.unlock_account() is True
+    assert w3.node.personal.admin.start_ws() is True
 
 
 def test_attach_modules_with_wrong_module_format():
     mods = {
-        "platon": (MockPlaton, MockGplaton, MockGplatonPersonal)
+        "platon": (MockPlaton, MockPnode, MockPersonal)
     }
     w3 = Web3(PlatonTesterProvider, modules={})
     with pytest.raises(ValidationError, match="Module definitions can only have 1 or 2 elements"):

@@ -135,7 +135,7 @@ Web3 can help you convert between denominations.  The following denominations ar
 +--------------+---------------------------------+
 | mether       | 1000000000000000000000000       |
 +--------------+---------------------------------+
-| gplatoner       | 1000000000000000000000000000    |
+| nodeer       | 1000000000000000000000000000    |
 +--------------+---------------------------------+
 | tether       | 1000000000000000000000000000000 |
 +--------------+---------------------------------+
@@ -360,7 +360,7 @@ The following example demonstrates a few things:
 
     store_var_contract = w3.platon.contract(address=address, abi=contract_interface["abi"])
 
-    gas_estimate = store_var_contract.functions.setVar(255).estimateGas()
+    gas_estimate = store_var_contract.functions.setVar(255).estimate_gas()
     print(f'Gas estimate to transact with setVar: {gas_estimate}')
 
     if gas_estimate < 100000:
@@ -708,7 +708,7 @@ Just remember that you have to sign all transactions locally, as infura does not
 
 .. code-block:: python
 
-    transaction = contract.functions.function_Name(params).buildTransaction()
+    transaction = contract.functions.function_Name(params).build_transaction()
     transaction.update({ 'gas' : appropriate_gas_amount })
     transaction.update({ 'nonce' : w3.platon.get_transaction_count('Your_Wallet_Address') })
     signed_tx = w3.platon.account.sign_transaction(transaction, private_key)
@@ -780,7 +780,7 @@ In this example, we show how to fetch all events of a certain event type from th
 platon_getLogs limitations
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Platon JSON-RPC API servers, like Gplaton, do not provide easy to paginate over events, only over blocks. There's no request that can find the first block with an event or how many events occur within a range of blocks. The only feedback the JSON-RPC service will give you is whether the `platon_getLogs` call failed.
+Platon JSON-RPC API servers, like Pnode, do not provide easy to paginate over events, only over blocks. There's no request that can find the first block with an event or how many events occur within a range of blocks. The only feedback the JSON-RPC service will give you is whether the `platon_getLogs` call failed.
 
 In this example script, we provide two kinds of heurestics to deal with this issue. The script scans events in a chunk of blocks (start block number - end block number). Then it uses two methods to find how many events there are likely to be in a block window:
 
@@ -1176,7 +1176,7 @@ The script can be run with: ``python ./eventscanner.py <your JSON-RPC API URL>``
 
         This method is detached from any contract instance.
 
-        This is a stateless method, as opposed to createFilter.
+        This is a stateless method, as opposed to create_filter.
         It can be safely called against nodes which do not provide `platon_newFilter` API, like Infura.
         """
 
@@ -1219,7 +1219,7 @@ The script can be run with: ``python ./eventscanner.py <your JSON-RPC API URL>``
         all_events = []
         for log in logs:
             # Convert raw JSON-RPC log result to human readable event by using ABI data
-            # More information how processLog works here
+            # More information how process_log works here
             # https://github.com/platonnetwork/platon.py/blob/fbaf1ad11b0c7fac09ba34baff2c256cffe0a148/web3/_utils/events.py#L200
             evt = get_event_data(codec, abi, log)
             # Note: This was originally yield,
@@ -1233,7 +1233,7 @@ The script can be run with: ``python ./eventscanner.py <your JSON-RPC API URL>``
         # The demo supports persistant state by using a JSON file.
         # You will need an Platon node for this.
         # Running this script will consume around 20k JSON-RPC calls.
-        # With locally running Gplaton, the script takes 10 minutes.
+        # With locally running Pnode, the script takes 10 minutes.
         # The resulting JSON state file is 2.9 MB.
         import sys
         import json

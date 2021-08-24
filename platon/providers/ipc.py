@@ -85,7 +85,7 @@ def get_default_ipc_path() -> str:  # type: ignore
             "~",
             "Library",
             "Platon",
-            "gplaton.ipc"
+            "node.ipc"
         ))
         if os.path.exists(ipc_path):
             return ipc_path
@@ -109,7 +109,7 @@ def get_default_ipc_path() -> str:  # type: ignore
         ipc_path = os.path.expanduser(os.path.join(
             "~",
             ".platon",
-            "gplaton.ipc"
+            "node.ipc"
         ))
         if os.path.exists(ipc_path):
             return ipc_path
@@ -134,7 +134,7 @@ def get_default_ipc_path() -> str:  # type: ignore
             "\\\\",
             ".",
             "pipe",
-            "gplaton.ipc"
+            "node.ipc"
         )
         if os.path.exists(ipc_path):
             return ipc_path
@@ -165,7 +165,7 @@ def get_dev_ipc_path() -> str:  # type: ignore
         tmpdir = os.environ.get('TMPDIR', '')
         ipc_path = os.path.expanduser(os.path.join(
             tmpdir,
-            "gplaton.ipc"
+            "node.ipc"
         ))
         if os.path.exists(ipc_path):
             return ipc_path
@@ -173,7 +173,7 @@ def get_dev_ipc_path() -> str:  # type: ignore
     elif sys.platform.startswith('linux') or sys.platform.startswith('freebsd'):
         ipc_path = os.path.expanduser(os.path.join(
             "/tmp",
-            "gplaton.ipc"
+            "node.ipc"
         ))
         if os.path.exists(ipc_path):
             return ipc_path
@@ -183,7 +183,7 @@ def get_dev_ipc_path() -> str:  # type: ignore
             "\\\\",
             ".",
             "pipe",
-            "gplaton.ipc"
+            "node.ipc"
         )
         if os.path.exists(ipc_path):
             return ipc_path

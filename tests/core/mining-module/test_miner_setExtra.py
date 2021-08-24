@@ -24,7 +24,7 @@ def test_miner_set_extra(web3_empty, wait_for_block):
     # sanity
     assert initial_extra != new_extra_data
 
-    web3.gplaton.miner.setExtra(new_extra_data)
+    web3.node.miner.setExtra(new_extra_data)
 
     with Timeout(60) as timeout:
         while True:
@@ -50,7 +50,7 @@ def test_miner_setExtra(web3_empty, wait_for_block):
     assert initial_extra != new_extra_data
 
     with pytest.warns(DeprecationWarning):
-        web3.gplaton.miner.setExtra(new_extra_data)
+        web3.node.miner.setExtra(new_extra_data)
     with Timeout(60) as timeout:
         while True:
             extra_data = decode_hex(web3.platon.get_block(web3.platon.block_number)['extraData'])

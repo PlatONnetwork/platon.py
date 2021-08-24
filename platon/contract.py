@@ -139,7 +139,7 @@ from platon.types import (  # noqa: F401
     BlockIdentifier,
     CallOverrideParams,
     EventData,
-    FunctionIdentifier,
+    FunctionType,
     LogReceipt,
     TxParams,
     TxReceipt,
@@ -349,11 +349,11 @@ class Contract:
     @classmethod
     def factory(cls, web3: 'Web3', class_name: Optional[str] = None, **kwargs: Any) -> 'Contract':
 
-        kwargs['platon'] = web3
+        kwargs['web3'] = web3
 
         normalizers = {
             'abi': normalize_abi,
-            'address': partial(normalize_address, kwargs['platon'].ens),
+            'address': partial(normalize_address, kwargs['web3'].ens),
             'bytecode': normalize_bytecode,
             'bytecode_runtime': normalize_bytecode,
         }
@@ -397,8 +397,8 @@ class Contract:
     #  Public API
     #
     @combomethod
-    def encodeABI(cls, fn_name: str, args: Optional[Any] = None,
-                  kwargs: Optional[Any] = None, data: Optional[HexStr] = None) -> HexStr:
+    def encode_abi(cls, fn_name: str, args: Optional[Any] = None,
+                   kwargs: Optional[Any] = None, data: Optional[HexStr] = None) -> HexStr:
         """
         Encodes the arguments using the Platon ABI for the contract function
         that matches the given name and arguments..
@@ -511,8 +511,8 @@ class Contract:
 
     @classmethod
     def _find_matching_fn_abi(
-        cls, fn_identifier: Optional[str] = None, args: Optional[Any] = None,
-        kwargs: Optional[Any] = None
+            cls, fn_identifier: Optional[str] = None, args: Optional[Any] = None,
+            kwargs: Optional[Any] = None
     ) -> ABIFunction:
         return find_matching_fn_abi(cls.abi,
                                     cls.web3.codec,
@@ -522,7 +522,7 @@ class Contract:
 
     @classmethod
     def _find_matching_event_abi(
-        cls, event_name: Optional[str] = None, argument_names: Optional[Sequence[str]] = None
+            cls, event_name: Optional[str] = None, argument_names: Optional[Sequence[str]] = None
     ) -> ABIEvent:
         return find_matching_event_abi(
             abi=cls.abi,
@@ -531,7 +531,7 @@ class Contract:
 
     @staticmethod
     def get_fallback_function(
-        abi: ABI, web3: 'Web3', address: Optional[Bech32Address] = None
+            abi: ABI, web3: 'Web3', address: Optional[Bech32Address] = None
     ) -> 'ContractFunction':
         if abi and fallback_func_abi_exists(abi):
             return ContractFunction.factory(
@@ -545,7 +545,7 @@ class Contract:
 
     @staticmethod
     def get_receive_function(
-        abi: ABI, web3: 'Web3', address: Optional[Bech32Address] = None
+            abi: ABI, web3: 'Web3', address: Optional[Bech32Address] = None
     ) -> 'ContractFunction':
         if abi and receive_func_abi_exists(abi):
             return ContractFunction.factory(
@@ -587,6 +587,7 @@ def mk_collision_prop(fn_name: str) -> Callable[[], None]:
     def collision_fn() -> NoReturn:
         msg = "Namespace collision for function name {0} with ConciseContract API.".format(fn_name)
         raise AttributeError(msg)
+
     collision_fn.__name__ = fn_name
     return collision_fn
 
@@ -595,8 +596,9 @@ class ContractConstructor:
     """
     Class for contract constructor API.
     """
+
     def __init__(
-        self, web3: 'Web3', abi: ABI, bytecode: HexStr, *args: Any, **kwargs: Any
+            self, web3: 'Web3', abi: ABI, bytecode: HexStr, *args: Any, **kwargs: Any
     ) -> None:
         self.web3 = web3
         self.abi = abi
@@ -623,9 +625,9 @@ class ContractConstructor:
         return data
 
     @combomethod
-    def estimateGas(
-        self, transaction: Optional[TxParams] = None,
-        block_identifier: Optional[BlockIdentifier] = None
+    def estimate_gas(
+            self, transaction: Optional[TxParams] = None,
+            block_identifier: Optional[BlockIdentifier] = None
     ) -> int:
         if transaction is None:
             estimate_gas_transaction: TxParams = {}
@@ -663,7 +665,7 @@ class ContractConstructor:
         return self.web3.platon.send_transaction(transact_transaction)
 
     @combomethod
-    def buildTransaction(self, transaction: Optional[TxParams] = None) -> TxParams:
+    def build_transaction(self, transaction: Optional[TxParams] = None) -> TxParams:
         """
         Build the transaction dictionary without sending
         """
@@ -685,7 +687,7 @@ class ContractConstructor:
 
     @staticmethod
     def check_forbidden_keys_in_transaction(
-        transaction: TxParams, forbidden_keys: Optional[Collection[str]] = None
+            transaction: TxParams, forbidden_keys: Optional[Collection[str]] = None
     ) -> None:
         keys_found = set(transaction.keys()) & set(forbidden_keys)
         if keys_found:
@@ -693,11 +695,11 @@ class ContractConstructor:
 
 
 class ConciseMethod:
-    ALLOWED_MODIFIERS = {'call', 'estimateGas', 'transact', 'buildTransaction'}
+    ALLOWED_MODIFIERS = {'call', 'estimate_gas', 'transact', 'build_transaction'}
 
     def __init__(
-        self, function: 'ContractFunction',
-        normalizers: Optional[Tuple[Callable[..., Any], ...]] = None
+            self, function: 'ContractFunction',
+            normalizers: Optional[Tuple[Callable[..., Any], ...]] = None
     ) -> None:
         self._function = function
         self._function._return_data_normalizers = normalizers
@@ -733,13 +735,14 @@ class ConciseContract:
 
     > contract.functions.withdraw(amount).transact({'from': platon.accounts[1], 'gas': 100000, ...})
     """
+
     @deprecated_for(
         "contract.caller.<method name> or contract.caller({transaction_dict}).<method name>"
     )
     def __init__(
-        self,
-        classic_contract: Contract,
-        method_class: Union[Type['ConciseMethod'], Type['ImplicitMethod']] = ConciseMethod
+            self,
+            classic_contract: Contract,
+            method_class: Union[Type['ConciseMethod'], Type['ImplicitMethod']] = ConciseMethod
     ) -> None:
         classic_contract._return_data_normalizers += CONCISE_NORMALIZERS
         self._classic_contract = classic_contract
@@ -816,10 +819,11 @@ class ImplicitContract(ConciseContract):
 
     > contract.functions.withdraw(amount).transact({})
     """
+
     def __init__(
-        self,
-        classic_contract: Contract,
-        method_class: Union[Type[ImplicitMethod], Type[ConciseMethod]] = ImplicitMethod
+            self,
+            classic_contract: Contract,
+            method_class: Union[Type[ImplicitMethod], Type[ConciseMethod]] = ImplicitMethod
     ) -> None:
         super().__init__(classic_contract, method_class=method_class)
 
@@ -849,7 +853,7 @@ class ContractFunction:
     is a subclass of this class.
     """
     address: Bech32Address = None
-    function_identifier: FunctionIdentifier = None
+    function_identifier: FunctionType = None
     web3: 'Web3' = None
     contract_abi: ABI = None
     abi: ABIFunction = None
@@ -898,9 +902,9 @@ class ContractFunction:
         self.arguments = merge_args_and_kwargs(self.abi, self.args, self.kwargs)
 
     def call(
-        self, transaction: Optional[TxParams] = None,
-        block_identifier: BlockIdentifier = 'latest',
-        state_override: Optional[CallOverrideParams] = None,
+            self, transaction: Optional[TxParams] = None,
+            block_identifier: BlockIdentifier = 'latest',
+            state_override: Optional[CallOverrideParams] = None,
     ) -> Any:
         """
         Execute a contract function call using the `platon_call` interface.
@@ -1005,9 +1009,9 @@ class ContractFunction:
             **self.kwargs
         )
 
-    def estimateGas(
-        self, transaction: Optional[TxParams] = None,
-        block_identifier: Optional[BlockIdentifier] = None
+    def estimate_gas(
+            self, transaction: Optional[TxParams] = None,
+            block_identifier: Optional[BlockIdentifier] = None
     ) -> int:
         if transaction is None:
             estimate_gas_transaction: TxParams = {}
@@ -1015,9 +1019,9 @@ class ContractFunction:
             estimate_gas_transaction = cast(TxParams, dict(**transaction))
 
         if 'data' in estimate_gas_transaction:
-            raise ValueError("Cannot set data in estimateGas transaction")
+            raise ValueError("Cannot set data in estimate gas transaction")
         if 'to' in estimate_gas_transaction:
-            raise ValueError("Cannot set to in estimateGas transaction")
+            raise ValueError("Cannot set to in estimate gas transaction")
 
         if self.address:
             estimate_gas_transaction.setdefault('to', self.address)
@@ -1028,7 +1032,7 @@ class ContractFunction:
         if 'to' not in estimate_gas_transaction:
             if isinstance(self, type):
                 raise ValueError(
-                    "When using `Contract.estimateGas` from a contract factory "
+                    "When using `Contract.estimate_gas` from a contract factory "
                     "you must provide a `to` address with the transaction"
                 )
             else:
@@ -1048,7 +1052,7 @@ class ContractFunction:
             **self.kwargs
         )
 
-    def buildTransaction(self, transaction: Optional[TxParams] = None) -> TxParams:
+    def build_transaction(self, transaction: Optional[TxParams] = None) -> TxParams:
         """
         Build the transaction dictionary without sending
         """
@@ -1062,7 +1066,7 @@ class ContractFunction:
 
         if not self.address and 'to' not in built_transaction:
             raise ValueError(
-                "When using `ContractFunction.buildTransaction` from a contract factory "
+                "When using `ContractFunction.build_transaction` from a contract factory "
                 "you must provide a `to` address with the transaction"
             )
         if self.address and 'to' in built_transaction:
@@ -1136,13 +1140,13 @@ class ContractEvent:
 
     @combomethod
     def processReceipt(
-        self, txn_receipt: TxReceipt, errors: EventLogErrorFlags = WARN
+            self, txn_receipt: TxReceipt, errors: EventLogErrorFlags = WARN
     ) -> Iterable[EventData]:
         return self._parse_logs(txn_receipt, errors)
 
     @to_tuple
     def _parse_logs(
-        self, txn_receipt: TxReceipt, errors: EventLogErrorFlags
+            self, txn_receipt: TxReceipt, errors: EventLogErrorFlags
     ) -> Iterable[EventData]:
         try:
             errors.name
@@ -1172,11 +1176,11 @@ class ContractEvent:
             yield rich_log
 
     @combomethod
-    def processLog(self, log: HexStr) -> EventData:
+    def process_log(self, log: HexStr) -> EventData:
         return get_event_data(self.web3.codec, self.abi, log)
 
     @combomethod
-    def createFilter(
+    def create_filter(
             self, *,  # PEP 3102
             argument_filters: Optional[Dict[str, Any]] = None,
             fromBlock: Optional[BlockIdentifier] = None,
@@ -1188,7 +1192,7 @@ class ContractEvent:
         :param filter_params: other parameters to limit the events
         """
         if fromBlock is None:
-            raise TypeError("Missing mandatory keyword argument to createFilter: fromBlock")
+            raise TypeError("Missing mandatory keyword argument to create filter: fromBlock")
 
         if argument_filters is None:
             argument_filters = dict()
@@ -1244,14 +1248,14 @@ class ContractEvent:
         return builder
 
     @combomethod
-    def getLogs(self,
-                argument_filters: Optional[Dict[str, Any]] = None,
-                fromBlock: Optional[BlockIdentifier] = None,
-                toBlock: Optional[BlockIdentifier] = None,
-                blockHash: Optional[HexBytes] = None) -> Iterable[EventData]:
+    def get_logs(self,
+                 argument_filters: Optional[Dict[str, Any]] = None,
+                 fromBlock: Optional[BlockIdentifier] = None,
+                 toBlock: Optional[BlockIdentifier] = None,
+                 blockHash: Optional[HexBytes] = None) -> Iterable[EventData]:
         """Get events for this contract instance using platon_getLogs API.
 
-        This is a stateless method, as opposed to createFilter.
+        This is a stateless method, as opposed to create filter.
         It can be safely called against nodes which do not provide
         platon_newFilter API, like Infura nodes.
 
@@ -1370,6 +1374,7 @@ class ContractCaller:
 
     > contract.caller(transaction={'from': platon.accounts[1], 'gas': 100000, ...}).add(2, 3)
     """
+
     def __init__(self,
                  abi: ABI,
                  web3: 'Web3',
@@ -1430,7 +1435,7 @@ class ContractCaller:
             return False
 
     def __call__(
-        self, transaction: Optional[TxParams] = None, block_identifier: BlockIdentifier = 'latest'
+            self, transaction: Optional[TxParams] = None, block_identifier: BlockIdentifier = 'latest'
     ) -> 'ContractCaller':
         if transaction is None:
             transaction = {}
@@ -1442,11 +1447,11 @@ class ContractCaller:
 
     @staticmethod
     def call_function(
-        fn: ContractFunction,
-        *args: Any,
-        transaction: Optional[TxParams] = None,
-        block_identifier: BlockIdentifier = 'latest',
-        **kwargs: Any
+            fn: ContractFunction,
+            *args: Any,
+            transaction: Optional[TxParams] = None,
+            block_identifier: BlockIdentifier = 'latest',
+            **kwargs: Any
     ) -> Any:
         if transaction is None:
             transaction = {}
@@ -1454,7 +1459,7 @@ class ContractCaller:
 
 
 def check_for_forbidden_api_filter_arguments(
-    event_abi: ABIEvent, _filters: Dict[str, Any]
+        event_abi: ABIEvent, _filters: Dict[str, Any]
 ) -> None:
     name_indexed_inputs = {_input['name']: _input for _input in event_abi['inputs']}
 
@@ -1462,11 +1467,11 @@ def check_for_forbidden_api_filter_arguments(
         _input = name_indexed_inputs[filter_name]
         if is_array_type(_input['type']):
             raise TypeError(
-                "createFilter no longer supports array type filter arguments. "
+                "create filter no longer supports array type filter arguments. "
                 "see the build_filter method for filtering array type filters.")
         if is_list_like(filter_value) and is_dynamic_sized_type(_input['type']):
             raise TypeError(
-                "createFilter no longer supports setting filter argument options for dynamic sized "
+                "create filter no longer supports setting filter argument options for dynamic sized "
                 "types. See the build_filter method for setting filters with the match_any "
                 "method.")
 
@@ -1475,7 +1480,7 @@ def call_contract_function(
         web3: 'Web3',
         address: Bech32Address,
         normalizers: Tuple[Callable[..., Any], ...],
-        function_identifier: FunctionIdentifier,
+        function_identifier: FunctionType,
         transaction: TxParams,
         block_id: Optional[BlockIdentifier] = None,
         contract_abi: Optional[ABI] = None,
@@ -1513,7 +1518,7 @@ def call_contract_function(
         output_data = web3.codec.decode_abi(output_types, return_data)
     except DecodingError as e:
         # Provide a more helpful error message than the one provided by
-        # platon-abi-utils
+        # platon-abi-_utils
         is_missing_code_error = (
                 return_data in ACCEPTABLE_EMPTY_STRINGS
                 and web3.platon.get_code(address) in ACCEPTABLE_EMPTY_STRINGS)
@@ -1566,7 +1571,7 @@ def parse_block_identifier_int(web3: 'Web3', block_identifier_int: int) -> Block
 def transact_with_contract_function(
         address: Bech32Address,
         web3: 'Web3',
-        function_name: Optional[FunctionIdentifier] = None,
+        function_name: Optional[FunctionType] = None,
         transaction: Optional[TxParams] = None,
         contract_abi: Optional[ABI] = None,
         fn_abi: Optional[ABIFunction] = None,
@@ -1594,7 +1599,7 @@ def transact_with_contract_function(
 def estimate_gas_for_function(
         address: Bech32Address,
         web3: 'Web3',
-        fn_identifier: Optional[FunctionIdentifier] = None,
+        fn_identifier: Optional[FunctionType] = None,
         transaction: Optional[TxParams] = None,
         contract_abi: Optional[ABI] = None,
         fn_abi: Optional[ABIFunction] = None,
@@ -1603,7 +1608,7 @@ def estimate_gas_for_function(
         **kwargs: Any) -> int:
     """Estimates gas cost a function call would take.
 
-    Don't call this directly, instead use :meth:`Contract.estimateGas`
+    Don't call this directly, instead use :meth:`Contract.estimate_gas`
     on your contract instance.
     """
     estimate_transaction = prepare_transaction(
@@ -1623,7 +1628,7 @@ def estimate_gas_for_function(
 def build_transaction_for_function(
         address: Bech32Address,
         web3: 'Web3',
-        function_name: Optional[FunctionIdentifier] = None,
+        function_name: Optional[FunctionType] = None,
         transaction: Optional[TxParams] = None,
         contract_abi: Optional[ABI] = None,
         fn_abi: Optional[ABIFunction] = None,
@@ -1631,7 +1636,7 @@ def build_transaction_for_function(
         **kwargs: Any) -> TxParams:
     """Builds a dictionary with the fields required to make the given transaction
 
-    Don't call this directly, instead use :meth:`Contract.buildTransaction`
+    Don't call this directly, instead use :meth:`Contract.build_transaction`
     on your contract instance.
     """
     prepared_transaction = prepare_transaction(
@@ -1651,7 +1656,7 @@ def build_transaction_for_function(
 
 
 def find_functions_by_identifier(
-    contract_abi: ABI, web3: 'Web3', address: Bech32Address, callable_check: Callable[..., Any]
+        contract_abi: ABI, web3: 'Web3', address: Bech32Address, callable_check: Callable[..., Any]
 ) -> List[ContractFunction]:
     fns_abi = filter_by_type('function', contract_abi)
     return [
@@ -1669,7 +1674,7 @@ def find_functions_by_identifier(
 
 
 def get_function_by_identifier(
-    fns: Sequence[ContractFunction], identifier: str
+        fns: Sequence[ContractFunction], identifier: str
 ) -> ContractFunction:
     if len(fns) > 1:
         raise ValueError(

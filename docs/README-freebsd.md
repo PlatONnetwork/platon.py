@@ -47,14 +47,14 @@ pip install -e .\[dev\]
 
 #### Prerequisites for integration tests:
 
-##### gplaton (https://github.com/platonnetwork/platon-go/wiki/Installation-Instructions-for-FreeBSD)
+##### node (https://github.com/platonnetwork/platon-go/wiki/Installation-Instructions-for-FreeBSD)
 ```
 pkg install go
 cd /tmp
 git clone https://github.com/platonnetwork/platon-go
 cd PlatON-Go
-make gplaton
-cp build/bin/gplaton /usr/local/bin/
+make node
+cp build/bin/node /usr/local/bin/
 ```
 
 ##### parity (https://github.com/paukstis/freebsd_parity/blob/v1.6/README.md)

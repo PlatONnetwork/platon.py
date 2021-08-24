@@ -306,6 +306,7 @@ filter_result_formatter = apply_one_of_formatters((
     (is_array_of_strings, apply_list_to_array_formatter(to_hexbytes(32))),
 ))
 
+# todo: delete
 TRANSACTION_REQUEST_FORMATTERS = {
     'maxFeePerGas': to_hex_if_integer,
     'maxPriorityFeePerGas': to_hex_if_integer,
@@ -361,17 +362,17 @@ FILTER_PARAM_NORMALIZERS = apply_formatters_to_dict({
 })
 
 
-GPLATON_WALLET_FORMATTER = {
+NODE_WALLET_FORMATTER = {
     'address': to_bech32_address
 }
 
-gplaton_wallet_formatter = apply_formatters_to_dict(GPLATON_WALLET_FORMATTER)
+node_wallet_formatter = apply_formatters_to_dict(NODE_WALLET_FORMATTER)
 
-GPLATON_WALLETS_FORMATTER = {
-    'accounts': apply_list_to_array_formatter(gplaton_wallet_formatter),
+NODE_WALLETS_FORMATTER = {
+    'accounts': apply_list_to_array_formatter(node_wallet_formatter),
 }
 
-gplaton_wallets_formatter = apply_formatters_to_dict(GPLATON_WALLETS_FORMATTER)
+node_wallets_formatter = apply_formatters_to_dict(NODE_WALLETS_FORMATTER)
 
 
 PYTHONIC_REQUEST_FORMATTERS: Dict[RPCEndpoint, Callable[..., Any]] = {
@@ -468,7 +469,7 @@ PYTHONIC_RESULT_FORMATTERS: Dict[RPCEndpoint, Callable[..., Any]] = {
     # personal
     RPC.personal_importRawKey: to_bech32_address,
     RPC.personal_listAccounts: apply_list_to_array_formatter(to_bech32_address),
-    RPC.personal_listWallets: apply_list_to_array_formatter(gplaton_wallets_formatter),
+    RPC.personal_listWallets: apply_list_to_array_formatter(node_wallets_formatter),
     RPC.personal_newAccount: to_bech32_address,
     RPC.personal_sendTransaction: to_hexbytes(32),
     RPC.personal_signTypedData: HexBytes,
@@ -519,7 +520,7 @@ def raise_solidity_error_on_revert(response: RPCResponse) -> RPCResponse:
 
     # Ganache case:
     if isinstance(data, dict) and response['error'].get('message'):
-        raise ContractLogicError(f'execution reverted: {response["error"]["message"]}')
+        raise ContractLogicError(f'{response["error"]["message"]}: {data}')
 
     # Parity/OpenPlaton case:
     if data.startswith('Reverted '):
@@ -532,11 +533,11 @@ def raise_solidity_error_on_revert(response: RPCResponse) -> RPCResponse:
         reason = data[len(prefix) + 64:len(prefix) + 64 + reason_length * 2]
         raise ContractLogicError(f'execution reverted: {bytes.fromhex(reason).decode("utf8")}')
 
-    # Gplaton case:
+    # Node case:
     if 'message' in response['error'] and response['error'].get('code', '') == 3:
         raise ContractLogicError(response['error']['message'])
 
-    # Gplaton Revert without error message case:
+    # Node Revert without error message case:
     if 'execution reverted' in response['error'].get('message'):
         raise ContractLogicError('execution reverted')
 

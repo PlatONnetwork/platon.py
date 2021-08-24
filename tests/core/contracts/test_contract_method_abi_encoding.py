@@ -55,7 +55,7 @@ ABI_D = json.loads('[{ "constant": false, "inputs": [ { "name": "b", "type": "by
 )
 def test_contract_abi_encoding(web3, abi, arguments, data, expected):
     contract = web3.platon.contract(abi=abi)
-    actual = contract.encodeABI('a', arguments, data=data)
+    actual = contract.encode_abi('a', arguments, data=data)
     assert actual == expected
 
 
@@ -67,7 +67,7 @@ def test_contract_abi_encoding_warning(web3):
         match='in v6 it will be invalid to pass a hex string without the "0x" prefix'
     ):
 
-        actual = contract.encodeABI('a', ['61'], data=None)
+        actual = contract.encode_abi('a', ['61'], data=None)
         assert actual == '0x9f3fab586100000000000000000000000000000000000000000000000000000000000000'  # noqa: E501
 
 
@@ -79,7 +79,7 @@ def test_contract_abi_encoding_kwargs(web3):
             '0x6f8d2fa18448afbfe4f82143c384484ad09a0271f3a3c0eb9f629e703f883125',
         ],
     }
-    actual = contract.encodeABI('byte_array', kwargs=kwargs)
+    actual = contract.encode_abi('byte_array', kwargs=kwargs)
     assert actual == '0xf166d6f8000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000025595c210956e7721f9b692e702708556aa9aabb14ea163e96afa56ffbe9fa8096f8d2fa18448afbfe4f82143c384484ad09a0271f3a3c0eb9f629e703f883125'  # noqa: E501
 
 
@@ -87,7 +87,7 @@ def test_contract_abi_encoding_kwargs(web3):
 def test_contract_abi_encoding_strict_with_error(w3_strict_abi, arguments):
     contract = w3_strict_abi.platon.contract(abi=ABI_C)
     with pytest.raises(ValidationError):
-        contract.encodeABI('a', arguments, data=None)
+        contract.encode_abi('a', arguments, data=None)
 
 
 @pytest.mark.parametrize(
@@ -134,5 +134,5 @@ def test_contract_abi_encoding_strict_with_error(w3_strict_abi, arguments):
 )
 def test_contract_abi_encoding_strict(w3_strict_abi, abi, arguments, data, expected):
     contract = w3_strict_abi.platon.contract(abi=abi)
-    actual = contract.encodeABI('a', arguments, data=data)
+    actual = contract.encode_abi('a', arguments, data=data)
     assert actual == expected

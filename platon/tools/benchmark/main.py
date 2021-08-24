@@ -33,7 +33,7 @@ from platon.middleware import (
     gas_price_strategy_middleware,
 )
 from platon.tools.benchmark.node import (
-    GplatonBenchmarkFixture,
+    PnodeBenchmarkFixture,
 )
 from platon.tools.benchmark.reporting import (
     print_entry,
@@ -104,25 +104,25 @@ async def async_benchmark(func: Callable[..., Any], n: int) -> Union[float, str]
 
 
 def unlocked_account(w3: "Web3") -> Bech32Address:
-    w3.gplaton.personal.unlock_account(w3.platon.coinbase, KEYFILE_PW)
+    w3.node.personal.unlock_account(w3.platon.coinbase, KEYFILE_PW)
     return w3.platon.coinbase
 
 
 async def async_unlocked_account(w3: Web3, w3_platon: Platon) -> Bech32Address:
     # change w3_platon type to w3_platon: AsyncPlaton once AsyncPlaton reflects Platon
     coinbase = await w3_platon.coinbase  # type: ignore
-    w3.gplaton.personal.unlock_account(coinbase, KEYFILE_PW)
+    w3.node.personal.unlock_account(coinbase, KEYFILE_PW)
     return coinbase
 
 
 def main(logger: logging.Logger, num_calls: int) -> None:
-    fixture = GplatonBenchmarkFixture()
+    fixture = PnodeBenchmarkFixture()
     for built_fixture in fixture.build():
         for process in built_fixture:
             w3_http = build_web3_http(fixture.endpoint_uri)
             loop = asyncio.get_event_loop()
             async_w3_http = loop.run_until_complete(build_async_w3_http(fixture.endpoint_uri))
-            # TODO: swap out w3_http for the async_w3_http once GplatonPersonal module is async
+            # TODO: swap out w3_http for the async_w3_http once Personal module is async
             async_unlocked_acct = loop.run_until_complete(
                 async_unlocked_account(w3_http, async_w3_http.platon)
             )

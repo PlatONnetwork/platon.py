@@ -593,7 +593,7 @@ def replace_link_ref_in_bytecode(offset: int, length: int, bytecode: str) -> str
     return new_bytes
 
 
-# todo pull all bytecode linking/validating across py-platonpm into shared utils
+# todo pull all bytecode linking/validating across py-platonpm into shared _utils
 @to_list
 def process_link_references(
     link_refs: Dict[str, Any], bytecode: str

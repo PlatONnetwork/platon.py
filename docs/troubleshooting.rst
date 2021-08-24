@@ -74,7 +74,7 @@ You can check that your instance is connected via the ``isConnected`` method:
     False
 
 There's a variety of explanations for why you may see ``False`` here. If you're
-running a local node, such as Gplaton, double-check that you've indeed started the
+running a local node, such as Pnode, double-check that you've indeed started the
 binary and that you've started it from the intended directory - particularly if
 you've specified a relative path to its ipc file.
 
@@ -126,14 +126,14 @@ you may be trying to create an account while connected to a remote node provider
 As a matter of security, remote nodes cannot create accounts.
 
 If you are in fact running a local node, make sure that it's properly configured to accept ``personal``
-methods. For Gplaton, that looks something like: ``--http.api personal,platon,<etc>`` or ``--ws.api personal,platon,<etc>``
+methods. For Pnode, that looks something like: ``--http.api personal,platon,<etc>`` or ``--ws.api personal,platon,<etc>``
 depending on your configuration. Note that the IPC configuration is most secure and includes the ``personal``
 API by default.
 
 In general, your options for accounts are:
 
-- Run a node (e.g., Gplaton) locally, connect to it via the local port, then use the ``personal`` API.
-- Import a keystore file for an account and :ref:`extract the private key<extract_gplaton_pk>`.
+- Run a node (e.g., Pnode) locally, connect to it via the local port, then use the ``personal`` API.
+- Import a keystore file for an account and :ref:`extract the private key<extract_node_pk>`.
 - Create an account via the :ref:`platon-account <platon-account>` API, e.g., ``new_acct = w3.platon.account.create()``.
 - Use an external service (e.g., MyCrypto) to generate a new account, then securely import its private key.
 
@@ -145,7 +145,7 @@ Making Platon JSON-RPC API access faster
 
 Your Platon node JSON-RPC API might be slow when fetching multiple and large requests, especially when running batch jobs. Here are some tips for how to speed up your platon.py application.
 
-- Run your client locally, e.g., `Go Platon <https://github.com/platonnetwork/platon-go>`_ or `TurboGplaton <https://github.com/ledgerwatch/turbo-gplaton>`_. The network latency and speed are the major limiting factors for fast API access.
+- Run your client locally, e.g., `Go Platon <https://github.com/platonnetwork/platon-go>`_ or `TurboPnode <https://github.com/ledgerwatch/turbo-node>`_. The network latency and speed are the major limiting factors for fast API access.
 
 - Use IPC communication instead of HTTP/WebSockets. See :ref:`choosing_provider`.
 

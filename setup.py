@@ -8,7 +8,7 @@ from setuptools import (
 extras_require = {
     'tester': [
         "platon-tester[py-evm]==v0.5.0-beta.4",
-        "py-gplaton>=3.2.0,<4",
+        "py-node>=3.2.0,<4",
     ],
     'linter': [
         "flake8==3.8.3",
@@ -21,7 +21,7 @@ extras_require = {
         "click>=5.1",
         "configparser==3.5.0",
         "contextlib2>=0.5.4",
-        "py-gplaton>=3.2.0,<4",
+        "py-node>=3.2.0,<4",
         "py-solc>=0.4.0",
         "pytest>=4.4.0,<5.0.0",
         "sphinx>=3.0,<4",
@@ -76,7 +76,7 @@ setup(
         "platon-account>=0.5.3,<0.6.0",
         "platon-hash[pycryptodome]>=0.2.0,<1.0.0",
         "platon-typing>=2.0.0,<3.0.0",
-        "platon-utils>=1.9.5,<2.0.0",
+        "platon-_utils>=1.9.5,<2.0.0",
         "hexbytes>=0.1.0,<1.0.0",
         "ipfshttpclient==0.7.0",
         "jsonschema>=3.2.0,<4.0.0",
@@ -90,7 +90,7 @@ setup(
     ],
     python_requires='>=3.6,<4',
     extras_require=extras_require,
-    py_modules=['platon', 'ens', 'platonpm'],
+    py_modules=['web3', 'ens', 'platonpm'],
     entry_points={"pytest11": ["pytest_platon = platon.tools.pytest_platon.plugins"]},
     license="MIT",
     zip_safe=False,

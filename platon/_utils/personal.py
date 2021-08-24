@@ -25,7 +25,7 @@ from platon.method import (
     default_root_munger,
 )
 from platon.types import (
-    GplatonWallet,
+    PnodeWallet,
     TxParams,
 )
 
@@ -47,7 +47,7 @@ list_accounts: Method[Callable[[], List[Bech32Address]]] = Method(
 )
 
 
-list_wallets: Method[Callable[[], List[GplatonWallet]]] = Method(
+list_wallets: Method[Callable[[], List[PnodeWallet]]] = Method(
     RPC.personal_listWallets,
     mungers=None,
 )

@@ -20,41 +20,41 @@ from .utils import (
 )
 
 
-def _gplaton_command_arguments(gplaton_ipc_path,
-                            base_gplaton_command_arguments):
+def _node_command_arguments(node_ipc_path,
+                            base_node_command_arguments):
 
-    gplaton_port = get_open_port()
-    yield from base_gplaton_command_arguments
+    node_port = get_open_port()
+    yield from base_node_command_arguments
     yield from (
-        '--port', gplaton_port,
-        '--ipcpath', gplaton_ipc_path,
+        '--port', node_port,
+        '--ipcpath', node_ipc_path,
     )
 
 
 @pytest.fixture(scope='module')
-def gplaton_command_arguments(gplaton_ipc_path,
-                           base_gplaton_command_arguments):
+def node_command_arguments(node_ipc_path,
+                           base_node_command_arguments):
 
-    return _gplaton_command_arguments(
-        gplaton_ipc_path,
-        base_gplaton_command_arguments
+    return _node_command_arguments(
+        node_ipc_path,
+        base_node_command_arguments
     )
 
 
 @pytest.fixture(scope='module')
-def gplaton_ipc_path(datadir):
-    gplaton_ipc_dir_path = tempfile.mkdtemp()
-    _gplaton_ipc_path = os.path.join(gplaton_ipc_dir_path, 'gplaton.ipc')
-    yield _gplaton_ipc_path
+def node_ipc_path(datadir):
+    node_ipc_dir_path = tempfile.mkdtemp()
+    _node_ipc_path = os.path.join(node_ipc_dir_path, 'node.ipc')
+    yield _node_ipc_path
 
-    if os.path.exists(_gplaton_ipc_path):
-        os.remove(_gplaton_ipc_path)
+    if os.path.exists(_node_ipc_path):
+        os.remove(_node_ipc_path)
 
 
 @pytest.fixture(scope="module")
-def web3(gplaton_process, gplaton_ipc_path):
-    wait_for_socket(gplaton_ipc_path)
-    _web3 = Web3(Web3.IPCProvider(gplaton_ipc_path))
+def web3(node_process, node_ipc_path):
+    wait_for_socket(node_ipc_path)
+    _web3 = Web3(Web3.IPCProvider(node_ipc_path))
     return _web3
 
 
@@ -63,7 +63,7 @@ class TestGoPlatonTest(GoPlatonTest):
 
 
 class TestGoPlatonAdminModuleTest(GoPlatonAdminModuleTest):
-    @pytest.mark.xfail(reason="running gplaton with the --nodiscover flag doesn't allow peer addition")
+    @pytest.mark.xfail(reason="running node with the --nodiscover flag doesn't allow peer addition")
     def test_admin_peers(web3):
         super().test_admin_peers(web3)
 

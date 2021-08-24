@@ -212,7 +212,7 @@ API_ENDPOINTS = {
         ),
         'mining': static_return(False),
         'hashrate': static_return(0),
-        'chain_id': static_return('0x3d'),
+        'chainId': static_return('0x3d'),
         'gasPrice': static_return(1),
         'accounts': call_platon_tester('get_accounts'),
         'blockNumber': compose(

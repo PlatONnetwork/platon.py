@@ -9,7 +9,7 @@ from threading import (
 import time
 import uuid
 
-from platon.auto.gplatondev import (
+from platon.auto.nodedev import (
     w3,
 )
 from platon.middleware import (
@@ -86,7 +86,7 @@ def test_sync_waits_for_full_result(jsonrpc_ipc_pipe_path, serve_empty_result):
     provider._socket.sock.close()
 
 
-def test_web3_auto_gplatondev():
+def test_web3_auto_nodedev():
     assert isinstance(w3.provider, IPCProvider)
     return_block_with_long_extra_data = construct_fixture_middleware({
         'platon_getBlockByNumber': {'extraData': '0x' + 'ff' * 33},

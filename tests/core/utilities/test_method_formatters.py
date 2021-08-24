@@ -50,7 +50,7 @@ OTHER_ERROR = RPCResponse({
     "id": 1,
 })
 
-GPLATON_RESPONSE = RPCResponse({
+NODE_RESPONSE = RPCResponse({
     'jsonrpc': '2.0',
     'id': 2,
     'error': {
@@ -84,13 +84,13 @@ GANACHE_RESPONSE = RPCResponse({
     (
         (REVERT_WITH_MSG, 'execution reverted: not allowed to monitor'),
         (REVERT_WITHOUT_MSG, 'execution reverted'),
-        (GPLATON_RESPONSE, 'execution reverted: Function has been reverted.'),
+        (NODE_RESPONSE, 'execution reverted: Function has been reverted.'),
         (GANACHE_RESPONSE, 'execution reverted: VM Exception while processing transaction: revert Custom revert message'),  # noqa: 501
     ),
     ids=[
         'test-get-revert-reason-with-msg',
         'test-get-revert-reason-without-msg',
-        'test-get-gplaton-revert-reason',
+        'test-get-node-revert-reason',
         'test_get-ganache-revert-reason',
     ])
 def test_get_revert_reason(response, expected) -> None:

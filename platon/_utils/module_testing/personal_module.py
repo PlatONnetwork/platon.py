@@ -39,11 +39,11 @@ ACCOUNT_FOR_UNLOCK = '0x12efDc31B1a8FA1A1e756DFD8A1601055C971E13'
 
 class GoPlatonPersonalModuleTest:
     def test_personal_import_raw_key(self, web3: "Web3") -> None:
-        actual = web3.gplaton.personal.import_raw_key(PRIVATE_KEY_HEX, PASSWORD)
+        actual = web3.node.personal.import_raw_key(PRIVATE_KEY_HEX, PASSWORD)
         assert actual == ADDRESS
 
     def test_personal_list_accounts(self, web3: "Web3") -> None:
-        accounts = web3.gplaton.personal.list_accounts()
+        accounts = web3.node.personal.list_accounts()
         assert is_list_like(accounts)
         assert len(accounts) > 0
         assert all((
@@ -53,7 +53,7 @@ class GoPlatonPersonalModuleTest:
         ))
 
     def test_personal_list_wallets(self, web3: "Web3") -> None:
-        wallets = web3.gplaton.personal.list_wallets()
+        wallets = web3.node.personal.list_wallets()
         assert is_list_like(wallets)
         assert len(wallets) > 0
         assert is_bech32_address(wallets[0]['accounts'][0]['address'])
@@ -65,7 +65,7 @@ class GoPlatonPersonalModuleTest:
         self, web3: "Web3", unlockable_account_dual_type: Bech32Address
     ) -> None:
         # TODO: how do we test this better?
-        web3.gplaton.personal.lock_account(unlockable_account_dual_type)
+        web3.node.personal.lock_account(unlockable_account_dual_type)
 
     def test_personal_unlock_account_success(
         self,
@@ -73,7 +73,7 @@ class GoPlatonPersonalModuleTest:
         unlockable_account_dual_type: Bech32Address,
         unlockable_account_pw: str,
     ) -> None:
-        result = web3.gplaton.personal.unlock_account(
+        result = web3.node.personal.unlock_account(
             unlockable_account_dual_type,
             unlockable_account_pw
         )
@@ -83,7 +83,7 @@ class GoPlatonPersonalModuleTest:
         self, web3: "Web3", unlockable_account_dual_type: Bech32Address
     ) -> None:
         with pytest.raises(ValueError):
-            web3.gplaton.personal.unlock_account(unlockable_account_dual_type, 'bad-password')
+            web3.node.personal.unlock_account(unlockable_account_dual_type, 'bad-password')
 
     def test_personal_send_transaction(
         self,
@@ -99,7 +99,7 @@ class GoPlatonPersonalModuleTest:
             'value': Wei(1),
             'gasPrice': web3.toWei(1, 'gwei'),
         }
-        txn_hash = web3.gplaton.personal.send_transaction(txn_params, unlockable_account_pw)
+        txn_hash = web3.node.personal.send_transaction(txn_params, unlockable_account_pw)
         assert txn_hash
         transaction = web3.platon.get_transaction(txn_hash)
 
@@ -115,17 +115,17 @@ class GoPlatonPersonalModuleTest:
         unlockable_account_dual_type: Bech32Address,
         unlockable_account_pw: str,
     ) -> None:
-        message = 'test-platon-gplaton-personal-sign'
-        signature = web3.gplaton.personal.sign(
+        message = 'test-platon-node-personal-sign'
+        signature = web3.node.personal.sign(
             message,
             unlockable_account_dual_type,
             unlockable_account_pw
         )
-        signer = web3.gplaton.personal.ec_recover(message, signature)
+        signer = web3.node.personal.ec_recover(message, signature)
         assert is_same_address(signer, unlockable_account_dual_type)
 
     @pytest.mark.xfail(
-        reason="personal_sign_typed_data JSON RPC call has not been released in gplaton"
+        reason="personal_sign_typed_data JSON RPC call has not been released in node"
     )
     def test_personal_sign_typed_data(
         self,
@@ -172,7 +172,7 @@ class GoPlatonPersonalModuleTest:
                 }
             }
         '''
-        signature = HexBytes(web3.gplaton.personal.sign_typed_data(
+        signature = HexBytes(web3.node.personal.sign_typed_data(
             json.loads(typed_message),
             unlockable_account_dual_type,
             unlockable_account_pw

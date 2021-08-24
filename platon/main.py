@@ -12,6 +12,8 @@ from platon_utils import (
     to_int,
     to_text,
     to_wei,
+    is_bech32_address,
+    to_bech32_address
 )
 from functools import (
     wraps,
@@ -32,7 +34,6 @@ from typing import (
 
 from platon_typing import (
     AnyAddress,
-    Bech32Address,
     HexStr,
     Primitives,
 )
@@ -64,15 +65,21 @@ from platon._utils.module import (
 from platon._utils.normalizers import (
     abi_ens_resolver,
 )
+
+from platon._utils.delegate import Delegate
+from platon.pip import Pip
+from platon._utils.restricting import Restricting
+from platon._utils.slashing import Slashing
+from platon._utils.staking import Staking
 from platon.platon import (
     Platon,
 )
-from platon.gplaton import (
-    Gplaton,
-    GplatonAdmin,
-    GplatonMiner,
-    GplatonPersonal,
-    GplatonTxPool,
+from platon.node import (
+    Node,
+    Admin,
+    Miner,
+    Personal,
+    TxPool,
 )
 from platon.iban import (
     Iban,
@@ -85,8 +92,8 @@ from platon.net import (
 )
 from platon.parity import (
     Parity,
-    ParityPersonal,
 )
+from platon.ppos import Ppos
 from platon.providers import (
     BaseProvider,
 )
@@ -104,9 +111,6 @@ from platon.providers.rpc import (
 )
 from platon.providers.websocket import (
     WebsocketProvider,
-)
-from platon.testing import (
-    Testing,
 )
 from platon.types import (  # noqa: F401
     Middleware,
@@ -126,22 +130,23 @@ def get_default_modules() -> Dict[str, Sequence[Any]]:
         "platon": (Platon,),
         "net": (Net,),
         "version": (Version,),
-        "parity": (Parity, {
-            "personal": (ParityPersonal,),
+        "restricting": (Restricting,),
+        "ppos": (Ppos, {
+            "staking": (Staking,),
+            "delegate": (Delegate,),
+            "slashing": (Slashing, ),
         }),
-        # todo: add default modules
-        # "restricting": None,
-        # "staking": None,
-        # "reward": None,
-        # "slashing": None,
-        # "govern": None,
-        "gplaton": (Gplaton, {
-            "admin": (GplatonAdmin,),
-            "miner": (GplatonMiner,),
-            "personal": (GplatonPersonal,),
-            "txpool": (GplatonTxPool,),
+        "pip": (Pip, ),
+        "node": (Node, {
+            "admin": (Admin,),
+            "miner": (Miner,),
+            "personal": (Personal,),
+            "txpool": (TxPool,),
         }),
-        "testing": (Testing,),
+        # "parity": (Parity, {
+        #     "personal": (ParityPersonal,),
+        # }),
+        # "testing": (Testing,),
     }
 
 
@@ -205,26 +210,27 @@ class Web3:
         return from_wei(number, unit)
 
     # Address Utility
-    # todo: support hrp
     @staticmethod
-    def isBech32Address(value: Any):
-        return True
+    def is_bech32_address(value: Any):
+        return is_bech32_address(value)
 
     @staticmethod
-    def toBech32Address(value: Union[AnyAddress, str, bytes], hrp: str):
-        return value
+    def to_bech32_address(value: Union[AnyAddress, str, bytes], hrp: str):
+        return to_bech32_address(value)
 
     # mypy Types
     platon: Platon
     parity: Parity
-    gplaton: Gplaton
+    node: Node
     net: Net
     # todo: add inner contract
-    staking: None
-    restricting: None
-    slashing: None
-    govern: None
-    reward: None
+    ppos: Ppos
+    pip: Pip
+    # staking: None
+    # restricting: None
+    # slashing: None
+    # govern: None
+    # reward: None
 
     def __init__(
             self,

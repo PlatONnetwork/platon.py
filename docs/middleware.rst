@@ -93,7 +93,7 @@ Middleware Order
 ~~~~~~~~~~~~~~~~~~
 
 Think of the middleware as being layered in an onion, where you initiate a platon.py request at
-the outermost layer of the onion, and the Platon node (like gplaton or parity) receives and responds
+the outermost layer of the onion, and the Platon node (like node or parity) receives and responds
 to the request inside the innermost layer of the onion. Here is a (simplified) diagram:
 
 .. code-block:: none
@@ -330,25 +330,25 @@ All of the caching middlewares accept these common arguments.
     A ready to use version of this middleware can be found at
     ``web3.middlewares.latest_block_based_cache_middleware``.
 
-.. _gplaton-poa:
+.. _node-poa:
 
-Gplaton-style Proof of Authority
+Pnode-style Proof of Authority
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This middleware is required to connect to ``gplaton --dev`` or the Rinkeby public network.
+This middleware is required to connect to ``node --dev`` or the Rinkeby public network.
 
-The easiest way to connect to a default ``gplaton --dev`` instance which loads the middleware is:
+The easiest way to connect to a default ``node --dev`` instance which loads the middleware is:
 
 
 .. code-block:: python
 
-    >>> from platon.auto.gplatondev import w3
+    >>> from platon.auto.nodedev import w3
 
     # confirm that the connection succeeded
     >>> w3.clientVersion
-    'Gplaton/v1.7.3-stable-4bb3c89d/linux-amd64/go1.9'
+    'Pnode/v1.7.3-stable-4bb3c89d/linux-amd64/go1.9'
 
-This example connects to a local ``gplaton --dev`` instance on Linux with a
+This example connects to a local ``node --dev`` instance on Linux with a
 unique IPC location and loads the middleware:
 
 
@@ -356,8 +356,8 @@ unique IPC location and loads the middleware:
 
     >>> from platon import Web3, IPCProvider
 
-    # connect to the IPC location started with 'gplaton --dev --datadir ~/mynode'
-    >>> w3 = Web3(IPCProvider('~/mynode/gplaton.ipc'))
+    # connect to the IPC location started with 'node --dev --datadir ~/mynode'
+    >>> w3 = Web3(IPCProvider('~/mynode/node.ipc'))
 
     >>> from platon.middleware import gplaton_poa_middleware
 
@@ -366,17 +366,17 @@ unique IPC location and loads the middleware:
 
     # confirm that the connection succeeded
     >>> w3.clientVersion
-    'Gplaton/v1.7.3-stable-4bb3c89d/linux-amd64/go1.9'
+    'Pnode/v1.7.3-stable-4bb3c89d/linux-amd64/go1.9'
 
 Why is ``gplaton_poa_middleware`` necessary?
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 There is no strong community consensus on a single Proof-of-Authority (PoA) standard yet.
-Some nodes have successful experiments running, though. One is platon (gplaton),
+Some nodes have successful experiments running, though. One is platon (node),
 which uses a prototype PoA for it's development mode and the Rinkeby test network.
 
 Unfortunately, it does deviate from the yellow paper specification, which constrains the
-``extraData`` field in each block to a maximum of 32-bytes. Gplaton's PoA uses more than
+``extraData`` field in each block to a maximum of 32-bytes. Pnode's PoA uses more than
 32 bytes, so this middleware modifies the block data a bit before returning it.
 
 .. _local-filter:

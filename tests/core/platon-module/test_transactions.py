@@ -32,7 +32,7 @@ RECEIPT_TIMEOUT = 0.2
 def test_send_transaction_with_valid_chain_id(web3, make_chain_id, expect_success):
     transaction = {
         'to': web3.platon.accounts[1],
-        'chain_id': make_chain_id(web3),
+        'chainId': make_chain_id(web3),
     }
     if expect_success:
         txn_hash = web3.platon.send_transaction(transaction)
@@ -64,7 +64,7 @@ def test_send_transaction_with_invalid_ens_names(web3, to, _from):
     ]):
         transaction = {
             'to': to,
-            'chain_id': web3.platon.chain_id,
+            'chainId': web3.platon.chain_id,
             'from': _from,
         }
 
@@ -79,7 +79,7 @@ def test_send_transaction_with_ens_names(web3):
     ]):
         transaction = {
             'to': 'registered-name-1.platon',
-            'chain_id': web3.platon.chain_id,
+            'chainId': web3.platon.chain_id,
             'from': 'registered-name-2.platon',
         }
 

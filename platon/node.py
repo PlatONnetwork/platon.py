@@ -7,6 +7,8 @@ from platon._utils.admin import (
     start_ws,
     stop_rpc,
     stop_ws,
+    get_program_version,
+    get_schnorr_NIZK_prove,
 )
 from platon._utils.miner import (
     make_dag,
@@ -40,10 +42,31 @@ from platon.module import (
 )
 
 
-class GplatonPersonal(Module):
-    """
-    https://github.com/platonnetwork/platon-go/wiki/management-apis#personal
-    """
+class Admin(Module):
+    peers = peers
+    data_dir = data_dir
+    add_peer = add_peer
+    node_info = node_info
+    start_rpc = start_rpc
+    start_ws = start_ws
+    stop_ws = stop_ws
+    stop_rpc = stop_rpc
+    get_program_version = get_program_version
+    get_schnorr_NIZK_prove = get_schnorr_NIZK_prove
+
+
+class Miner(Module):
+    make_dag = make_dag
+    set_extra = set_extra
+    set_etherbase = set_etherbase
+    set_gas_price = set_gas_price
+    start = start
+    stop = stop
+    start_auto_dag = start_auto_dag
+    stop_auto_dag = stop_auto_dag
+
+
+class Personal(Module):
     ec_recover = ec_recover
     import_raw_key = import_raw_key
     list_accounts = list_accounts
@@ -56,43 +79,14 @@ class GplatonPersonal(Module):
     unlock_account = unlock_account
 
 
-class GplatonTxPool(Module):
-    """
-    https://github.com/platonnetwork/platon-go/wiki/Management-APIs#txpool
-    """
+class TxPool(Module):
     content = content
     inspect = inspect
     status = status
 
 
-class GplatonAdmin(Module):
-    """
-    https://github.com/platonnetwork/platon-go/wiki/Management-APIs#admin
-    """
-    peers = peers
-    data_dir = data_dir
-    add_peer = add_peer
-    node_info = node_info
-    start_rpc = start_rpc
-    start_ws = start_ws
-    stop_ws = stop_ws
-    stop_rpc = stop_rpc
-
-
-class GplatonMiner(Module):
-    """
-    https://github.com/platonnetwork/platon-go/wiki/Management-APIs#miner
-    """
-    make_dag = make_dag
-    set_extra = set_extra
-    set_etherbase = set_etherbase
-    set_gas_price = set_gas_price
-    start = start
-    stop = stop
-    start_auto_dag = start_auto_dag
-    stop_auto_dag = stop_auto_dag
-
-
-class Gplaton(Module):
-    personal: GplatonPersonal
-    admin: GplatonAdmin
+class Node(Module):
+    admin: Admin
+    miner: Miner
+    personal: Personal
+    txpool: TxPool

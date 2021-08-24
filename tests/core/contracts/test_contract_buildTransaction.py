@@ -47,47 +47,47 @@ def payable_tester_contract(web3, PayableTesterContract, address_conversion_func
 def test_build_transaction_not_paying_to_nonpayable_function(
         web3,
         payable_tester_contract,
-        buildTransaction):
-    txn = buildTransaction(contract=payable_tester_contract,
+        build_transaction):
+    txn = build_transaction(contract=payable_tester_contract,
                            contract_function='doNoValueCall')
     assert dissoc(txn, 'gas') == {
         'to': payable_tester_contract.address,
         'data': '0xe4cb8f5c',
         'value': 0,
         'gasPrice': 1,
-        'chain_id': 61,
+        'chainId': 61,
     }
 
 
 def test_build_transaction_paying_to_nonpayable_function(
         web3,
         payable_tester_contract,
-        buildTransaction):
+        build_transaction):
     with pytest.raises(ValidationError):
-        buildTransaction(contract=payable_tester_contract,
+        build_transaction(contract=payable_tester_contract,
                          contract_function='doNoValueCall',
                          tx_params={'value': 1})
 
 
-def test_build_transaction_with_contract_no_arguments(web3, math_contract, buildTransaction):
-    txn = buildTransaction(contract=math_contract, contract_function='increment')
+def test_build_transaction_with_contract_no_arguments(web3, math_contract, build_transaction):
+    txn = build_transaction(contract=math_contract, contract_function='increment')
     assert dissoc(txn, 'gas') == {
         'to': math_contract.address,
         'data': '0xd09de08a',
         'value': 0,
         'gasPrice': 1,
-        'chain_id': 61,
+        'chainId': 61,
     }
 
 
 def test_build_transaction_with_contract_fallback_function(web3, fallback_function_contract):
-    txn = fallback_function_contract.fallback.buildTransaction()
+    txn = fallback_function_contract.fallback.build_transaction()
     assert dissoc(txn, 'gas') == {
         'to': fallback_function_contract.address,
         'data': '0x',
         'value': 0,
         'gasPrice': 1,
-        'chain_id': 61,
+        'chainId': 61,
     }
 
 
@@ -95,8 +95,8 @@ def test_build_transaction_with_contract_class_method(
         web3,
         MathContract,
         math_contract,
-        buildTransaction):
-    txn = buildTransaction(
+        build_transaction):
+    txn = build_transaction(
         contract=MathContract,
         contract_function='increment',
         tx_params={'to': math_contract.address},
@@ -106,52 +106,52 @@ def test_build_transaction_with_contract_class_method(
         'data': '0xd09de08a',
         'value': 0,
         'gasPrice': 1,
-        'chain_id': 61,
+        'chainId': 61,
     }
 
 
 def test_build_transaction_with_contract_default_account_is_set(
         web3,
         math_contract,
-        buildTransaction):
-    txn = buildTransaction(contract=math_contract, contract_function='increment')
+        build_transaction):
+    txn = build_transaction(contract=math_contract, contract_function='increment')
     assert dissoc(txn, 'gas') == {
         'to': math_contract.address,
         'data': '0xd09de08a',
         'value': 0,
         'gasPrice': 1,
-        'chain_id': 61,
+        'chainId': 61,
     }
 
 
-def test_build_transaction_with_gas_price_strategy_set(web3, math_contract, buildTransaction):
+def test_build_transaction_with_gas_price_strategy_set(web3, math_contract, build_transaction):
     def my_gas_price_strategy(web3, transaction_params):
         return 5
     web3.platon.set_gas_price_strategy(my_gas_price_strategy)
-    txn = buildTransaction(contract=math_contract, contract_function='increment')
+    txn = build_transaction(contract=math_contract, contract_function='increment')
     assert dissoc(txn, 'gas') == {
         'to': math_contract.address,
         'data': '0xd09de08a',
         'value': 0,
         'gasPrice': 5,
-        'chain_id': 61,
+        'chainId': 61,
     }
 
 
 def test_build_transaction_with_contract_data_supplied_errors(web3,
                                                               math_contract,
-                                                              buildTransaction):
+                                                              build_transaction):
     with pytest.raises(ValueError):
-        buildTransaction(contract=math_contract,
+        build_transaction(contract=math_contract,
                          contract_function='increment',
                          tx_params={'data': '0x000'})
 
 
 def test_build_transaction_with_contract_to_address_supplied_errors(web3,
                                                                     math_contract,
-                                                                    buildTransaction):
+                                                                    build_transaction):
     with pytest.raises(ValueError):
-        buildTransaction(contract=math_contract,
+        build_transaction(contract=math_contract,
                          contract_function='increment',
                          tx_params={'to': '0xb2930B35844a230f00E51431aCAe96Fe543a0347'})
 
@@ -162,31 +162,31 @@ def test_build_transaction_with_contract_to_address_supplied_errors(web3,
         (
             {}, (5,), {}, {
                 'data': '0x7cf5dab00000000000000000000000000000000000000000000000000000000000000005',  # noqa: E501
-                'value': 0, 'gasPrice': 1, 'chain_id': 61,
+                'value': 0, 'gasPrice': 1, 'chainId': 61,
             }, False
         ),
         (
             {'gas': 800000}, (5,), {}, {
                 'data': '0x7cf5dab00000000000000000000000000000000000000000000000000000000000000005',  # noqa: E501
-                'value': 0, 'gasPrice': 1, 'chain_id': 61,
+                'value': 0, 'gasPrice': 1, 'chainId': 61,
             }, False
         ),
         (
             {'gasPrice': 21000000000}, (5,), {}, {
                 'data': '0x7cf5dab00000000000000000000000000000000000000000000000000000000000000005',  # noqa: E501
-                'value': 0, 'gasPrice': 21000000000, 'chain_id': 61,
+                'value': 0, 'gasPrice': 21000000000, 'chainId': 61,
             }, False
         ),
         (
             {'nonce': 7}, (5,), {}, {
                 'data': '0x7cf5dab00000000000000000000000000000000000000000000000000000000000000005',  # noqa: E501
-                'value': 0, 'gasPrice': 1, 'nonce': 7, 'chain_id': 61,
+                'value': 0, 'gasPrice': 1, 'nonce': 7, 'chainId': 61,
             }, True
         ),
         (
             {'value': 20000}, (5,), {}, {
                 'data': '0x7cf5dab00000000000000000000000000000000000000000000000000000000000000005',  # noqa: E501
-                'value': 20000, 'gasPrice': 1, 'chain_id': 61,
+                'value': 20000, 'gasPrice': 1, 'chainId': 61,
             }, False
         ),
     ),
@@ -204,11 +204,11 @@ def test_build_transaction_with_contract_with_arguments(web3, skip_if_testrpc, m
                                                         method_kwargs,
                                                         expected,
                                                         skip_testrpc,
-                                                        buildTransaction):
+                                                        build_transaction):
     if skip_testrpc:
         skip_if_testrpc(web3)
 
-    txn = buildTransaction(contract=math_contract,
+    txn = build_transaction(contract=math_contract,
                            contract_function='increment',
                            func_args=method_args,
                            func_kwargs=method_kwargs,

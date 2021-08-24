@@ -37,7 +37,7 @@ from platon.types import (
 )
 
 TX_PARAM_LITERALS = Literal['from', 'to', 'gas', 'maxFeePerGas', 'maxPriorityFeePerGas',
-                            'gasPrice', 'value', 'data', 'nonce', 'chain_id']
+                            'gasPrice', 'value', 'data', 'nonce', 'chainId']
 
 VALID_TRANSACTION_PARAMS: List[TX_PARAM_LITERALS] = [
     'from',
@@ -49,7 +49,7 @@ VALID_TRANSACTION_PARAMS: List[TX_PARAM_LITERALS] = [
     'value',
     'data',
     'nonce',
-    'chain_id',
+    'chainId',
 ]
 
 TRANSACTION_DEFAULTS = {
@@ -57,7 +57,7 @@ TRANSACTION_DEFAULTS = {
     'data': b'',
     'gas': lambda web3, tx: web3.platon.estimate_gas(tx),
     'gasPrice': lambda web3, tx: web3.platon.generate_gas_price(tx) or web3.platon.gas_price,
-    'chain_id': lambda web3, tx: web3.platon.chain_id,
+    'chainId': lambda web3, tx: web3.platon.chain_id,
 }
 
 if TYPE_CHECKING:

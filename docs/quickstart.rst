@@ -34,11 +34,11 @@ in the :ref:`Providers<providers>` documentation. This Quickstart guide will hig
 a couple of the most common use cases.
 
 
-Provider: Local Gplaton Node
+Provider: Local Pnode Node
 **************************
 
 For locally run nodes, an IPC connection is the most secure option, but HTTP and
-websocket configurations are also available. By default, `Gplaton <https://gplaton.platon.org/>`_
+websocket configurations are also available. By default, `Pnode <https://node.platon.org/>`_
 exposes port ``8545`` to serve HTTP requests and ``8546`` for websocket requests. Connecting
 to this local node can be done as follows:
 
@@ -47,7 +47,7 @@ to this local node can be done as follows:
    >>> from platon import Web3
 
    # IPCProvider:
-   >>> w3 = Web3(Web3.IPCProvider('./path/to/gplaton.ipc'))
+   >>> w3 = Web3(Web3.IPCProvider('./path/to/node.ipc'))
 
    # HTTPProvider:
    >>> w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:8545'))

@@ -38,6 +38,8 @@ class RPC:
     admin_startWS = RPCEndpoint("admin_startWS")
     admin_stopRPC = RPCEndpoint("admin_stopRPC")
     admin_stopWS = RPCEndpoint("admin_stopWS")
+    admin_getProgramVersion = RPCEndpoint("admin_getProgramVersion")
+    admin_getSchnorrNIZKProve = RPCEndpoint("admin_getSchnorrNIZKProve")
 
     # platon
     platon_accounts = RPCEndpoint("platon_accounts")

@@ -25,7 +25,7 @@ common: &common
           - ~/.local
           - ./eggs
           - ~/.ethash
-          - ~/.py-gplaton
+          - ~/.py-node
         key: cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
 docs_steps: &docs_steps
@@ -54,7 +54,7 @@ docs_steps: &docs_steps
           - ~/.local
           - ./eggs
           - ~/.ethash
-          - ~/.py-gplaton
+          - ~/.py-node
         key: cache-docs-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
 # parity_steps: &parity_steps
@@ -91,11 +91,11 @@ docs_steps: &docs_steps
           # - ~/.local
           # - ./eggs
           # - ~/.ethash
-          # - ~/.py-gplaton
+          # - ~/.py-node
           # - ~/.parity-bin
         # key: cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
-gplaton_steps: &gplaton_steps
+node_steps: &node_steps
   working_directory: ~/repo
   steps:
     - checkout
@@ -106,14 +106,14 @@ gplaton_steps: &gplaton_steps
         name: install dependencies
         command: pip install --user tox
     - run:
-        name: build gplaton if missing
+        name: build node if missing
         command: |
           mkdir -p $HOME/.ethash
-          pip install --user py-gplaton>=3.2.0
+          pip install --user py-node>=3.2.0
           export GOROOT=/usr/local/go
-          echo $GPLATON_VERSION
-          export GPLATON_BINARY="$HOME/.py-gplaton/gplaton-$GPLATON_VERSION/bin/gplaton"
-          if [ ! -e "$GPLATON_BINARY" ]; then
+          echo $NODE_VERSION
+          export NODE_BINARY="$HOME/.py-node/node-$NODE_VERSION/bin/node"
+          if [ ! -e "$NODE_BINARY" ]; then
             curl -O https://storage.googleapis.com/golang/go1.14.2.linux-amd64.tar.gz
             tar xvf go1.14.2.linux-amd64.tar.gz
             sudo chown -R root:root ./go
@@ -121,11 +121,11 @@ gplaton_steps: &gplaton_steps
             sudo ln -s /usr/local/go/bin/go /usr/local/bin/go
             sudo apt-get update;
             sudo apt-get install -y build-essential;
-            python -m gplaton.install $GPLATON_VERSION;
+            python -m node.install $NODE_VERSION;
           fi
-          sudo ln -s /home/circleci/.py-gplaton/gplaton-$GPLATON_VERSION/bin/gplaton /usr/local/bin/gplaton
-          gplaton version
-          gplaton makedag 0 $HOME/.ethash
+          sudo ln -s /home/circleci/.py-node/node-$NODE_VERSION/bin/node /usr/local/bin/node
+          node version
+          node makedag 0 $HOME/.ethash
     - run:
         name: run tox
         command: ~/.local/bin/tox -r
@@ -136,10 +136,10 @@ gplaton_steps: &gplaton_steps
           - ~/.local
           - ./eggs
           - ~/.ethash
-          - ~/.py-gplaton
+          - ~/.py-node
         key: cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "setup.py" }}-{{ checksum "tox.ini" }}
 
-gplaton_custom_steps: &gplaton_custom_steps
+node_custom_steps: &node_custom_steps
   working_directory: ~/repo
   steps:
     - checkout
@@ -150,13 +150,13 @@ gplaton_custom_steps: &gplaton_custom_steps
         name: install dependencies
         command: pip install --user tox
     - run:
-        name: use a pre-built gplaton binary
+        name: use a pre-built node binary
         command: |
           mkdir -p $HOME/.ethash
           export GOROOT=/usr/local/go
-          echo $GPLATON_VERSION
-          export GPLATON_BINARY="./custom_gplaton"
-          echo 'export GPLATON_BINARY="./custom_gplaton"' >> $BASH_ENV
+          echo $NODE_VERSION
+          export NODE_BINARY="./custom_node"
+          echo 'export NODE_BINARY="./custom_node"' >> $BASH_ENV
           curl -O https://storage.googleapis.com/golang/go1.14.2.linux-amd64.tar.gz
           tar xvf go1.14.2.linux-amd64.tar.gz
           sudo chown -R root:root ./go
@@ -164,8 +164,8 @@ gplaton_custom_steps: &gplaton_custom_steps
           sudo ln -s /usr/local/go/bin/go /usr/local/bin/go
           sudo apt-get update;
           sudo apt-get install -y build-essential;
-          ./custom_gplaton version
-          ./custom_gplaton makedag 0 $HOME/.ethash
+          ./custom_node version
+          ./custom_node makedag 0 $HOME/.ethash
     - run:
         name: run tox
         command: ~/.local/bin/tox -r
@@ -282,28 +282,28 @@ jobs:
       WEB3_INFURA_PROJECT_ID: 7707850c2fb7465ebe6f150d67182e22
 
   py36-integration-platon-ipc:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.6
     environment:
       TOXENV: py36-integration-platon-ipc
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
   py36-integration-platon-http:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.6
     environment:
       TOXENV: py36-integration-platon-http
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
   py36-integration-platon-ws:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.6
     environment:
       TOXENV: py36-integration-platon-ws
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
   # py36-integration-parity-ipc:
     # <<: *parity_steps
@@ -374,28 +374,28 @@ jobs:
       WEB3_INFURA_PROJECT_ID: 7707850c2fb7465ebe6f150d67182e22
 
   py37-integration-platon-ipc:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.7
     environment:
       TOXENV: py37-integration-platon-ipc
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
   py37-integration-platon-http:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.7
     environment:
       TOXENV: py37-integration-platon-http
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
   py37-integration-platon-ws:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.7
     environment:
       TOXENV: py37-integration-platon-ws
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
   # py37-integration-parity-ipc:
     # <<: *parity_steps
@@ -471,28 +471,28 @@ jobs:
       WEB3_INFURA_PROJECT_ID: 7707850c2fb7465ebe6f150d67182e22
 
   py38-integration-platon-ipc:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.8
     environment:
       TOXENV: py38-integration-platon-ipc
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
   py38-integration-platon-http:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.8
     environment:
       TOXENV: py38-integration-platon-http
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
   py38-integration-platon-ws:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.8
     environment:
       TOXENV: py38-integration-platon-ws
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
   # py38-integration-parity-ipc:
     # <<: *parity_steps
@@ -563,28 +563,28 @@ jobs:
       WEB3_INFURA_PROJECT_ID: 7707850c2fb7465ebe6f150d67182e22
 
   py39-integration-platon-ipc:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.9
     environment:
       TOXENV: py39-integration-platon-ipc
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
   py39-integration-platon-http:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.9
     environment:
       TOXENV: py39-integration-platon-http
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
   py39-integration-platon-ws:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.9
     environment:
       TOXENV: py39-integration-platon-ws
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
   # py39-integration-parity-ipc:
   #   <<: *parity_steps
@@ -629,12 +629,12 @@ jobs:
           TOXENV: py39-wheel-cli
 
   benchmark:
-    <<: *gplaton_steps
+    <<: *node_steps
     docker:
       - image: circleci/python:3.9
     environment:
       TOXENV: benchmark
-      GPLATON_VERSION: v1.10.4
+      NODE_VERSION: v1.10.4
 
 workflows:
   version: 2.1

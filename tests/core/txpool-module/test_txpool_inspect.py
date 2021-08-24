@@ -8,7 +8,7 @@ from platon._utils.threads import (
 def test_txpool_inspect(web3_empty):
     web3 = web3_empty
 
-    web3.gplaton.miner.stop()
+    web3.node.miner.stop()
 
     with Timeout(60) as timeout:
         while web3.platon.hashrate or web3.platon.mining:
@@ -27,7 +27,7 @@ def test_txpool_inspect(web3_empty):
     })
     txn_2 = web3.platon.get_transaction(txn_2_hash)
 
-    inspect_content = web3.gplaton.txpool.inspect
+    inspect_content = web3.node.txpool.inspect
 
     assert web3.platon.coinbase in inspect_content['pending']
 

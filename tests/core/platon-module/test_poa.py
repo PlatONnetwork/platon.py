@@ -29,7 +29,7 @@ def test_full_extra_data(web3):
     assert block.extraData == b'\xff' * 32
 
 
-def test_gplaton_proof_of_authority(web3):
+def test_node_proof_of_authority(web3):
     return_block_with_long_extra_data = construct_fixture_middleware({
         'platon_getBlockByNumber': {'extraData': '0x' + 'ff' * 33},
     })

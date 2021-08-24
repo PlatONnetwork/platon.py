@@ -65,12 +65,12 @@ if TYPE_CHECKING:
 def mine_pending_block(web3: "Web3") -> None:
     timeout = 10
 
-    web3.gplaton.miner.start()  # type: ignore
+    web3.node.miner.start()  # type: ignore
     start = time.time()
     while time.time() < start + timeout:
         if len(web3.platon.get_block('pending')['transactions']) == 0:
             break
-    web3.gplaton.miner.stop()  # type: ignore
+    web3.node.miner.stop()  # type: ignore
 
 
 class AsyncPlatonModuleTest:
@@ -409,13 +409,13 @@ class PlatonModuleTest:
 
     def test_platon_chain_id(self, web3: "Web3") -> None:
         chain_id = web3.platon.chain_id
-        # chain id value from gplaton fixture genesis file
+        # chain id value from node fixture genesis file
         assert chain_id == 131277322940537
 
     def test_platon_chainId(self, web3: "Web3") -> None:
         with pytest.warns(DeprecationWarning):
             chain_id = web3.platon.chainId
-        # chain id value from gplaton fixture genesis file
+        # chain id value from node fixture genesis file
         assert chain_id == 131277322940537
 
     def test_platon_gas_price(self, web3: "Web3") -> None:
@@ -1084,10 +1084,10 @@ class PlatonModuleTest:
         }
         txn_hash = web3.platon.send_transaction(txn_params)
         try:
-            web3.gplaton.miner.start()  # type: ignore
+            web3.node.miner.start()  # type: ignore
             web3.platon.wait_for_transaction_receipt(txn_hash, timeout=10)
         finally:
-            web3.gplaton.miner.stop()  # type: ignore
+            web3.node.miner.stop()  # type: ignore
 
         txn_params['maxFeePerGas'] = web3.toWei(3, 'gwei')
         txn_params['maxPriorityFeePerGas'] = web3.toWei(2, 'gwei')
@@ -1260,7 +1260,7 @@ class PlatonModuleTest:
                 # private key 0x3c2ab4e8f17a7dea191b8c991522660126d681039509dc3bb31af7c9bdb63518
                 # This is an unfunded account, but the transaction has a 0 gas price, so is valid.
                 # It never needs to be mined, we just want the transaction hash back to confirm.
-                # tx = {'to': '0x0000000000000000000000000000000000000000', 'value': 0, 'nonce': 0, 'gas': 21000, 'gasPrice': 0, 'chain_id': 131277322940537}  # noqa: E501
+                # tx = {'to': '0x0000000000000000000000000000000000000000', 'value': 0, 'nonce': 0, 'gas': 21000, 'gasPrice': 0, 'chainId': 131277322940537}  # noqa: E501
                 HexBytes('0xf8658080825208940000000000000000000000000000000000000000808086eecac466e115a038176e5f9f1c25ce470ce77856bacbc02dd728ad647bb8b18434ac62c3e8e14fa03279bb3ee1e5202580668ec62b66a7d01355de3d5c4ef18fcfcb88fac56d5f90'),  # noqa: E501
                 '0x6ab943e675003de610b4e94f2e289dc711688df6e150da2bc57bd03811ad0f63',
             ),

@@ -17,6 +17,10 @@ from uuid import UUID
 from platon_utils.toolz import (
     pipe,
 )
+
+from platon._utils.decorators import (
+    deprecated_for,
+)
 from platon._utils.threads import (  # noqa: F401
     ThreadWithReturn,
     spawn,
@@ -195,15 +199,15 @@ class RequestManager:
                                        error_formatters,
                                        null_result_formatters)
 
-    # @deprecated_for("coro_request")
-    # def request_async(self, raw_method: str, raw_params: Any) -> UUID:
-    #     request_id = uuid.uuid4()
-    #     self.pending_requests[request_id] = spawn(
-    #         self.request_blocking,
-    #         raw_method=raw_method,
-    #         raw_params=raw_params,
-    #     )
-    #     return request_id
+    @deprecated_for("coro_request")
+    def request_async(self, raw_method: str, raw_params: Any) -> UUID:
+        request_id = uuid.uuid4()
+        self.pending_requests[request_id] = spawn(
+            self.request_blocking,
+            raw_method=raw_method,
+            raw_params=raw_params,
+        )
+        return request_id
 
     def receive_blocking(self, request_id: UUID, timeout: Optional[float] = None) -> Any:
         try:

@@ -19,7 +19,7 @@ def test_miner_set_gas_price(web3_empty, wait_for_block):
     # sanity check
     assert web3.platon.gas_price > 1000
 
-    web3.gplaton.miner.set_gas_price(initial_gas_price // 2)
+    web3.node.miner.set_gas_price(initial_gas_price // 2)
 
     with Timeout(60) as timeout:
         while web3.platon.gas_price == initial_gas_price:
@@ -39,7 +39,7 @@ def test_miner_setGasPrice(web3_empty, wait_for_block):
     # sanity check
 
     with pytest.warns(DeprecationWarning):
-        web3.gplaton.miner.setGasPrice(initial_gas_price // 2)
+        web3.node.miner.setGasPrice(initial_gas_price // 2)
 
     with Timeout(60) as timeout:
         while web3.platon.gas_price == initial_gas_price:

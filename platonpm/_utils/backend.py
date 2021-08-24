@@ -30,7 +30,7 @@ from platonpm.backends.registry import (
     RegistryURIBackend,
 )
 
-logger = logging.getLogger("platonpm.utils.backend")
+logger = logging.getLogger("platonpm._utils.backend")
 
 ALL_URI_BACKENDS = [
     InfuraIPFSBackend,

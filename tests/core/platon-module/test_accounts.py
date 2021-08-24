@@ -265,7 +265,7 @@ def test_platon_account_sign(acct,
                 'gas': 2000000,
                 'gasPrice': 234567897654321,
                 'nonce': 0,
-                'chain_id': 1
+                'chainId': 1
             },
             '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
             HexBytes('0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428'),  # noqa: E501
@@ -281,7 +281,7 @@ def test_platon_account_sign(acct,
                 'gas': 31853,
                 'gasPrice': 0,
                 'nonce': 0,
-                'chain_id': 1
+                'chainId': 1
             },
             '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
             HexBytes('0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20'),  # noqa: E501
@@ -373,7 +373,7 @@ def test_platon_account_prepared_encrypt(acct, web3js_key, web3js_password):
                 'gas': 2000000,
                 'gasPrice': 234567897654321,
                 'nonce': 0,
-                'chain_id': 1
+                'chainId': 1
             },
             HexBytes('0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428'),  # noqa: E501
             HexBytes('0xd8f64a42b57be0d565f385378db2f6bf324ce14a594afc05de90436e9ce01f60'),
@@ -388,7 +388,7 @@ def test_platon_account_prepared_encrypt(acct, web3js_key, web3js_password):
                 'gas': 31853,
                 'gasPrice': 0,
                 'nonce': 0,
-                'chain_id': 1
+                'chainId': 1
             },
             HexBytes('0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20'),  # noqa: E501
             HexBytes('0xb0c5e2c6b29eeb0b9c1d63eaa8b0f93c02ead18ae01cb7fc795b0612d3e9d55a'),

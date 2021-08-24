@@ -221,44 +221,44 @@ def parity_export_blocks_process(
 
 def generate_parity_fixture(destination_dir):
     """
-    The parity fixture generation strategy is to start a gplaton client with
+    The parity fixture generation strategy is to start a node client with
     existing fixtures copied into a temp data_dir.  Then a parity client
-    is started is peered with the gplaton client.
+    is started is peered with the node client.
     """
     with contextlib.ExitStack() as stack:
 
-        gplaton_datadir = stack.enter_context(common.tempdir())
+        node_datadir = stack.enter_context(common.tempdir())
 
-        gplaton_port = get_open_port()
+        node_port = get_open_port()
 
-        gplaton_ipc_path_dir = stack.enter_context(common.tempdir())
-        gplaton_ipc_path = os.path.join(gplaton_ipc_path_dir, 'gplaton.ipc')
+        node_ipc_path_dir = stack.enter_context(common.tempdir())
+        node_ipc_path = os.path.join(node_ipc_path_dir, 'node.ipc')
 
-        gplaton_keystore_dir = os.path.join(gplaton_datadir, 'keystore')
-        common.ensure_path_exists(gplaton_keystore_dir)
-        gplaton_keyfile_path = os.path.join(gplaton_keystore_dir, common.KEYFILE_FILENAME)
-        with open(gplaton_keyfile_path, 'w') as keyfile:
+        node_keystore_dir = os.path.join(node_datadir, 'keystore')
+        common.ensure_path_exists(node_keystore_dir)
+        node_keyfile_path = os.path.join(node_keystore_dir, common.KEYFILE_FILENAME)
+        with open(node_keyfile_path, 'w') as keyfile:
             keyfile.write(common.KEYFILE_DATA)
 
-        genesis_file_path = os.path.join(gplaton_datadir, 'genesis.json')
+        genesis_file_path = os.path.join(node_datadir, 'genesis.json')
         with open(genesis_file_path, 'w') as genesis_file:
             genesis_file.write(json.dumps(common.GENESIS_DATA))
 
         stack.enter_context(
-            common.get_gplaton_process(
-                common.get_gplaton_binary(),
-                gplaton_datadir,
+            common.get_node_process(
+                common.get_node_binary(),
+                node_datadir,
                 genesis_file_path,
-                gplaton_ipc_path,
-                gplaton_port,
+                node_ipc_path,
+                node_port,
                 str(CHAIN_CONFIG['params']['networkID'])
             )
         )
         # set up fixtures
-        common.wait_for_socket(gplaton_ipc_path)
-        web3_gplaton = Web3(Web3.IPCProvider(gplaton_ipc_path))
-        chain_data = platon.setup_chain_state(web3_gplaton)
-        fixture_block_count = web3_gplaton.platon.block_number
+        common.wait_for_socket(node_ipc_path)
+        web3_node = Web3(Web3.IPCProvider(node_ipc_path))
+        chain_data = platon.setup_chain_state(web3_node)
+        fixture_block_count = web3_node.platon.block_number
 
         datadir = stack.enter_context(common.tempdir())
 
@@ -291,7 +291,7 @@ def generate_parity_fixture(destination_dir):
         web3 = Web3(Web3.IPCProvider(parity_ipc_path))
 
         time.sleep(10)
-        connect_nodes(web3, web3_gplaton)
+        connect_nodes(web3, web3_node)
         time.sleep(10)
         wait_for_chain_sync(web3, fixture_block_count)
 
@@ -318,9 +318,9 @@ def generate_parity_fixture(destination_dir):
 def connect_nodes(w3_parity, w3_secondary):
     parity_peers = w3_parity.parity.net_peers()
     parity_enode = w3_parity.parity.enode()
-    secondary_node_info = w3_secondary.gplaton.admin.node_info()
+    secondary_node_info = w3_secondary.node.admin.node_info()
     if secondary_node_info['id'] not in (node.get('id', tuple()) for node in parity_peers['peers']):
-        w3_secondary.gplaton.admin.add_peer(parity_enode)
+        w3_secondary.node.admin.add_peer(parity_enode)
 
 
 def wait_for_chain_sync(web3, target):

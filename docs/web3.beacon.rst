@@ -359,7 +359,7 @@ Methods
         >>> beacon.get_deposit_contract()
         {
           'data': {
-            'chain_id': '5',
+            'chainId': '5',
             'address': '0x8c5fecdc472e27bc447696f431e425d02dd46a8c'
           }
         }

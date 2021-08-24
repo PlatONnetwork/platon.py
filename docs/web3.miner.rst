@@ -1,19 +1,19 @@
 Miner API
 =========
 
-.. py:module:: web3.gplaton.miner
+.. py:module:: web3.node.miner
 
-The ``web3.gplaton.miner`` object exposes methods to interact with the RPC APIs under
-the ``miner_`` namespace that are supported by the Gplaton client.
+The ``web3.node.miner`` object exposes methods to interact with the RPC APIs under
+the ``miner_`` namespace that are supported by the Pnode client.
 
 
 Methods
 -------
 
-The following methods are available on the ``web3.gplaton.miner`` namespace.
+The following methods are available on the ``web3.node.miner`` namespace.
 
 
-.. py:method:: GplatonMiner.make_dag(number)
+.. py:method:: Miner.make_dag(number)
 
     * Delegates to ``miner_makeDag`` RPC Method
 
@@ -21,10 +21,10 @@ The following methods are available on the ``web3.gplaton.miner`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.miner.make_dag(10000)
+        >>> web3.node.miner.make_dag(10000)
 
 
-.. py:method:: GplatonMiner.set_extra(extra)
+.. py:method:: Miner.set_extra(extra)
 
     * Delegates to ``miner_setExtra`` RPC Method
 
@@ -33,10 +33,10 @@ The following methods are available on the ``web3.gplaton.miner`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.miner.set_extra('abcdefghijklmnopqrstuvwxyzABCDEF')
+        >>> web3.node.miner.set_extra('abcdefghijklmnopqrstuvwxyzABCDEF')
 
 
-.. py:method:: GplatonMiner.set_gas_price(gas_price)
+.. py:method:: Miner.set_gas_price(gas_price)
 
     * Delegates to ``miner_setGasPrice`` RPC Method
 
@@ -46,10 +46,10 @@ The following methods are available on the ``web3.gplaton.miner`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.miner.set_gas_price(19999999999)
+        >>> web3.node.miner.set_gas_price(19999999999)
 
 
-.. py:method:: GplatonMiner.start(num_threads)
+.. py:method:: Miner.start(num_threads)
 
     * Delegates to ``miner_start`` RPC Method
 
@@ -57,10 +57,10 @@ The following methods are available on the ``web3.gplaton.miner`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.miner.start(2)
+        >>> web3.node.miner.start(2)
 
 
-.. py:method:: GplatonMiner.stop()
+.. py:method:: Miner.stop()
 
     * Delegates to ``miner_stop`` RPC Method
 
@@ -68,10 +68,10 @@ The following methods are available on the ``web3.gplaton.miner`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.miner.stop()
+        >>> web3.node.miner.stop()
 
 
-.. py:method:: GplatonMiner.start_auto_dag()
+.. py:method:: Miner.start_auto_dag()
 
     * Delegates to ``miner_startAutoDag`` RPC Method
 
@@ -79,10 +79,10 @@ The following methods are available on the ``web3.gplaton.miner`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.miner.start_auto_dag()
+        >>> web3.node.miner.start_auto_dag()
 
 
-.. py:method:: GplatonMiner.stop_auto_dag()
+.. py:method:: Miner.stop_auto_dag()
 
     * Delegates to ``miner_stopAutoDag`` RPC Method
 
@@ -90,4 +90,4 @@ The following methods are available on the ``web3.gplaton.miner`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.miner.stop_auto_dag()
+        >>> web3.node.miner.stop_auto_dag()

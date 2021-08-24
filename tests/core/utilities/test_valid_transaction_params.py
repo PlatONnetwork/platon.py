@@ -15,7 +15,7 @@ def test_assert_valid_transaction_params_all_params():
         'value': 1,
         'data': '0x0',
         'nonce': 2,
-        'chain_id': 1,
+        'chainId': 1,
     })
 
 
@@ -45,7 +45,7 @@ FULL_TXN_DICT = {
     'data': '0x2',
     'value': 3,
     'nonce': 2,
-    'chain_id': 1,
+    'chainId': 1,
 }
 
 

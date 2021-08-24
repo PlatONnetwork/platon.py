@@ -26,7 +26,7 @@ from platon.types import (
 
 def admin_start_params_munger(
     module: Module, host: str = 'localhost', port: int = 8546, cors: str = '',
-    apis: str = 'platon,net,platon'
+    apis: str = 'web3,net,platon'
 ) -> Tuple[str, int, str, str]:
     return (host, port, cors, apis)
 
@@ -57,7 +57,7 @@ peers: Method[Callable[[], List[Peer]]] = Method(
 
 class ServerConnection(Protocol):
     def __call__(
-        self, host: str = "localhost", port: int = 8546, cors: str = "", apis: str = "platon,net,platon"
+        self, host: str = "localhost", port: int = 8546, cors: str = "", apis: str = "web3,net,platon"
     ) -> bool:
         pass
 
@@ -85,3 +85,16 @@ stop_ws: Method[Callable[[], bool]] = Method(
     mungers=None,
 )
 
+
+# todo: add apis
+
+get_program_version: Method[Callable[[], bool]] = Method(
+    RPC.admin_getProgramVersion,
+    mungers=None,
+)
+
+
+get_schnorr_NIZK_prove: Method[Callable[[], bool]] = Method(
+    RPC.admin_getSchnorrNIZKProve,
+    mungers=None,
+)

@@ -72,7 +72,7 @@ def check_extradata_length(val: Any) -> Any:
             "The field extraData is %d bytes, but should be %d. "
             "It is quite likely that you are connected to a POA chain. "
             "Refer to "
-            "http://web3py.readthedocs.io/en/stable/middleware.html#gplaton-style-proof-of-authority "
+            "http://web3py.readthedocs.io/en/stable/middleware.html#node-style-proof-of-authority "
             "for more details. The full extraData is: %r" % (
                 len(result), MAX_EXTRADATA_LENGTH, result
             )
@@ -81,7 +81,7 @@ def check_extradata_length(val: Any) -> Any:
 
 
 def transaction_normalizer(transaction: TxParams) -> TxParams:
-    return dissoc(transaction, 'chain_id')
+    return dissoc(transaction, 'chainId')
 
 
 def transaction_param_validator(web3: "Web3") -> Callable[..., Any]:

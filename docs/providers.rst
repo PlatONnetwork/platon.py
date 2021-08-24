@@ -126,7 +126,7 @@ Some nodes provide APIs beyond the standards. Sometimes the same information is 
 in different ways across nodes. If you want to write code that works
 across multiple nodes, you may want to look up the node type you are connected to.
 
-For example, the following retrieves the client enode endpoint for both gplaton and parity:
+For example, the following retrieves the client enode endpoint for both node and parity:
 
 .. code-block:: python
 
@@ -137,8 +137,8 @@ For example, the following retrieves the client enode endpoint for both gplaton 
     if connected and w3.clientVersion.startswith('Parity'):
         enode = w3.parity.enode
 
-    elif connected and w3.clientVersion.startswith('Gplaton'):
-        enode = w3.gplaton.admin.nodeInfo['enode']
+    elif connected and w3.clientVersion.startswith('Pnode'):
+        enode = w3.node.admin.nodeInfo['enode']
 
     else:
         enode = None
@@ -189,14 +189,14 @@ an optional secret key, set the environment variable ``WEB3_INFURA_API_SECRET``:
     >>> w3.isConnected()
     True
 
-Gplaton dev Proof of Authority
+Pnode dev Proof of Authority
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To connect to a ``gplaton --dev`` Proof of Authority instance with defaults:
+To connect to a ``node --dev`` Proof of Authority instance with defaults:
 
 .. code-block:: python
 
-    >>> from platon.auto.gplatondev import w3
+    >>> from platon.auto.nodedev import w3
 
     # confirm that the connection succeeded
     >>> w3.isConnected()
@@ -271,24 +271,24 @@ IPCProvider
     .. code-block:: python
 
         >>> from platon import Web3
-        >>> w3 = Web3(Web3.IPCProvider("~/Library/Platon/gplaton.ipc"))
+        >>> w3 = Web3(Web3.IPCProvider("~/Library/Platon/node.ipc"))
 
     If no ``ipc_path`` is specified, it will use the first IPC file
     it can find from this list:
 
     - On Linux and FreeBSD:
 
-      - ``~/.platon/gplaton.ipc``
+      - ``~/.platon/node.ipc``
       - ``~/.local/share/io.parity.platon/jsonrpc.ipc``
       - ``~/.local/share/trinity/mainnet/ipcs-eth1/jsonrpc.ipc``
     - On Mac OS:
 
-      - ``~/Library/Platon/gplaton.ipc``
+      - ``~/Library/Platon/node.ipc``
       - ``~/Library/Application Support/io.parity.platon/jsonrpc.ipc``
       - ``~/.local/share/trinity/mainnet/ipcs-eth1/jsonrpc.ipc``
     - On Windows:
 
-      - ``\\\.\pipe\gplaton.ipc``
+      - ``\\\.\pipe\node.ipc``
       - ``\\\.\pipe\jsonrpc.ipc``
 
 

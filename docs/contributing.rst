@@ -279,7 +279,7 @@ commit that introduces the feature or bugfix.
 Generating New Fixtures
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Our integration tests make use of Gplaton and Parity/OpenPlaton private networks.
+Our integration tests make use of Pnode and Parity/OpenPlaton private networks.
 When new versions of the client software are introduced, new fixtures should be
 generated.
 
@@ -296,56 +296,56 @@ Before generating new fixtures, make sure you have the test dependencies install
     testing platon.py functionality against.
 
 
-Gplaton Fixtures
+Pnode Fixtures
 ^^^^^^^^^^^^^
 
-1. Install the desired Gplaton version on your machine locally. We recommend `py-gplaton`_ for
-   this purpose, because it enables you to easily manage multiple versions of Gplaton.
+1. Install the desired Pnode version on your machine locally. We recommend `py-node`_ for
+   this purpose, because it enables you to easily manage multiple versions of Pnode.
 
-   Note that ``py-gplaton`` will need updating to support each new Gplaton version as well.
-   Adding newer Gplaton versions to py-gplaton is straightforward; see past commits for a template.
+   Note that ``py-node`` will need updating to support each new Pnode version as well.
+   Adding newer Pnode versions to py-node is straightforward; see past commits for a template.
 
-   If py-gplaton has the Gplaton version you need, install that version locally. For example:
-
-   .. code:: sh
-
-       $ python -m gplaton.install v1.10.4
-
-2. Specify the Gplaton binary and run the fixture creation script (from within the platon.py directory):
+   If py-node has the Pnode version you need, install that version locally. For example:
 
    .. code:: sh
 
-       $ GPLATON_BINARY=~/.py-gplaton/gplaton-v1.10.4/bin/gplaton python ./tests/integration/generate_fixtures/platon.py ./tests/integration/gplaton-1.10.4-fixture
+       $ python -m node.install v1.10.4
+
+2. Specify the Pnode binary and run the fixture creation script (from within the platon.py directory):
+
+   .. code:: sh
+
+       $ NODE_BINARY=~/.py-node/node-v1.10.4/bin/node python ./tests/integration/generate_fixtures/platon.py ./tests/integration/node-1.10.4-fixture
 
 3. The output of this script is your fixture, a zip file, which is now stored in ``/tests/integration/``.
    Update the ``/tests/integration/platon/conftest.py`` file to point to this new fixture. Delete the old fixture.
 
-4. Run the tests. To ensure that the tests run with the correct Gplaton version locally,
-   you may again include the ``GPLATON_BINARY`` environment variable.
+4. Run the tests. To ensure that the tests run with the correct Pnode version locally,
+   you may again include the ``NODE_BINARY`` environment variable.
 
 
-CI Testing With a Nightly Gplaton Build
+CI Testing With a Nightly Pnode Build
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Occasionally you'll want to have CI run the test suite against an unreleased version of Gplaton,
+Occasionally you'll want to have CI run the test suite against an unreleased version of Pnode,
 for example, to test upcoming hard fork changes. The workflow described below is for testing only,
 i.e., open a PR, let CI run the tests, but the changes should only be merged into master once the
-Gplaton release is published or you have some workaround that doesn't require test fixtures built from
+Pnode release is published or you have some workaround that doesn't require test fixtures built from
 an unstable client.
 
 1. Configure ``tests/integration/generate_fixtures/platon/common.py`` as needed.
 
-2. Gplaton automagically compiles new builds for every commit that gets merged into the codebase.
-   Download the desired build from the `develop builds <https://gplaton.platon.org/downloads/>`_.
+2. Pnode automagically compiles new builds for every commit that gets merged into the codebase.
+   Download the desired build from the `develop builds <https://node.platon.org/downloads/>`_.
 
-3. Build your test fixture, passing in the binary you just downloaded via ``GPLATON_BINARY``. Don't forget
+3. Build your test fixture, passing in the binary you just downloaded via ``NODE_BINARY``. Don't forget
    to update the ``/tests/integration/platon/conftest.py`` file to point to your new fixture.
 
 4. Our CI runs on Ubuntu, so download the corresponding 64-bit Linux
-   `develop build <https://gplaton.platon.org/downloads/>`_, then
-   add it to the root of your platon.py directory. Rename the binary ``custom_gplaton``.
+   `develop build <https://node.platon.org/downloads/>`_, then
+   add it to the root of your platon.py directory. Rename the binary ``custom_node``.
 
-5. In ``.circleci/config.yml``, update jobs relying on ``gplaton_steps``, to instead use ``custom_gplaton_steps``.
+5. In ``.circleci/config.yml``, update jobs relying on ``node_steps``, to instead use ``custom_node_steps``.
 
 6. Create a PR and let CI do its thing.
 
@@ -372,7 +372,7 @@ Parity/OpenPlaton Fixtures
    file to point the new fixture.
 
 6. By this point, you may have noticed that Parity fixture generation relies
-   on a Gplaton network to sync from. In the output of the generation script are
+   on a Pnode network to sync from. In the output of the generation script are
    the hashes of the various contracts that it mined. Update the corresponding
    values in the ``/parity/conftest.py`` file with those hashes.
 
@@ -502,7 +502,7 @@ version explicitly, like ``make release bump="--new-version 4.0.0-alpha.1 devnum
 .. _type hints: https://www.python.org/dev/peps/pep-0484/
 .. _how to create documentation: https://github.com/platonnetwork/snake-charmers-tactical-manual/blob/master/documentation.md
 .. _working on pull requests: https://help.github.com/articles/about-pull-requests/
-.. _py-gplaton: https://github.com/platonnetwork/py-gplaton
+.. _py-node: https://github.com/platonnetwork/py-node
 .. _Github releases: https://github.com/platonnetwork/platon-go/releases
 .. _Build the binary: https://github.com/platonnetwork/platon-go/#3-building-
 .. _pytest documentation: https://docs.pytest.org/en/latest

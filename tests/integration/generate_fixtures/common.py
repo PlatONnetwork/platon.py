@@ -85,23 +85,23 @@ def tempdir():
         shutil.rmtree(dir_path)
 
 
-def get_gplaton_binary():
-    from gplaton.install import (
+def get_node_binary():
+    from node.install import (
         get_executable_path,
-        install_gplaton,
+        install_node,
     )
 
-    if 'GPLATON_BINARY' in os.environ:
-        return os.environ['GPLATON_BINARY']
-    elif 'GPLATON_VERSION' in os.environ:
-        gplaton_version = os.environ['GPLATON_VERSION']
-        _gplaton_binary = get_executable_path(gplaton_version)
-        if not os.path.exists(_gplaton_binary):
-            install_gplaton(gplaton_version)
-        assert os.path.exists(_gplaton_binary)
-        return _gplaton_binary
+    if 'NODE_BINARY' in os.environ:
+        return os.environ['NODE_BINARY']
+    elif 'NODE_VERSION' in os.environ:
+        node_version = os.environ['NODE_VERSION']
+        _node_binary = get_executable_path(node_version)
+        if not os.path.exists(_node_binary):
+            install_node(node_version)
+        assert os.path.exists(_node_binary)
+        return _node_binary
     else:
-        return 'gplaton'
+        return 'node'
 
 
 def wait_for_popen(proc, timeout):
@@ -141,7 +141,7 @@ def wait_for_socket(ipc_path, timeout=30):
 
 
 @contextlib.contextmanager
-def get_gplaton_process(gplaton_binary,
+def get_node_process(node_binary,
                      datadir,
                      genesis_file_path,
                      ipc_path,
@@ -150,7 +150,7 @@ def get_gplaton_process(gplaton_binary,
                      skip_init=False):
     if not skip_init:
         init_datadir_command = (
-            gplaton_binary,
+            node_binary,
             '--data_dir', datadir,
             'init',
             genesis_file_path,
@@ -162,8 +162,8 @@ def get_gplaton_process(gplaton_binary,
             stderr=subprocess.PIPE,
         )
 
-    run_gplaton_command = (
-        gplaton_binary,
+    run_node_command = (
+        node_binary,
         '--data_dir', datadir,
         '--ipcpath', ipc_path,
         '--nodiscover',
@@ -171,15 +171,15 @@ def get_gplaton_process(gplaton_binary,
         '--networkid', networkid,
         '--etherbase', COINBASE[2:],
     )
-    print(' '.join(run_gplaton_command))
+    print(' '.join(run_node_command))
     try:
-        proc = get_process(run_gplaton_command)
+        proc = get_process(run_node_command)
         yield proc
     finally:
         kill_proc_gracefully(proc)
         output, errors = proc.communicate()
         print(
-            "Gplaton Process Exited:\n"
+            "Node Process Exited:\n"
             "stdout:{0}\n\n"
             "stderr:{1}\n\n".format(
                 to_text(output),
@@ -202,11 +202,11 @@ def mine_block(web3):
     origin_block_number = web3.platon.block_number
 
     start_time = time.time()
-    web3.gplaton.miner.start(1)
+    web3.node.miner.start(1)
     while time.time() < start_time + 120:
         block_number = web3.platon.block_number
         if block_number > origin_block_number:
-            web3.gplaton.miner.stop()
+            web3.node.miner.stop()
             return block_number
         else:
             time.sleep(0.1)
@@ -216,14 +216,14 @@ def mine_block(web3):
 
 def mine_transaction_hash(web3, txn_hash):
     start_time = time.time()
-    web3.gplaton.miner.start(1)
+    web3.node.miner.start(1)
     while time.time() < start_time + 120:
         try:
             receipt = web3.platon.get_transaction_receipt(txn_hash)
         except TransactionNotFound:
             continue
         if receipt is not None:
-            web3.gplaton.miner.stop()
+            web3.node.miner.stop()
             return receipt
         else:
             time.sleep(0.1)
@@ -232,7 +232,7 @@ def mine_transaction_hash(web3, txn_hash):
 
 
 def deploy_contract(web3, name, factory):
-    web3.gplaton.personal.unlock_account(web3.platon.coinbase, KEYFILE_PW)
+    web3.node.personal.unlock_account(web3.platon.coinbase, KEYFILE_PW)
     deploy_txn_hash = factory.constructor().transact({'from': web3.platon.coinbase})
     print('{0}_CONTRACT_DEPLOY_HASH: '.format(name.upper()), deploy_txn_hash)
     deploy_receipt = mine_transaction_hash(web3, deploy_txn_hash)

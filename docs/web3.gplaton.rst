@@ -1,19 +1,19 @@
-Gplaton API
+Pnode API
 ========
 
-.. py:module:: web3.gplaton
+.. py:module:: web3.node
 
-The ``web3.gplaton`` object exposes modules that enable you to interact with the JSON-RPC endpoints supported by `Gplaton <https://github.com/platonnetwork/platon-go/wiki/Management-APIs>`_ that are not defined in the standard set of Platon JSONRPC endpoints according to `EIP 1474 <https://github.com/platonnetwork/EIPs/pull/1474>`_.
+The ``web3.node`` object exposes modules that enable you to interact with the JSON-RPC endpoints supported by `Pnode <https://github.com/platonnetwork/platon-go/wiki/Management-APIs>`_ that are not defined in the standard set of Platon JSONRPC endpoints according to `EIP 1474 <https://github.com/platonnetwork/EIPs/pull/1474>`_.
 
-GplatonAdmin API
+Admin API
 ~~~~~~~~~~~~~
 
-The following methods are available on the ``web3.gplaton.admin`` namespace.
+The following methods are available on the ``web3.node.admin`` namespace.
 
-.. py:module:: web3.gplaton.admin
+.. py:module:: web3.node.admin
 
-The ``web3.gplaton.admin`` object exposes methods to interact with the RPC APIs under the
-``admin_`` namespace that are supported by the Gplaton client.
+The ``web3.node.admin`` object exposes methods to interact with the RPC APIs under the
+``admin_`` namespace that are supported by the Pnode client.
 
 .. py:method:: datadir()
 
@@ -23,7 +23,7 @@ The ``web3.gplaton.admin`` object exposes methods to interact with the RPC APIs 
 
     .. code-block:: python
 
-        >>> web3.gplaton.admin.datadir()
+        >>> web3.node.admin.datadir()
         '/Users/piper/Library/Platon'
 
 
@@ -35,13 +35,13 @@ The ``web3.gplaton.admin`` object exposes methods to interact with the RPC APIs 
 
     .. code-block:: python
 
-        >>> web3.gplaton.admin.node_info()
+        >>> web3.node.admin.node_info()
         {
             'enode': 'enode://e54eebad24dce1f6d246bea455ffa756d97801582420b9ed681a2ea84bf376d0bd87ae8dd6dc06cdb862a2ca89ecabe1be1050be35b4e70d62bc1a092cb7e2d3@[::]:30303',
             'id': 'e54eebad24dce1f6d246bea455ffa756d97801582420b9ed681a2ea84bf376d0bd87ae8dd6dc06cdb862a2ca89ecabe1be1050be35b4e70d62bc1a092cb7e2d3',
             'ip': '::',
             'listenAddr': '[::]:30303',
-            'name': 'Gplaton/v1.4.11-stable-fed692f6/darwin/go1.7',
+            'name': 'Pnode/v1.4.11-stable-fed692f6/darwin/go1.7',
             'ports': {'discovery': 30303, 'listener': 30303},
             'protocols': {
                 'platon': {
@@ -62,12 +62,12 @@ The ``web3.gplaton.admin`` object exposes methods to interact with the RPC APIs 
 
     .. code-block:: python
 
-        >>> web3.gplaton.admin.peers()
+        >>> web3.node.admin.peers()
         [
             {
                 'caps': ['platon/63'],
                 'id': '146e8e3e2460f1e18939a5da37c4a79f149c8b9837240d49c7d94c122f30064e07e4a42ae2c2992d0f8e7e6f68a30e7e9ad31d524349ec9d17effd2426a37b40',
-                'name': 'Gplaton/v1.4.10-stable/windows/go1.6.2',
+                'name': 'Pnode/v1.4.10-stable/windows/go1.6.2',
                 'network': {
                     'localAddress': '10.0.3.115:64478',
                     'remoteAddress': '72.208.167.127:30303',
@@ -83,7 +83,7 @@ The ``web3.gplaton.admin`` object exposes methods to interact with the RPC APIs 
             {
                 'caps': ['platon/62', 'platon/63'],
                 'id': '76cb6cd3354be081923a90dfd4cda40aa78b307cc3cf4d5733dc32cc171d00f7c08356e9eb2ea47eab5aad7a15a3419b859139e3f762e1e1ebf5a04f530dcef7',
-                'name': 'Gplaton/v1.4.10-stable-5f55d95a/linux/go1.5.1',
+                'name': 'Pnode/v1.4.10-stable-5f55d95a/linux/go1.5.1',
                 'network': {
                     'localAddress': '10.0.3.115:64784',
                     'remoteAddress': '60.205.92.119:30303',
@@ -108,13 +108,13 @@ The ``web3.gplaton.admin`` object exposes methods to interact with the RPC APIs 
 
     .. code-block:: python
 
-        >>> web3.gplaton.admin.add_peer('enode://e54eebad24dce1f6d246bea455ffa756d97801582420b9ed681a2ea84bf376d0bd87ae8dd6dc06cdb862a2ca89ecabe1be1050be35b4e70d62bc1a092cb7e2d3@52.71.255.237:30303')
+        >>> web3.node.admin.add_peer('enode://e54eebad24dce1f6d246bea455ffa756d97801582420b9ed681a2ea84bf376d0bd87ae8dd6dc06cdb862a2ca89ecabe1be1050be35b4e70d62bc1a092cb7e2d3@52.71.255.237:30303')
         True
 
 
 .. py:method:: setSolc(solc_path)
 
-    .. Warning:: This method has been removed from Gplaton
+    .. Warning:: This method has been removed from Pnode
 
 .. py:method:: start_rpc(host='localhost', port=8545, cors="", apis="platon,net,web3")
 
@@ -127,7 +127,7 @@ The ``web3.gplaton.admin`` object exposes methods to interact with the RPC APIs 
 
     .. code-block:: python
 
-        >>> web3.gplaton.admin.start_rpc()
+        >>> web3.node.admin.start_rpc()
         True
 
 
@@ -142,7 +142,7 @@ The ``web3.gplaton.admin`` object exposes methods to interact with the RPC APIs 
 
     .. code-block:: python
 
-        >>> web3.gplaton.admin.start_ws()
+        >>> web3.node.admin.start_ws()
         True
 
 
@@ -154,7 +154,7 @@ The ``web3.gplaton.admin`` object exposes methods to interact with the RPC APIs 
 
     .. code-block:: python
 
-        >>> web3.gplaton.admin.stop_rpc()
+        >>> web3.node.admin.stop_rpc()
         True
 
 
@@ -166,16 +166,16 @@ The ``web3.gplaton.admin`` object exposes methods to interact with the RPC APIs 
 
     .. code-block:: python
 
-        >>> web3.gplaton.admin.stop_ws()
+        >>> web3.node.admin.stop_ws()
         True
 
 
-.. py:module:: web3.gplaton.personal
+.. py:module:: web3.node.personal
 
-GplatonPersonal API
+Personal API
 ~~~~~~~~~~~~~~~~
 
-The following methods are available on the ``web3.gplaton.personal`` namespace.
+The following methods are available on the ``web3.node.personal`` namespace.
 
 .. py:method:: list_accounts()
 
@@ -185,7 +185,7 @@ The following methods are available on the ``web3.gplaton.personal`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.personal.list_accounts()
+        >>> web3.node.personal.list_accounts()
         ['0xd3CdA913deB6f67967B99D67aCDFa1712C293601']
 
 
@@ -193,11 +193,11 @@ The following methods are available on the ``web3.gplaton.personal`` namespace.
 
     * Delegates to ``personal_listWallets`` RPC Method
 
-    Returns the list of wallets managed by Gplaton.
+    Returns the list of wallets managed by Pnode.
 
     .. code-block:: python
 
-        >>> web3.gplaton.personal.list_wallets()
+        >>> web3.node.personal.list_wallets()
         [{
             accounts: [{
                 address: "0x44f705f3c31017856777f2931c2f09f240dd800b",
@@ -217,7 +217,7 @@ The following methods are available on the ``web3.gplaton.personal`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.personal.import_raw_key(some_private_key, 'the-passphrase')
+        >>> web3.node.personal.import_raw_key(some_private_key, 'the-passphrase')
         '0xd3CdA913deB6f67967B99D67aCDFa1712C293601'
 
 
@@ -230,7 +230,7 @@ The following methods are available on the ``web3.gplaton.personal`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.personal.new_account('the-passphrase')
+        >>> web3.node.personal.new_account('the-passphrase')
         '0xd3CdA913deB6f67967B99D67aCDFa1712C293601'
 
 
@@ -242,7 +242,7 @@ The following methods are available on the ``web3.gplaton.personal`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.personal.lock_account('0xd3CdA913deB6f67967B99D67aCDFa1712C293601')
+        >>> web3.node.personal.lock_account('0xd3CdA913deB6f67967B99D67aCDFa1712C293601')
 
 
 .. py:method:: unlock_account(self, account, passphrase, duration=None)
@@ -251,15 +251,15 @@ The following methods are available on the ``web3.gplaton.personal`` namespace.
 
     Unlocks the given ``account`` for ``duration`` seconds.
     If ``duration`` is ``None``, then the account will remain unlocked
-    for 300 seconds (which is current default by Gplaton v1.9.5);
+    for 300 seconds (which is current default by Pnode v1.9.5);
     if ``duration`` is set to ``0``, the account will remain unlocked indefinitely.
     Returns boolean as to whether the account was successfully unlocked.
 
     .. code-block:: python
 
-        >>> web3.gplaton.personal.unlock_account('0xd3CdA913deB6f67967B99D67aCDFa1712C293601', 'wrong-passphrase')
+        >>> web3.node.personal.unlock_account('0xd3CdA913deB6f67967B99D67aCDFa1712C293601', 'wrong-passphrase')
         False
-        >>> web3.gplaton.personal.unlock_account('0xd3CdA913deB6f67967B99D67aCDFa1712C293601', 'the-passphrase')
+        >>> web3.node.personal.unlock_account('0xd3CdA913deB6f67967B99D67aCDFa1712C293601', 'the-passphrase')
         True
 
 
@@ -270,16 +270,16 @@ The following methods are available on the ``web3.gplaton.personal`` namespace.
     Sends the transaction.
 
 
-.. py:module:: web3.gplaton.txpool
+.. py:module:: web3.node.txpool
 
-GplatonTxPool API
+TxPool API
 ~~~~~~~~~~~~~~
 
-The ``web3.gplaton.txpool`` object exposes methods to interact with the RPC APIs under
-the ``txpool_`` namespace. These methods are only exposed under the ``gplaton`` namespace
+The ``web3.node.txpool`` object exposes methods to interact with the RPC APIs under
+the ``txpool_`` namespace. These methods are only exposed under the ``node`` namespace
 since they are not standard nor supported in Parity.
 
-The following methods are available on the ``web3.gplaton.txpool`` namespace.
+The following methods are available on the ``web3.node.txpool`` namespace.
 
 .. py:method:: TxPool.inspect()
 
@@ -291,7 +291,7 @@ The following methods are available on the ``web3.gplaton.txpool`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.txpool.inspect()
+        >>> web3.node.txpool.inspect()
         {
             'pending': {
                 '0x26588a9301b0428d95e6Fc3A5024fcE8BEc12D51': {
@@ -367,7 +367,7 @@ The following methods are available on the ``web3.gplaton.txpool`` namespace.
 
     .. code-block:: python
 
-        >>> web3.gplaton.txpool.content()
+        >>> web3.node.txpool.content()
         {
           'pending': {
             '0x0216D5032f356960Cd3749C31Ab34eEFF21B3395': {

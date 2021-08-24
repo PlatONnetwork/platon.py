@@ -169,7 +169,7 @@ def unlockable_account_pw(web3):
 
 @pytest.fixture(scope='module')
 def unlockable_account(web3, unlockable_account_pw):
-    account = web3.gplaton.personal.import_raw_key(UNLOCKABLE_PRIVATE_KEY, unlockable_account_pw)
+    account = web3.node.personal.import_raw_key(UNLOCKABLE_PRIVATE_KEY, unlockable_account_pw)
     web3.platon.send_transaction({
         'from': web3.platon.coinbase,
         'to': account,
@@ -180,9 +180,9 @@ def unlockable_account(web3, unlockable_account_pw):
 
 @pytest.fixture
 def unlocked_account(web3, unlockable_account, unlockable_account_pw):
-    web3.gplaton.personal.unlock_account(unlockable_account, unlockable_account_pw)
+    web3.node.personal.unlock_account(unlockable_account, unlockable_account_pw)
     yield unlockable_account
-    web3.gplaton.personal.lock_account(unlockable_account)
+    web3.node.personal.lock_account(unlockable_account)
 
 
 @pytest.fixture()
@@ -192,9 +192,9 @@ def unlockable_account_dual_type(unlockable_account, address_conversion_func):
 
 @pytest.fixture
 def unlocked_account_dual_type(web3, unlockable_account_dual_type, unlockable_account_pw):
-    web3.gplaton.personal.unlock_account(unlockable_account_dual_type, unlockable_account_pw)
+    web3.node.personal.unlock_account(unlockable_account_dual_type, unlockable_account_pw)
     yield unlockable_account_dual_type
-    web3.gplaton.personal.lock_account(unlockable_account_dual_type)
+    web3.node.personal.lock_account(unlockable_account_dual_type)
 
 
 @pytest.fixture(scope="module")
@@ -447,7 +447,7 @@ class TestPlatonTesterNetModule(NetModuleTest):
     pass
 
 
-# Use platon.gplaton.personal namespace for testing platon-tester
+# Use platon.node.personal namespace for testing platon-tester
 class TestPlatonTesterPersonalModule(GoPlatonPersonalModuleTest):
     test_personal_sign_and_ecrecover = not_implemented(
         GoPlatonPersonalModuleTest.test_personal_sign_and_ecrecover,
@@ -458,7 +458,7 @@ class TestPlatonTesterPersonalModule(GoPlatonPersonalModuleTest):
     def test_personal_unlock_account_failure(self,
                                              web3,
                                              unlockable_account_dual_type):
-        result = web3.gplaton.personal.unlock_account(unlockable_account_dual_type, 'bad-password')
+        result = web3.node.personal.unlock_account(unlockable_account_dual_type, 'bad-password')
         assert result is False
 
     @pytest.mark.xfail(raises=ValueError, reason="list_wallets not implemented in platon-tester")

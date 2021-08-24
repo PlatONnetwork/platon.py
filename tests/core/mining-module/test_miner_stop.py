@@ -16,7 +16,7 @@ def test_miner_stop(web3_empty):
     assert web3.platon.mining
     assert web3.platon.hashrate
 
-    web3.gplaton.miner.stop()
+    web3.node.miner.stop()
 
     with Timeout(60) as timeout:
         while web3.platon.mining or web3.platon.hashrate:

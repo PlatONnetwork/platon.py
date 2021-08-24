@@ -806,8 +806,8 @@ The following methods are available on the ``web3.platon`` namespace.
 
     In most cases it is better to make contract function call through the :py:class:`web3.contract.Contract` interface.
 
-    Overriding state is a debugging feature available in Gplaton clients.
-    View their `usage documentation <https://gplaton.platon.org/docs/rpc/ns-platon#3-object---state-override-set>`_
+    Overriding state is a debugging feature available in Pnode clients.
+    View their `usage documentation <https://node.platon.org/docs/rpc/ns-platon#3-object---state-override-set>`_
     for a list of possible parameters.
 
 

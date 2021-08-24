@@ -40,11 +40,11 @@ def endpoint_uri(rpc_port):
     return 'http://localhost:{0}'.format(rpc_port)
 
 
-def _gplaton_command_arguments(rpc_port,
-                            base_gplaton_command_arguments,
-                            gplaton_version):
-    yield from base_gplaton_command_arguments
-    if gplaton_version.major == 1:
+def _node_command_arguments(rpc_port,
+                            base_node_command_arguments,
+                            node_version):
+    yield from base_node_command_arguments
+    if node_version.major == 1:
         yield from (
             '--http',
             '--http.port', rpc_port,
@@ -53,30 +53,30 @@ def _gplaton_command_arguments(rpc_port,
             '--allow-insecure-unlock'
         )
     else:
-        raise AssertionError("Unsupported Gplaton version")
+        raise AssertionError("Unsupported Node version")
 
 
 @pytest.fixture(scope='module')
-def gplaton_command_arguments(rpc_port,
-                           base_gplaton_command_arguments,
-                           get_gplaton_version):
+def node_command_arguments(rpc_port,
+                           base_node_command_arguments,
+                           get_node_version):
 
-    return _gplaton_command_arguments(
+    return _node_command_arguments(
         rpc_port,
-        base_gplaton_command_arguments,
-        get_gplaton_version
+        base_node_command_arguments,
+        get_node_version
     )
 
 
 @pytest.fixture(scope="module")
-def web3(gplaton_process, endpoint_uri):
+def web3(node_process, endpoint_uri):
     wait_for_http(endpoint_uri)
     _web3 = Web3(Web3.HTTPProvider(endpoint_uri))
     return _web3
 
 
 @pytest.fixture(scope="module")
-async def async_w3(gplaton_process, endpoint_uri):
+async def async_w3(node_process, endpoint_uri):
     await wait_for_aiohttp(endpoint_uri)
     _web3 = Web3(
         AsyncHTTPProvider(endpoint_uri),
@@ -93,7 +93,7 @@ class TestGoPlatonTest(GoPlatonTest):
 
 
 class TestGoPlatonAdminModuleTest(GoPlatonAdminModuleTest):
-    @pytest.mark.xfail(reason="running gplaton with the --nodiscover flag doesn't allow peer addition")
+    @pytest.mark.xfail(reason="running node with the --nodiscover flag doesn't allow peer addition")
     def test_admin_peers(self, web3: "Web3") -> None:
         super().test_admin_peers(web3)
 

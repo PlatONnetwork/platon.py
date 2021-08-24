@@ -25,13 +25,13 @@ from platon_abi.grammar import (
 from platon_typing import (
     Bech32Address,
     HexStr,
-    TypeStr,
+    TypeStr, Address,
 )
 from platon_utils import (
     to_bytes,
     to_bech32_address,
     to_hex,
-    to_text,
+    to_text, to_canonical_address, is_address,
 )
 from platon_utils.toolz import (
     curry,
@@ -188,10 +188,20 @@ def abi_bytes_to_bytes(
 
 
 @implicitly_identity
+def abi_address_to_bytes(type_str: TypeStr, data: Any) -> Optional[Tuple[TypeStr, Address]]:
+    if type_str == 'address':
+        validate_address(data)
+        if is_address(data):
+            return type_str, to_canonical_address(data)
+    return None
+
+
+@implicitly_identity
 def abi_address_to_bech32(type_str: TypeStr, data: Any) -> Optional[Tuple[TypeStr, Bech32Address]]:
     if type_str == 'address':
         validate_address(data)
-        return type_str, to_bech32_address(data)
+        if is_address(data):
+            return type_str, to_bech32_address(data)
     return None
 
 
