@@ -1,9 +1,19 @@
-from typing import Union
+from typing import (
+    Union
+)
 
-from platon_typing import NodeID, HexStr
+from platon_typing import (
+    NodeID,
+    HexStr,
+)
 
-from platon._utils.argument_formatter import InnerFn
-from platon.types import Version
+from platon._utils.argument_formatter import (
+    InnerFn,
+)
+from platon.types import (
+    Version,
+    BlockIdentifier,
+)
 from platon.inner_contract import (
     InnerContract,
 )
@@ -36,7 +46,7 @@ class Pip(InnerContract):
                               name: str,
                               value: str,
                               ):
-        # todo: add module
+        # todo: add attribute dict for module
         """
         Submit a parameter proposal to change the value of the governable parameter.
         Use 'self.govern_param_list' to get all governable parameters.
@@ -123,43 +133,42 @@ class Pip(InnerContract):
         """
         return self.function_processor(InnerFn.govern_getProposal, locals(), is_call=True)
 
-    def get_tally_result(self, proposal_id: Union[bytes, HexStr]):
-        # todo: edit docs
+    def get_proposal_votes(self,
+                           proposal_id: Union[bytes, HexStr],
+                           block_identifier: BlockIdentifier = 'latest',
+                           ):
         """
-        Query proposal results
+        Get the voting information for the proposal based on the block identifier.
+
+        :param proposal_id: hash id of the proposal
+        :param block_identifier: block identifier
+        """
+        block = self.web3.platon.get_block(block_identifier)
+        kwargs = locals()
+        kwargs['block_identifier'] = block['hash']
+        return self.function_processor(InnerFn.govern_getProposalVotes, kwargs, is_call=True)
+
+    def get_proposal_result(self, proposal_id: Union[bytes, HexStr]):
+        """
+        Get proposal results, you can query only after the proposal is complete.
+        use 'self.get_proposal_votes' to get current voting information.
 
         :param proposal_id: proposal id
         """
-        return self.function_processor(InnerFn.govern_getTallyResult, locals(), is_call=True)
-
-    def get_proposal_votes(self,
-                           proposal_id: Union[bytes, HexStr],
-                           block_hash: Union[bytes, HexStr],
-                           ):
-        # todo: edit docs
-        """
-        Query the cumulative number of votes for the proposal
-
-        :param proposal_id:  proposal id
-        :param block_hash: block hash
-        """
-        return self.function_processor(InnerFn.govern_getProposalVotes, locals(), is_call=True)
+        return self.function_processor(InnerFn.govern_getProposalResult, locals(), is_call=True)
 
     def proposal_list(self):
-        # todo: edit docs
         """
         Get proposal list for the chain
         """
         return self.function_processor(InnerFn.govern_proposalList, locals(), is_call=True)
 
     def get_chain_version(self):
-        # todo: copy to version.py
         """
         Query the chain effective version of the node
         """
         return self.function_processor(InnerFn.govern_getChainVersion, locals(), is_call=True)
 
-    # todo: add module attribute dict
     def get_govern_param(self, module: str, name: str):
         """
         Get the current value of the governable parameter

@@ -31,6 +31,7 @@ from platon.types import (
 class RPC:
     # admin
     admin_addPeer = RPCEndpoint("admin_addPeer")
+    admin_removePeer = RPCEndpoint("admin_removePeer")
     admin_datadir = RPCEndpoint("admin_datadir")
     admin_nodeInfo = RPCEndpoint("admin_nodeInfo")
     admin_peers = RPCEndpoint("admin_peers")
@@ -38,8 +39,11 @@ class RPC:
     admin_startWS = RPCEndpoint("admin_startWS")
     admin_stopRPC = RPCEndpoint("admin_stopRPC")
     admin_stopWS = RPCEndpoint("admin_stopWS")
+    admin_importChain = RPCEndpoint("admin_importChain")
+    admin_exportChain = RPCEndpoint("admin_exportChain")
     admin_getProgramVersion = RPCEndpoint("admin_getProgramVersion")
     admin_getSchnorrNIZKProve = RPCEndpoint("admin_getSchnorrNIZKProve")
+    admin_setSolc = RPCEndpoint("admin_setSolc")
 
     # platon
     platon_accounts = RPCEndpoint("platon_accounts")
@@ -82,6 +86,9 @@ class RPC:
     platon_submitWork = RPCEndpoint("platon_submitWork")
     platon_syncing = RPCEndpoint("platon_syncing")
     platon_uninstallFilter = RPCEndpoint("platon_uninstallFilter")
+    platon_evidences = RPCEndpoint("platon_evidences")
+    platon_consensusStatus = RPCEndpoint("platon_consensusStatus")
+    platon_getPrepareQC = RPCEndpoint("platon_getPrepareQC")
 
     # evm
     evm_mine = RPCEndpoint("evm_mine")
@@ -126,6 +133,11 @@ class RPC:
 
     # testing
     testing_timeTravel = RPCEndpoint("testing_timeTravel")
+
+    # debug
+    debug_economicConfig = RPCEndpoint("debug_economicConfig")
+    debug_getWaitSlashingNodeList = RPCEndpoint("debug_getWaitSlashingNodeList")
+    debug_getBadBlocks = RPCEndpoint("debug_getBadBlocks")
 
     # trace
     trace_block = RPCEndpoint("trace_block")
@@ -202,9 +214,9 @@ RPC_ABIS = {
 
 @curry
 def apply_abi_formatters_to_dict(
-    normalizers: Sequence[Callable[[TypeStr, Any], Tuple[TypeStr, Any]]],
-    abi_dict: Dict[str, Any],
-    data: Dict[Any, Any]
+        normalizers: Sequence[Callable[[TypeStr, Any], Tuple[TypeStr, Any]]],
+        abi_dict: Dict[str, Any],
+        data: Dict[Any, Any]
 ) -> Dict[Any, Any]:
     fields = list(set(abi_dict.keys()) & set(data.keys()))
     formatted_values = map_abi_data(
@@ -218,8 +230,8 @@ def apply_abi_formatters_to_dict(
 
 @to_dict
 def abi_request_formatters(
-    normalizers: Sequence[Callable[[TypeStr, Any], Tuple[TypeStr, Any]]],
-    abis: Dict[RPCEndpoint, Any],
+        normalizers: Sequence[Callable[[TypeStr, Any], Tuple[TypeStr, Any]]],
+        abis: Dict[RPCEndpoint, Any],
 ) -> Iterable[Tuple[RPCEndpoint, Callable[..., Any]]]:
     for method, abi_types in abis.items():
         if isinstance(abi_types, list):

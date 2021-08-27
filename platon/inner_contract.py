@@ -102,7 +102,7 @@ class InnerContractFunction:
 
         call_transaction['data'] = self._encode_transaction_data()
 
-        # todo: 对return_data进行格式化
+        # todo: format the return data
         return_data = self.web3.platon.call(call_transaction,
                                             block_identifier=block_identifier,
                                             state_override=state_override, )

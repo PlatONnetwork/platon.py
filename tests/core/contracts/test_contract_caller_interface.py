@@ -43,7 +43,7 @@ def transaction_dict(web3, address):
     return {
         'from': address,
         'gas': 210000,
-        'gasPrice': web3.toWei(.001, 'ether'),
+        'gasPrice': web3.toVon(.001, 'ether'),
         'value': 12345,
     }
 

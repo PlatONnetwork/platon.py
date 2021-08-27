@@ -173,7 +173,6 @@ def apply_link_ref(offset: int, length: int, value: bytes, bytecode: bytes) -> b
     except PlatonPMValidationError:
         raise BytecodeLinkingError("Link references cannot be applied to bytecode")
 
-    # todo: 修改该方法
     address = value if is_canonical_address(value) else to_canonical_address(value)
     new_bytes = (
         # Ignore linting error b/c conflict b/w black & flake8

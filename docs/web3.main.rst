@@ -179,27 +179,27 @@ Encoding and Decoding Helpers
 Currency Conversions
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. py:method:: Web3.toWei(value, currency)
+.. py:method:: Web3.toVon(value, currency)
 
     Returns the value in the denomination specified by the ``currency`` argument
-    converted to wei.
+    converted to von.
 
 
     .. code-block:: python
 
-        >>> Web3.toWei(1, 'ether')
+        >>> Web3.toVon(1, 'ether')
         1000000000000000000
 
 
-.. py:method:: Web3.fromWei(value, currency)
+.. py:method:: Web3.fromVon(value, currency)
 
-    Returns the value in wei converted to the given currency. The value is returned
-    as a ``Decimal`` to ensure precision down to the wei.
+    Returns the value in von converted to the given currency. The value is returned
+    as a ``Decimal`` to ensure precision down to the von.
 
 
     .. code-block:: python
 
-        >>> Web3.fromWei(1000000000000000000, 'ether')
+        >>> Web3.fromVon(1000000000000000000, 'ether')
         Decimal('1')
 
 

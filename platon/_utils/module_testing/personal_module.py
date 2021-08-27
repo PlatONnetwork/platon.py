@@ -20,7 +20,7 @@ from hexbytes import (
 
 from platon.types import (  # noqa: F401
     TxParams,
-    Wei,
+    Von,
 )
 
 if TYPE_CHECKING:
@@ -91,13 +91,13 @@ class GoPlatonPersonalModuleTest:
         unlockable_account_dual_type: Bech32Address,
         unlockable_account_pw: str,
     ) -> None:
-        assert web3.platon.get_balance(unlockable_account_dual_type) > web3.toWei(1, 'ether')
+        assert web3.platon.get_balance(unlockable_account_dual_type) > web3.toVon(1, 'ether')
         txn_params: TxParams = {
             'from': unlockable_account_dual_type,
             'to': unlockable_account_dual_type,
-            'gas': Wei(21000),
-            'value': Wei(1),
-            'gasPrice': web3.toWei(1, 'gwei'),
+            'gas': Von(21000),
+            'value': Von(1),
+            'gasPrice': web3.toVon(1, 'benefit'),
         }
         txn_hash = web3.node.personal.send_transaction(txn_params, unlockable_account_pw)
         assert txn_hash
@@ -247,13 +247,13 @@ class ParityPersonalModuleTest():
         unlockable_account_dual_type: Bech32Address,
         unlockable_account_pw: str,
     ) -> None:
-        assert web3.platon.get_balance(unlockable_account_dual_type) > web3.toWei(1, 'ether')
+        assert web3.platon.get_balance(unlockable_account_dual_type) > web3.toVon(1, 'ether')
         txn_params: TxParams = {
             'from': unlockable_account_dual_type,
             'to': unlockable_account_dual_type,
-            'gas': Wei(21000),
-            'value': Wei(1),
-            'gasPrice': web3.toWei(1, 'gwei'),
+            'gas': Von(21000),
+            'value': Von(1),
+            'gasPrice': web3.toVon(1, 'gvon'),
         }
         txn_hash = web3.parity.personal.send_transaction(txn_params, unlockable_account_pw)
         assert txn_hash

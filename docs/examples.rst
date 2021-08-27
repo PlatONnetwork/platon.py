@@ -82,7 +82,7 @@ has a public address of 0x742d35Cc6634C0532925a3b844Bc454e4438f44e.
    3841357360894980500000001
 
 Note that this number is not denominated in ether, but instead in the smallest unit of value in
-Platon, wei. Read on to learn how to convert that number to ether.
+Platon, von. Read on to learn how to convert that number to ether.
 
 
 Converting currency denominations
@@ -91,23 +91,23 @@ Converting currency denominations
 Web3 can help you convert between denominations.  The following denominations are supported.
 
 +--------------+---------------------------------+
-| denomination | amount in wei                   |
+| denomination | amount in von                   |
 +--------------+---------------------------------+
-| wei          | 1                               |
+| von          | 1                               |
 +--------------+---------------------------------+
-| kwei         | 1000                            |
+| kvon         | 1000                            |
 +--------------+---------------------------------+
 | babbage      | 1000                            |
 +--------------+---------------------------------+
 | femtoether   | 1000                            |
 +--------------+---------------------------------+
-| mwei         | 1000000                         |
+| mvon         | 1000000                         |
 +--------------+---------------------------------+
 | lovelace     | 1000000                         |
 +--------------+---------------------------------+
 | picoether    | 1000000                         |
 +--------------+---------------------------------+
-| gwei         | 1000000000                      |
+| gvon         | 1000000000                      |
 +--------------+---------------------------------+
 | shannon      | 1000000000                      |
 +--------------+---------------------------------+
@@ -141,15 +141,15 @@ Web3 can help you convert between denominations.  The following denominations ar
 +--------------+---------------------------------+
 
 Picking up from the previous example, the largest account contained
-3841357360894980500000001 wei. You can use the :meth:`~web3.fromWei` method
+3841357360894980500000001 von. You can use the :meth:`~web3.fromVon` method
 to convert that balance to ether (or another denomination).
 
 .. code-block:: python
 
-    >>> web3.fromWei(3841357360894980500000001, 'ether')
+    >>> web3.fromVon(3841357360894980500000001, 'ether')
     Decimal('3841357.360894980500000001')
 
-To convert back to wei, you can use the inverse function, :meth:`~web3.toWei`.
+To convert back to von, you can use the inverse function, :meth:`~web3.toVon`.
 Note that Python's default floating point precision is insufficient for this
 use case, so it's necessary to cast the value to a
 `Decimal <https://docs.python.org/3/library/decimal.html>`_ if it isn't already.
@@ -157,18 +157,18 @@ use case, so it's necessary to cast the value to a
 .. code-block:: python
 
     >>> from decimal import Decimal
-    >>> web3.toWei(Decimal('3841357.360894980500000001'), 'ether')
+    >>> web3.toVon(Decimal('3841357.360894980500000001'), 'ether')
     3841357360894980500000001
 
 Best practice: If you need to work with multiple currency denominations, default
-to wei. A typical workflow may require a conversion from some denomination to
-wei, then from wei to whatever you need.
+to von. A typical workflow may require a conversion from some denomination to
+von, then from von to whatever you need.
 
 .. code-block:: python
 
-    >>> web3.toWei(Decimal('0.000000005'), 'ether')
+    >>> web3.toVon(Decimal('0.000000005'), 'ether')
     5000000000
-    >>> web3.fromWei(5000000000, 'gwei')
+    >>> web3.fromVon(5000000000, 'gvon')
     Decimal('5')
 
 

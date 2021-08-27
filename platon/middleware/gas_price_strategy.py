@@ -18,7 +18,7 @@ from platon.types import (
     RPCEndpoint,
     RPCResponse,
     TxParams,
-    Wei,
+    Von,
 )
 
 if TYPE_CHECKING:
@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 
 def validate_transaction_params(
-    transaction: TxParams, latest_block: BlockData, generated_gas_price: Wei
+    transaction: TxParams, latest_block: BlockData, generated_gas_price: Von
 ) -> TxParams:
     # gas price strategy explicitly set:
     if generated_gas_price is not None and 'gasPrice' not in transaction:

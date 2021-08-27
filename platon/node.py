@@ -1,5 +1,6 @@
 from platon._utils.admin import (
     add_peer,
+    rmeove_peer,
     data_dir,
     node_info,
     peers,
@@ -7,8 +8,11 @@ from platon._utils.admin import (
     start_ws,
     stop_rpc,
     stop_ws,
+    import_chain,
+    export_chain,
     get_program_version,
     get_schnorr_NIZK_prove,
+    set_solc,
 )
 from platon._utils.miner import (
     make_dag,
@@ -44,15 +48,19 @@ from platon.module import (
 
 class Admin(Module):
     peers = peers
-    data_dir = data_dir
     add_peer = add_peer
+    rmeove_peer = rmeove_peer
+    data_dir = data_dir
     node_info = node_info
     start_rpc = start_rpc
     start_ws = start_ws
     stop_ws = stop_ws
     stop_rpc = stop_rpc
+    import_chain = import_chain
+    export_chain = export_chain
     get_program_version = get_program_version
     get_schnorr_NIZK_prove = get_schnorr_NIZK_prove
+    set_solc = set_solc
 
 
 class Miner(Module):

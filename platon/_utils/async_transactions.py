@@ -7,7 +7,7 @@ from typing import (
 from platon.types import (
     BlockIdentifier,
     TxParams,
-    Wei,
+    Von,
 )
 
 if TYPE_CHECKING:
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 async def get_block_gas_limit(
     web3_platon: "AsyncPlaton", block_identifier: Optional[BlockIdentifier] = None
-) -> Wei:
+) -> Von:
     if block_identifier is None:
         block_identifier = await web3_platon.block_number
     block = await web3_platon.get_block(block_identifier)
@@ -25,8 +25,8 @@ async def get_block_gas_limit(
 
 
 async def get_buffered_gas_estimate(
-    web3: "Web3", transaction: TxParams, gas_buffer: Wei = Wei(100000)
-) -> Wei:
+    web3: "Web3", transaction: TxParams, gas_buffer: Von = Von(100000)
+) -> Von:
     gas_estimate_transaction = cast(TxParams, dict(**transaction))
 
     gas_estimate = await web3.platon.estimate_gas(gas_estimate_transaction)  # type: ignore
@@ -40,4 +40,4 @@ async def get_buffered_gas_estimate(
             "limit: {1}".format(gas_estimate, gas_limit)
         )
 
-    return Wei(min(gas_limit, gas_estimate + gas_buffer))
+    return Von(min(gas_limit, gas_estimate + gas_buffer))

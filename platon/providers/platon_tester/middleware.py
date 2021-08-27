@@ -44,7 +44,7 @@ from platon.types import (
     RPCEndpoint,
     RPCResponse,
     TxParams,
-    Wei,
+    Von,
 )
 
 if TYPE_CHECKING:
@@ -104,7 +104,6 @@ RECEIPT_KEY_MAPPINGS = {
 receipt_key_remapper = apply_key_map(RECEIPT_KEY_MAPPINGS)
 
 
-# todo: noqa
 BLOCK_KEY_MAPPINGS = {
     'gas_limit': 'gasLimit',
     'sha3_uncles': 'sha3Uncles',
@@ -291,8 +290,8 @@ def guess_from(web3: "Web3", transaction: TxParams) -> Bech32Address:
     return None
 
 
-def guess_gas(web3: "Web3", transaction: TxParams) -> Wei:
-    return Wei(web3.platon.estimate_gas(transaction) * 2)
+def guess_gas(web3: "Web3", transaction: TxParams) -> Von:
+    return Von(web3.platon.estimate_gas(transaction) * 2)
 
 
 @curry

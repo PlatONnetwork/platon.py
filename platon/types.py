@@ -104,7 +104,7 @@ ENS = NewType("ENS", str)
 Nonce = NewType("Nonce", int)
 RPCEndpoint = NewType("RPCEndpoint", str)
 Timestamp = NewType("Timestamp", int)
-Wei = NewType('Wei', int)
+Von = NewType('Von', int)
 
 Formatters = Dict[RPCEndpoint, Callable[..., Any]]
 
@@ -216,10 +216,10 @@ TxData = TypedDict("TxData", {
     "chain_id": int,
     "data": Union[bytes, HexStr],
     "from": Bech32Address,
-    "gas": Wei,
-    "gasPrice": Wei,
-    # "maxFeePerGas": Wei,
-    # "maxPriorityFeePerGas": Wei,
+    "gas": Von,
+    "gasPrice": Von,
+    # "maxFeePerGas": Von,
+    # "maxPriorityFeePerGas": Von,
     "hash": HexBytes,
     # "input": HexStr,
     "nonce": Nonce,
@@ -228,7 +228,7 @@ TxData = TypedDict("TxData", {
     "to": Bech32Address,
     "transactionIndex": int,
     "v": int,
-    "value": Wei,
+    "value": Von,
 }, total=False)
 
 # syntax b/c "from" keyword not allowed w/ class construction
@@ -237,28 +237,28 @@ TxParams = TypedDict("TxParams", {
     "data": Union[bytes, HexStr],
     # addr or ens
     "from": Bech32Address,
-    "gas": Wei,
+    "gas": Von,
     # legacy pricing
-    "gasPrice": Wei,
+    "gasPrice": Von,
     # 1559 pricing
-    # "maxFeePerGas": Union[str, Wei],
-    # "maxPriorityFeePerGas": Union[str, Wei],
+    # "maxFeePerGas": Union[str, Von],
+    # "maxPriorityFeePerGas": Union[str, Von],
     "nonce": Nonce,
     # addr or ens
     "to": Bech32Address,
-    "value": Wei,
+    "value": Von,
 }, total=False)
 
 
 class CallOverrideParams(TypedDict):
-    balance: Optional[Wei]
+    balance: Optional[Von]
     nonce: Optional[int]
     code: Optional[Union[bytes, HexStr]]
     state: Optional[Dict[str, Any]]
     stateDiff: Optional[Dict[Address, Dict[str, Any]]]
 
 
-GasPriceStrategy = Callable[["Web3", TxParams], Wei]
+GasPriceStrategy = Callable[["Web3", TxParams], Von]
 
 # syntax b/c "from" keyword not allowed w/ class construction
 TxReceipt = TypedDict("TxReceipt", {
@@ -266,7 +266,7 @@ TxReceipt = TypedDict("TxReceipt", {
     "blockNumber": BlockNumber,
     "contractAddress": Optional[Bech32Address],
     "cumulativeGasUsed": int,
-    "gasUsed": Wei,
+    "gasUsed": Von,
     "from": Bech32Address,
     "logs": List[LogReceipt],
     "logsBloom": HexBytes,
@@ -334,11 +334,11 @@ class SyncStatus(TypedDict):
 
 # todo: noqa
 class BlockData(TypedDict, total=False):
-    baseFeePerGas: Wei
+    # baseFeePerGas: Von
     difficulty: int
     extraData: HexBytes
-    gasLimit: Wei
-    gasUsed: Wei
+    gasLimit: Von
+    gasUsed: Von
     hash: HexBytes
     logsBloom: HexBytes
     miner: Bech32Address
@@ -347,11 +347,9 @@ class BlockData(TypedDict, total=False):
     number: BlockNumber
     parentHash: HexBytes
     receiptRoot: HexBytes
-    sha3Uncles: HexBytes
     size: int
     stateRoot: HexBytes
     timestamp: Timestamp
-    totalDifficulty: int
     # list of tx hashes or of txdatas
     transactions: Union[Sequence[HexBytes], Sequence[TxData]]
     transactionsRoot: HexBytes
@@ -434,20 +432,20 @@ class ParityFilterParams(TypedDict, total=False):
 class InnerFn:
     # staking
     staking_createStaking = FunctionIdentifier(1000)
-    staking_editCandidate = FunctionIdentifier(1001)
+    staking_editStaking = FunctionIdentifier(1001)
     staking_increaseStaking = FunctionIdentifier(1002)
     staking_withdrewStaking = FunctionIdentifier(1003)
     staking_getVerifierList = FunctionIdentifier(1100)
     staking_getValidatorList = FunctionIdentifier(1101)
     staking_getCandidateList = FunctionIdentifier(1102)
     staking_getCandidateInfo = FunctionIdentifier(1105)
-    staking_getPackageReward = FunctionIdentifier(1200)
+    staking_getBlockReward = FunctionIdentifier(1200)
     staking_getStakingReward = FunctionIdentifier(1201)
-    staking_getAvgPackTime = FunctionIdentifier(1202)
+    staking_getAvgBlockTime = FunctionIdentifier(1202)
     # delegate
     delegate_delegate = FunctionIdentifier(1004)
     delegate_withdrewDelegation = FunctionIdentifier(1005)
-    delegate_redeemDelegation = FunctionIdentifier(1006)
+    # delegate_redeemDelegation = FunctionIdentifier(1006)
     delegate_getDelegateList = FunctionIdentifier(1103)
     delegate_getDelegateInfo = FunctionIdentifier(1104)
     delegate_withdrawDelegateReward = FunctionIdentifier(5000)
@@ -460,7 +458,7 @@ class InnerFn:
     govern_declareVersion = FunctionIdentifier(2004)
     govern_submitCancelProposal = FunctionIdentifier(2005)
     govern_getProposal = FunctionIdentifier(2100)
-    govern_getTallyResult = FunctionIdentifier(2101)
+    govern_getProposalResult = FunctionIdentifier(2101)
     govern_proposalList = FunctionIdentifier(2102)
     govern_getChainVersion = FunctionIdentifier(2103)
     govern_getGovernParam = FunctionIdentifier(2104)

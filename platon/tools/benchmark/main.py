@@ -45,7 +45,7 @@ from platon.tools.benchmark.utils import (
     wait_for_http,
 )
 from platon.types import (
-    Wei,
+    Von,
 )
 
 KEYFILE_PW = 'web3py-test'
@@ -140,12 +140,12 @@ def main(logger: logging.Logger, num_calls: int) -> None:
                     "exec": lambda: w3_http.platon.send_transaction({
                         'to': '0xd3CdA913deB6f67967B99D67aCDFa1712C293601',
                         'from': unlocked_account(w3_http),
-                        'value': Wei(12345),
+                        'value': Von(12345),
                     }),
                     "async_exec": lambda: async_w3_http.platon.send_transaction({
                         'to': '0xd3CdA913deB6f67967B99D67aCDFa1712C293601',
                         'from': async_unlocked_acct,
-                        'value': Wei(12345)
+                        'value': Von(12345)
                     }),
                 },
                 {

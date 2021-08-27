@@ -93,7 +93,7 @@ from platon.types import (
     TxData,
     TxParams,
     TxReceipt,
-    Wei,
+    Von,
     _Hash32,
 )
 
@@ -102,7 +102,7 @@ class BasePlaton(Module):
     _default_account: Union[Bech32Address, Empty] = empty
     gasPriceStrategy = None
 
-    _gas_price: Method[Callable[[], Wei]] = Method(
+    _gas_price: Method[Callable[[], Von]] = Method(
         RPC.platon_gasPrice,
         mungers=None,
     )
@@ -127,7 +127,7 @@ class BasePlaton(Module):
         mungers=[default_root_munger]
     )
 
-    def _generate_gas_price(self, transaction_params: Optional[TxParams] = None) -> Optional[Wei]:
+    def _generate_gas_price(self, transaction_params: Optional[TxParams] = None) -> Optional[Von]:
         if self.gasPriceStrategy:
             return self.gasPriceStrategy(self.web3, transaction_params)
         return None
@@ -150,7 +150,7 @@ class BasePlaton(Module):
 
         return params
 
-    _estimate_gas: Method[Callable[..., Wei]] = Method(
+    _estimate_gas: Method[Callable[..., Von]] = Method(
         RPC.platon_estimateGas,
         mungers=[estimate_gas_munger]
     )
@@ -183,12 +183,27 @@ class BasePlaton(Module):
         mungers=None,
     )
 
+    evidences: Method[Callable[[], str]] = Method(
+        RPC.platon_evidences,
+        mungers=None,
+    )
+
+    consensus_status: Method[Callable[[], str]] = Method(
+        RPC.platon_consensusStatus,
+        mungers=None,
+    )
+
+    get_prepare_QC: Method[Callable[[], str]] = Method(
+        RPC.platon_getPrepareQC,
+        mungers=None,
+    )
+
 
 class AsyncPlaton(BasePlaton):
     is_async = True
 
     @property
-    async def gas_price(self) -> Wei:
+    async def gas_price(self) -> Von:
         # types ignored b/c mypy conflict with BlockingPlaton properties
         return await self._gas_price()  # type: ignore
 
@@ -202,14 +217,14 @@ class AsyncPlaton(BasePlaton):
 
     async def generate_gas_price(
             self, transaction_params: Optional[TxParams] = None
-    ) -> Optional[Wei]:
+    ) -> Optional[Von]:
         return self._generate_gas_price(transaction_params)
 
     async def estimate_gas(
             self,
             transaction: TxParams,
             block_identifier: Optional[BlockIdentifier] = None
-    ) -> Wei:
+    ) -> Von:
         # types ignored b/c mypy conflict with BlockingPlaton properties
         return await self._estimate_gas(transaction, block_identifier)  # type: ignore
 
@@ -261,7 +276,7 @@ class Platon(BasePlaton, Module):
         return self.is_syncing()
 
     @property
-    def gas_price(self) -> Wei:
+    def gas_price(self) -> Von:
         return self._gas_price()
 
     get_accounts: Method[Callable[[], Tuple[Bech32Address]]] = Method(
@@ -315,7 +330,7 @@ class Platon(BasePlaton, Module):
             block_identifier = self.default_block
         return (account, block_identifier)
 
-    get_balance: Method[Callable[..., Wei]] = Method(
+    get_balance: Method[Callable[..., Von]] = Method(
         RPC.platon_getBalance,
         mungers=[block_id_munger],
     )
@@ -495,7 +510,7 @@ class Platon(BasePlaton, Module):
             self,
             transaction: TxParams,
             block_identifier: Optional[BlockIdentifier] = None
-    ) -> Wei:
+    ) -> Von:
         return self._estimate_gas(transaction, block_identifier)
 
     def filter_munger(
@@ -594,5 +609,5 @@ class Platon(BasePlaton, Module):
         mungers=None,
     )
 
-    def generate_gas_price(self, transaction_params: Optional[TxParams] = None) -> Optional[Wei]:
+    def generate_gas_price(self, transaction_params: Optional[TxParams] = None) -> Optional[Von]:
         return self._generate_gas_price(transaction_params)

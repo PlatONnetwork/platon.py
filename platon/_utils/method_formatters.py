@@ -306,7 +306,7 @@ filter_result_formatter = apply_one_of_formatters((
     (is_array_of_strings, apply_list_to_array_formatter(to_hexbytes(32))),
 ))
 
-# todo: delete
+# todo: confirm and delete
 TRANSACTION_REQUEST_FORMATTERS = {
     'maxFeePerGas': to_hex_if_integer,
     'maxPriorityFeePerGas': to_hex_if_integer,

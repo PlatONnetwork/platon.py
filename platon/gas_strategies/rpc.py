@@ -8,12 +8,12 @@ from platon._utils.rpc_abi import (
 )
 from platon.types import (
     TxParams,
-    Wei,
+    Von,
 )
 
 
 def rpc_gas_price_strategy(web3: Web3,
-                           transaction_params: Optional[TxParams] = None) -> Wei:
+                           transaction_params: Optional[TxParams] = None) -> Von:
     """
     A simple gas price strategy deriving it's value from the platon_gasPrice JSON-RPC call.
     """

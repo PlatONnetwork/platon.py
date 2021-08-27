@@ -1,3 +1,5 @@
+from platon_typing import Bech32Address
+
 from platon.types import InnerFn
 from platon.inner_contract import (
     InnerContract,
@@ -7,25 +9,28 @@ from platon.inner_contract import (
 class Restricting(InnerContract):
     _HEX_ADDRESS = '0x1000000000000000000000000000000000000001'
 
-    def create_restricting(self, release_address, plans):
+    def create_restricting(self,
+                           release_address: Bech32Address,
+                           plans: [dict],
+                           ):
         """
         Create a restricting
 
         :param release_address: released to account
         :param plans: a list of restricting plan, for example:
-            [{'Epoch': 2, 'Amount': Web3.toWei(1, 'ether')}, {'Epoch': 8, 'Amount': Web3.toWei(3, 'ether')}]
+            [{'Epoch': 2, 'Amount': Web3.toVon(1, 'ether')}, {'Epoch': 8, 'Amount': Web3.toVon(3, 'ether')}]
 
             restricting plan is defined as follows:
             {
                 Epoch: int   # the amount will be released to release address when the epoch ends
-                Amount: Wei  # restricting amount
+                Amount: Von  # restricting amount
             }
         """
         kwargs = locals()
         kwargs['plans'] = [list(plan.values()) for plan in plans]
         return self.function_processor(InnerFn.restricting_createRestricting, kwargs)
 
-    def get_restricting_info(self, release_address):
+    def get_restricting_info(self, release_address: Bech32Address):
         """
         Get the restricting information.
 

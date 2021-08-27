@@ -109,7 +109,7 @@ The following properties are available on the ``web3.platon`` namespace.
 
     * Delegates to ``platon_gasPrice`` RPC Method
 
-    Returns the current gas price in Wei.
+    Returns the current gas price in Von.
 
     .. code-block:: python
 
@@ -599,8 +599,8 @@ The following methods are available on the ``web3.platon`` namespace.
           'from': web3.platon.coinbase,
           'value': 12345,
           'gas': 21000,
-          'maxFeePerGas': web3.toWei(250, 'gwei'),
-          'maxPriorityFeePerGas': web3.toWei(2, 'gwei'),
+          'maxFeePerGas': web3.toVon(250, 'gvon'),
+          'maxPriorityFeePerGas': web3.toVon(2, 'gvon'),
         })
         HexBytes('0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331')
 
@@ -611,7 +611,7 @@ The following methods are available on the ``web3.platon`` namespace.
           'from': web3.platon.coinbase,
           'value': 12345,
           'gas': 21000,
-          'gasPrice': web3.toWei(50, 'gwei'),
+          'gasPrice': web3.toVon(50, 'gvon'),
         })
         HexBytes('0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331')
 
@@ -831,7 +831,7 @@ The following methods are available on the ``web3.platon`` namespace.
 .. py:method:: PlatON.generate_gas_price(transaction_params=None)
 
     Uses the selected gas price strategy to calculate a gas price. This method
-    returns the gas price denominated in wei.
+    returns the gas price denominated in von.
 
     The ``transaction_params`` argument is optional however some gas price strategies
     may require it to be able to produce a gas price.
@@ -849,7 +849,7 @@ The following methods are available on the ``web3.platon`` namespace.
 .. py:method:: PlatON.set_gas_price_strategy(gas_price_strategy)
 
     Set the selected gas price strategy. It must be a method of the signature
-    ``(web3, transaction_params)`` and return a gas price denominated in wei.
+    ``(web3, transaction_params)`` and return a gas price denominated in von.
 
 
 Filters

@@ -173,7 +173,7 @@ def unlockable_account(web3, unlockable_account_pw):
     web3.platon.send_transaction({
         'from': web3.platon.coinbase,
         'to': account,
-        'value': web3.toWei(10, 'ether'),
+        'value': web3.toVon(10, 'ether'),
     })
     yield account
 
@@ -203,7 +203,7 @@ def funded_account_for_raw_txn(web3):
     web3.platon.send_transaction({
         'from': web3.platon.coinbase,
         'to': account,
-        'value': web3.toWei(10, 'ether'),
+        'value': web3.toVon(10, 'ether'),
         'gas': 21000,
         'gas_price': 1,
     })

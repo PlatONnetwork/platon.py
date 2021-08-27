@@ -51,7 +51,7 @@ from platon.types import (  # noqa: F401
     Nonce,
     SyncStatus,
     TxParams,
-    Wei,
+    Von,
 )
 
 UNKNOWN_ADDRESS = Bech32Address(HexAddress(HexStr('0xdEADBEeF00000000000000000000000000000000')))
@@ -91,8 +91,8 @@ class AsyncPlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
             'gasPrice': await async_w3.platon.gas_price,  # type: ignore
         }
         txn_hash = await async_w3.platon.send_transaction(txn_params)  # type: ignore
@@ -111,10 +111,10 @@ class AsyncPlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': async_w3.toWei(3, 'gwei'),
-            'maxPriorityFeePerGas': async_w3.toWei(1, 'gwei'),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': async_w3.toVon(3, 'gvon'),
+            'maxPriorityFeePerGas': async_w3.toVon(1, 'gvon'),
         }
         txn_hash = await async_w3.platon.send_transaction(txn_params)  # type: ignore
         txn = await async_w3.platon.get_transaction(txn_hash)  # type: ignore
@@ -134,8 +134,8 @@ class AsyncPlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
         }
         txn_hash = await async_w3.platon.send_transaction(txn_params)  # type: ignore
         txn = await async_w3.platon.get_transaction(txn_hash)  # type: ignore
@@ -155,8 +155,8 @@ class AsyncPlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
             'maxFeePerGas': hex(250 * 10**9),
             'maxPriorityFeePerGas': hex(2 * 10**9),
         }
@@ -177,9 +177,9 @@ class AsyncPlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'maxFeePerGas': Wei(250 * 10**9),
-            'maxPriorityFeePerGas': Wei(2 * 10**9),
+            'value': Von(1),
+            'maxFeePerGas': Von(250 * 10**9),
+            'maxPriorityFeePerGas': Von(2 * 10**9),
         }
         txn_hash = await async_w3.platon.send_transaction(txn_params)  # type: ignore
         txn = await async_w3.platon.get_transaction(txn_hash)  # type: ignore
@@ -196,11 +196,11 @@ class AsyncPlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'gasPrice': Wei(1),
-            'maxFeePerGas': Wei(250 * 10**9),
-            'maxPriorityFeePerGas': Wei(2 * 10**9),
+            'value': Von(1),
+            'gas': Von(21000),
+            'gasPrice': Von(1),
+            'maxFeePerGas': Von(250 * 10**9),
+            'maxPriorityFeePerGas': Von(2 * 10**9),
         }
         with pytest.raises(TransactionTypeMismatch):
             await async_w3.platon.send_transaction(txn_params)  # type: ignore
@@ -212,9 +212,9 @@ class AsyncPlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': Wei(250 * 10**9),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': Von(250 * 10**9),
         }
         with pytest.raises(InvalidTransaction, match='maxPriorityFeePerGas must be defined'):
             await async_w3.platon.send_transaction(txn_params)  # type: ignore
@@ -223,12 +223,12 @@ class AsyncPlatonModuleTest:
     async def test_platon_send_transaction_no_max_fee(
         self, async_w3: "Web3", unlocked_account_dual_type: Bech32Address
     ) -> None:
-        maxPriorityFeePerGas = async_w3.toWei(2, 'gwei')
+        maxPriorityFeePerGas = async_w3.toVon(2, 'gvon')
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
             'maxPriorityFeePerGas': maxPriorityFeePerGas,
         }
         txn_hash = await async_w3.platon.send_transaction(txn_params)  # type: ignore
@@ -249,10 +249,10 @@ class AsyncPlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': Wei(1 * 10**9),
-            'maxPriorityFeePerGas': Wei(2 * 10**9),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': Von(1 * 10**9),
+            'maxPriorityFeePerGas': Von(2 * 10**9),
         }
         with pytest.raises(
             InvalidTransaction, match="maxFeePerGas must be >= maxPriorityFeePerGas"
@@ -266,20 +266,20 @@ class AsyncPlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
         }
-        two_gwei_in_wei = async_w3.toWei(2, 'gwei')
+        two_gvon_in_von = async_w3.toVon(2, 'gvon')
 
-        def gas_price_strategy(web3: "Web3", txn: TxParams) -> Wei:
-            return two_gwei_in_wei
+        def gas_price_strategy(web3: "Web3", txn: TxParams) -> Von:
+            return two_gvon_in_von
 
         async_w3.platon.set_gas_price_strategy(gas_price_strategy)
 
         txn_hash = await async_w3.platon.send_transaction(txn_params)  # type: ignore
         txn = await async_w3.platon.get_transaction(txn_hash)  # type: ignore
 
-        assert txn['gasPrice'] == two_gwei_in_wei
+        assert txn['gasPrice'] == two_gvon_in_von
         async_w3.platon.set_gas_price_strategy(None)  # reset strategy
 
     @pytest.mark.asyncio
@@ -289,7 +289,7 @@ class AsyncPlatonModuleTest:
         gas_estimate = await async_w3.platon.estimate_gas({  # type: ignore
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
+            'value': Von(1),
         })
         assert is_integer(gas_estimate)
         assert gas_estimate > 0
@@ -734,8 +734,8 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account,
             'to': unlocked_account,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
             'gasPrice': web3.platon.gas_price,
             'nonce': Nonce(0),
         }
@@ -755,8 +755,8 @@ class PlatonModuleTest:
             txn_params: TxParams = {
                 'from': 'unlocked-account.platon',
                 'to': 'unlocked-account.platon',
-                'value': Wei(1),
-                'gas': Wei(21000),
+                'value': Von(1),
+                'gas': Von(21000),
                 'gasPrice': web3.platon.gas_price,
                 'nonce': Nonce(0),
             }
@@ -776,10 +776,10 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account,
             'to': unlocked_account,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': web3.toWei(2, 'gwei'),
-            'maxPriorityFeePerGas': web3.toWei(1, 'gwei'),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': web3.toVon(2, 'gvon'),
+            'maxPriorityFeePerGas': web3.toVon(1, 'gvon'),
         }
 
         with pytest.raises(InvalidAddress):
@@ -796,8 +796,8 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
             'gasPrice': web3.platon.gas_price,
         }
         txn_hash = web3.platon.send_transaction(txn_params)
@@ -815,10 +815,10 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': web3.toWei(3, 'gwei'),
-            'maxPriorityFeePerGas': web3.toWei(1, 'gwei'),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': web3.toVon(3, 'gvon'),
+            'maxPriorityFeePerGas': web3.toVon(1, 'gvon'),
         }
         txn_hash = web3.platon.send_transaction(txn_params)
         txn = web3.platon.get_transaction(txn_hash)
@@ -839,11 +839,11 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account,
             'to': unlocked_account,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
             # unique maxFeePerGas to ensure transaction hash different from other tests
-            'maxFeePerGas': web3.toWei(4.321, 'gwei'),
-            'maxPriorityFeePerGas': web3.toWei(1, 'gwei'),
+            'maxFeePerGas': web3.toVon(4.321, 'gvon'),
+            'maxPriorityFeePerGas': web3.toVon(1, 'gvon'),
             'nonce': web3.platon.get_transaction_count(unlocked_account),
         }
         txn_hash = web3.platon.send_transaction(txn_params)
@@ -864,8 +864,8 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
         }
         txn_hash = web3.platon.send_transaction(txn_params)
         txn = web3.platon.get_transaction(txn_hash)
@@ -884,8 +884,8 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
             'maxFeePerGas': hex(250 * 10**9),
             'maxPriorityFeePerGas': hex(2 * 10**9),
         }
@@ -905,9 +905,9 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'maxFeePerGas': Wei(250 * 10**9),
-            'maxPriorityFeePerGas': Wei(2 * 10**9),
+            'value': Von(1),
+            'maxFeePerGas': Von(250 * 10**9),
+            'maxPriorityFeePerGas': Von(2 * 10**9),
         }
         txn_hash = web3.platon.send_transaction(txn_params)
         txn = web3.platon.get_transaction(txn_hash)
@@ -923,11 +923,11 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'gasPrice': Wei(1),
-            'maxFeePerGas': Wei(250 * 10**9),
-            'maxPriorityFeePerGas': Wei(2 * 10**9),
+            'value': Von(1),
+            'gas': Von(21000),
+            'gasPrice': Von(1),
+            'maxFeePerGas': Von(250 * 10**9),
+            'maxPriorityFeePerGas': Von(2 * 10**9),
         }
         with pytest.raises(TransactionTypeMismatch):
             web3.platon.send_transaction(txn_params)
@@ -938,9 +938,9 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': Wei(250 * 10**9),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': Von(250 * 10**9),
         }
         with pytest.raises(InvalidTransaction, match='maxPriorityFeePerGas must be defined'):
             web3.platon.send_transaction(txn_params)
@@ -948,12 +948,12 @@ class PlatonModuleTest:
     def test_platon_send_transaction_no_max_fee(
         self, web3: "Web3", unlocked_account_dual_type: Bech32Address
     ) -> None:
-        maxPriorityFeePerGas = web3.toWei(2, 'gwei')
+        maxPriorityFeePerGas = web3.toVon(2, 'gvon')
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
             'maxPriorityFeePerGas': maxPriorityFeePerGas,
         }
         txn_hash = web3.platon.send_transaction(txn_params)
@@ -973,10 +973,10 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': Wei(1 * 10**9),
-            'maxPriorityFeePerGas': Wei(2 * 10**9),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': Von(1 * 10**9),
+            'maxPriorityFeePerGas': Von(2 * 10**9),
         }
         with pytest.raises(
             InvalidTransaction, match="maxFeePerGas must be >= maxPriorityFeePerGas"
@@ -989,13 +989,13 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
             'gasPrice': web3.platon.gas_price,
         }
         txn_hash = web3.platon.send_transaction(txn_params)
 
-        txn_params['gasPrice'] = Wei(web3.platon.gas_price * 2)
+        txn_params['gasPrice'] = Von(web3.platon.gas_price * 2)
         replace_txn_hash = web3.platon.replace_transaction(txn_hash, txn_params)
         replace_txn = web3.platon.get_transaction(replace_txn_hash)
 
@@ -1008,21 +1008,21 @@ class PlatonModuleTest:
     def test_platon_replace_transaction(
         self, web3: "Web3", unlocked_account_dual_type: Bech32Address
     ) -> None:
-        two_gwei_in_wei = web3.toWei(2, 'gwei')
-        three_gwei_in_wei = web3.toWei(3, 'gwei')
+        two_gvon_in_von = web3.toVon(2, 'gvon')
+        three_gvon_in_von = web3.toVon(3, 'gvon')
 
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': two_gwei_in_wei,
-            'maxPriorityFeePerGas': web3.toWei(1, 'gwei'),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': two_gvon_in_von,
+            'maxPriorityFeePerGas': web3.toVon(1, 'gvon'),
         }
         txn_hash = web3.platon.send_transaction(txn_params)
 
-        txn_params['maxFeePerGas'] = three_gwei_in_wei
-        txn_params['maxPriorityFeePerGas'] = two_gwei_in_wei
+        txn_params['maxFeePerGas'] = three_gvon_in_von
+        txn_params['maxPriorityFeePerGas'] = two_gvon_in_von
 
         replace_txn_hash = web3.platon.replace_transaction(txn_hash, txn_params)
         replace_txn = web3.platon.get_transaction(replace_txn_hash)
@@ -1031,8 +1031,8 @@ class PlatonModuleTest:
         assert is_same_address(replace_txn['to'], cast(Bech32Address, txn_params['to']))
         assert replace_txn['value'] == 1
         assert replace_txn['gas'] == 21000
-        assert replace_txn['maxFeePerGas'] == three_gwei_in_wei
-        assert replace_txn['maxPriorityFeePerGas'] == two_gwei_in_wei
+        assert replace_txn['maxFeePerGas'] == three_gvon_in_von
+        assert replace_txn['maxPriorityFeePerGas'] == two_gvon_in_von
 
     def test_platon_replace_transaction_underpriced(
         self, web3: "Web3", unlocked_account_dual_type: Bech32Address
@@ -1040,16 +1040,16 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': web3.toWei(3, 'gwei'),
-            'maxPriorityFeePerGas': web3.toWei(2, 'gwei'),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': web3.toVon(3, 'gvon'),
+            'maxPriorityFeePerGas': web3.toVon(2, 'gvon'),
         }
         txn_hash = web3.platon.send_transaction(txn_params)
 
-        one_gwei_in_wei = web3.toWei(1, 'gwei')
-        txn_params['maxFeePerGas'] = one_gwei_in_wei
-        txn_params['maxPriorityFeePerGas'] = one_gwei_in_wei
+        one_gvon_in_von = web3.toVon(1, 'gvon')
+        txn_params['maxFeePerGas'] = one_gvon_in_von
+        txn_params['maxPriorityFeePerGas'] = one_gvon_in_von
 
         with pytest.raises(ValueError, match="replacement transaction underpriced"):
             web3.platon.replace_transaction(txn_hash, txn_params)
@@ -1060,10 +1060,10 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': web3.toWei(3, 'gwei'),
-            'maxPriorityFeePerGas': web3.toWei(1, 'gwei'),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': web3.toVon(3, 'gvon'),
+            'maxPriorityFeePerGas': web3.toVon(1, 'gvon'),
         }
         with pytest.raises(TransactionNotFound):
             web3.platon.replace_transaction(
@@ -1077,10 +1077,10 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': web3.toWei(2, 'gwei'),
-            'maxPriorityFeePerGas': web3.toWei(1, 'gwei'),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': web3.toVon(2, 'gvon'),
+            'maxPriorityFeePerGas': web3.toVon(1, 'gvon'),
         }
         txn_hash = web3.platon.send_transaction(txn_params)
         try:
@@ -1089,8 +1089,8 @@ class PlatonModuleTest:
         finally:
             web3.node.miner.stop()  # type: ignore
 
-        txn_params['maxFeePerGas'] = web3.toWei(3, 'gwei')
-        txn_params['maxPriorityFeePerGas'] = web3.toWei(2, 'gwei')
+        txn_params['maxFeePerGas'] = web3.toVon(3, 'gvon')
+        txn_params['maxPriorityFeePerGas'] = web3.toVon(2, 'gvon')
         with pytest.raises(ValueError, match="Supplied transaction with hash"):
             web3.platon.replace_transaction(txn_hash, txn_params)
 
@@ -1100,16 +1100,16 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account,
             'to': unlocked_account,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': web3.toWei(2, 'gwei'),
-            'maxPriorityFeePerGas': web3.toWei(1, 'gwei'),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': web3.toVon(2, 'gvon'),
+            'maxPriorityFeePerGas': web3.toVon(1, 'gvon'),
         }
         txn_hash = web3.platon.send_transaction(txn_params)
         txn = web3.platon.get_transaction(txn_hash)
 
-        txn_params['maxFeePerGas'] = web3.toWei(3, 'gwei')
-        txn_params['maxPriorityFeePerGas'] = web3.toWei(2, 'gwei')
+        txn_params['maxFeePerGas'] = web3.toVon(3, 'gvon')
+        txn_params['maxPriorityFeePerGas'] = web3.toVon(2, 'gvon')
         txn_params['nonce'] = Nonce(txn['nonce'] + 1)
         with pytest.raises(ValueError):
             web3.platon.replace_transaction(txn_hash, txn_params)
@@ -1120,26 +1120,26 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'gasPrice': web3.toWei(2, 'gwei'),
+            'value': Von(1),
+            'gas': Von(21000),
+            'gasPrice': web3.toVon(2, 'gvon'),
         }
         txn_hash = web3.platon.send_transaction(txn_params)
 
-        txn_params['gasPrice'] = web3.toWei(1, 'gwei')
+        txn_params['gasPrice'] = web3.toVon(1, 'gvon')
         with pytest.raises(ValueError):
             web3.platon.replace_transaction(txn_hash, txn_params)
 
     def test_platon_replace_transaction_gas_price_defaulting_minimum(
         self, web3: "Web3", unlocked_account: Bech32Address
     ) -> None:
-        gas_price = web3.toWei(1, 'gwei')
+        gas_price = web3.toVon(1, 'gvon')
 
         txn_params: TxParams = {
             'from': unlocked_account,
             'to': unlocked_account,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
             'gasPrice': gas_price,
         }
         txn_hash = web3.platon.send_transaction(txn_params)
@@ -1156,41 +1156,41 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account,
             'to': unlocked_account,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'gasPrice': web3.toWei(1, 'gwei'),
+            'value': Von(1),
+            'gas': Von(21000),
+            'gasPrice': web3.toVon(1, 'gvon'),
         }
         txn_hash = web3.platon.send_transaction(txn_params)
 
-        two_gwei_in_wei = web3.toWei(2, 'gwei')
+        two_gvon_in_von = web3.toVon(2, 'gvon')
 
-        def higher_gas_price_strategy(web3: "Web3", txn: TxParams) -> Wei:
-            return two_gwei_in_wei
+        def higher_gas_price_strategy(web3: "Web3", txn: TxParams) -> Von:
+            return two_gvon_in_von
 
         web3.platon.set_gas_price_strategy(higher_gas_price_strategy)
 
         txn_params.pop('gasPrice')
         replace_txn_hash = web3.platon.replace_transaction(txn_hash, txn_params)
         replace_txn = web3.platon.get_transaction(replace_txn_hash)
-        assert replace_txn['gasPrice'] == two_gwei_in_wei  # Strategy provides higher gas price
+        assert replace_txn['gasPrice'] == two_gvon_in_von  # Strategy provides higher gas price
         web3.platon.set_gas_price_strategy(None)  # reset strategy
 
     def test_platon_replace_transaction_gas_price_defaulting_strategy_lower(
         self, web3: "Web3", unlocked_account: Bech32Address
     ) -> None:
-        gas_price = web3.toWei(2, 'gwei')
+        gas_price = web3.toVon(2, 'gvon')
 
         txn_params: TxParams = {
             'from': unlocked_account,
             'to': unlocked_account,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
             'gasPrice': gas_price,
         }
         txn_hash = web3.platon.send_transaction(txn_params)
 
-        def lower_gas_price_strategy(web3: "Web3", txn: TxParams) -> Wei:
-            return web3.toWei(1, 'gwei')
+        def lower_gas_price_strategy(web3: "Web3", txn: TxParams) -> Von:
+            return web3.toVon(1, 'gvon')
 
         web3.platon.set_gas_price_strategy(lower_gas_price_strategy)
 
@@ -1207,8 +1207,8 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account,
             'to': unlocked_account,
-            'value': Wei(1),
-            'gas': Wei(21000),
+            'value': Von(1),
+            'gas': Von(21000),
             'gasPrice': web3.platon.gas_price,
         }
         txn_hash = web3.platon.send_transaction(txn_params)
@@ -1230,18 +1230,18 @@ class PlatonModuleTest:
         txn_params: TxParams = {
             'from': unlocked_account,
             'to': unlocked_account,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxPriorityFeePerGas': web3.toWei(1, 'gwei'),
-            'maxFeePerGas': web3.toWei(2, 'gwei'),
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxPriorityFeePerGas': web3.toVon(1, 'gvon'),
+            'maxFeePerGas': web3.toVon(2, 'gvon'),
         }
         txn_hash = web3.platon.send_transaction(txn_params)
 
         modified_txn_hash = web3.platon.modify_transaction(
             txn_hash,
             value=2,
-            maxPriorityFeePerGas=(cast(Wei, txn_params['maxPriorityFeePerGas']) * 2),
-            maxFeePerGas=(cast(Wei, txn_params['maxFeePerGas']) * 2),
+            maxPriorityFeePerGas=(cast(Von, txn_params['maxPriorityFeePerGas']) * 2),
+            maxFeePerGas=(cast(Von, txn_params['maxFeePerGas']) * 2),
         )
         modified_txn = web3.platon.get_transaction(modified_txn_hash)
 
@@ -1249,9 +1249,9 @@ class PlatonModuleTest:
         assert is_same_address(modified_txn['to'], cast(Bech32Address, txn_params['to']))
         assert modified_txn['value'] == 2
         assert modified_txn['gas'] == 21000
-        assert modified_txn['maxPriorityFeePerGas'] == cast(Wei, txn_params[
+        assert modified_txn['maxPriorityFeePerGas'] == cast(Von, txn_params[
             'maxPriorityFeePerGas']) * 2
-        assert modified_txn['maxFeePerGas'] == cast(Wei, txn_params['maxFeePerGas']) * 2
+        assert modified_txn['maxFeePerGas'] == cast(Von, txn_params['maxFeePerGas']) * 2
 
     @pytest.mark.parametrize(
         'raw_transaction, expected_hash',
@@ -1398,7 +1398,7 @@ class PlatonModuleTest:
         gas_estimate = web3.platon.estimate_gas({
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
+            'value': Von(1),
         })
         assert is_integer(gas_estimate)
         assert gas_estimate > 0
@@ -1409,7 +1409,7 @@ class PlatonModuleTest:
         gas_estimate = web3.platon.estimate_gas({
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
+            'value': Von(1),
         }, 'latest')
         assert is_integer(gas_estimate)
         assert gas_estimate > 0
@@ -1520,10 +1520,10 @@ class PlatonModuleTest:
         txn_hash = web3.platon.send_transaction({
             'from': unlocked_account_dual_type,
             'to': unlocked_account_dual_type,
-            'value': Wei(1),
-            'gas': Wei(21000),
-            'maxFeePerGas': web3.toWei(3, 'gwei'),
-            'maxPriorityFeePerGas': web3.toWei(1, 'gwei')
+            'value': Von(1),
+            'gas': Von(21000),
+            'maxFeePerGas': web3.toVon(3, 'gvon'),
+            'maxPriorityFeePerGas': web3.toVon(1, 'gvon')
         })
         with pytest.raises(TransactionNotFound):
             web3.platon.get_transaction_receipt(txn_hash)

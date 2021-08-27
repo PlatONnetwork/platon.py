@@ -62,7 +62,7 @@ with open('./README.md') as readme:
 setup(
     name='platon.py',
     # *IMPORTANT*: Don't manually change the version here. Use the 'bumpversion' utility.
-    version='5.21.0',
+    version='1.1.1',
     description="""platon.py""",
     long_description_content_type='text/markdown',
     long_description=long_description,
@@ -76,7 +76,7 @@ setup(
         "platon-account>=0.5.3,<0.6.0",
         "platon-hash[pycryptodome]>=0.2.0,<1.0.0",
         "platon-typing>=2.0.0,<3.0.0",
-        "platon-_utils>=1.9.5,<2.0.0",
+        "platon-utils>=1.9.5,<2.0.0",
         "hexbytes>=0.1.0,<1.0.0",
         "ipfshttpclient==0.7.0",
         "jsonschema>=3.2.0,<4.0.0",

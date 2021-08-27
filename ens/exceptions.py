@@ -73,7 +73,7 @@ class OversizeTransaction(ValueError):
 
 class UnderfundedBid(ValueError):
     """
-    Raised if you send less wei with your bid than you declared
+    Raised if you send less von with your bid than you declared
     as your intent to bid.
     """
     pass

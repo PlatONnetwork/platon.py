@@ -40,7 +40,7 @@ def test_txpool_inspect(web3_empty):
     txn_2_summary = pending_txns[txn_2['nonce']][0]
 
     assert '0xd3CdA913deB6f67967B99D67aCDFa1712C293601' in txn_1_summary
-    assert '12345 wei' in txn_1_summary
+    assert '12345 von' in txn_1_summary
 
     assert '0xd3CdA913deB6f67967B99D67aCDFa1712C293601' in txn_2_summary
-    assert '54321 wei' in txn_2_summary
+    assert '54321 von' in txn_2_summary

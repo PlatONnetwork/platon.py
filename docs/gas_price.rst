@@ -13,7 +13,7 @@ Web3 includes an API for configuring it.
 
 The Gas Price API allows you to define Web3's behaviour for populating the gas price.
 This is done using a "Gas Price Strategy" - a method which takes the Web3 object and a
-transaction dictionary and returns a gas price (denominated in wei).
+transaction dictionary and returns a gas price (denominated in von).
 
 Retrieving gas price
 --------------------
@@ -37,7 +37,7 @@ signature:
     def gas_price_strategy(web3, transaction_params=None):
     ...
 
-The method must return a positive integer representing the gas price in wei.
+The method must return a positive integer representing the gas price in von.
 
 To demonstrate, here is a rudimentary example of a gas price strategy that
 returns a higher gas price when the value of the transaction is higher than
@@ -48,10 +48,10 @@ returns a higher gas price when the value of the transaction is higher than
     from platon import Web3
 
     def value_based_gas_price_strategy(web3, transaction_params):
-        if transaction_params['value'] > Web3.toWei(1, 'ether'):
-            return Web3.toWei(20, 'gwei')
+        if transaction_params['value'] > Web3.toVon(1, 'ether'):
+            return Web3.toVon(20, 'gvon')
         else:
-            return Web3.toWei(5, 'gwei')
+            return Web3.toVon(5, 'gvon')
 
 Selecting the gas price strategy
 --------------------------------

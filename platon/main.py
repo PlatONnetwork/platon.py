@@ -5,13 +5,13 @@ from platon_abi.codec import (
 from platon_utils import (
     add_0x_prefix,
     apply_to_return_value,
-    from_wei,
+    from_von,
     keccak as platon_utils_keccak,
     remove_0x_prefix,
     to_bytes,
     to_int,
     to_text,
-    to_wei,
+    to_von,
     is_bech32_address,
     to_bech32_address
 )
@@ -66,11 +66,24 @@ from platon._utils.normalizers import (
     abi_ens_resolver,
 )
 
-from platon._utils.delegate import Delegate
-from platon.pip import Pip
-from platon._utils.restricting import Restricting
-from platon._utils.slashing import Slashing
-from platon._utils.staking import Staking
+from platon._utils.delegate import (
+    Delegate,
+)
+from platon.debug import (
+    Debug,
+)
+from platon.pip import (
+    Pip,
+)
+from platon.restricting import (
+    Restricting,
+)
+from platon._utils.slashing import (
+    Slashing,
+)
+from platon._utils.staking import (
+    Staking,
+)
 from platon.platon import (
     Platon,
 )
@@ -89,9 +102,6 @@ from platon.manager import (
 )
 from platon.net import (
     Net,
-)
-from platon.parity import (
-    Parity,
 )
 from platon.ppos import Ppos
 from platon.providers import (
@@ -115,7 +125,7 @@ from platon.providers.websocket import (
 from platon.types import (  # noqa: F401
     Middleware,
     MiddlewareOnion,
-    Wei,
+    Von,
 )
 from platon.version import (
     Version,
@@ -147,6 +157,7 @@ def get_default_modules() -> Dict[str, Sequence[Any]]:
         #     "personal": (ParityPersonal,),
         # }),
         # "testing": (Testing,),
+        "debug": (Debug, ),
     }
 
 
@@ -200,14 +211,14 @@ class Web3:
 
     # Currency Utility
     @staticmethod
-    @wraps(to_wei)
-    def toWei(number: Union[int, float, str, decimal.Decimal], unit: str) -> Wei:
-        return cast(Wei, to_wei(number, unit))
+    @wraps(to_von)
+    def toVon(number: Union[int, float, str, decimal.Decimal], unit: str) -> Von:
+        return cast(Von, to_von(number, unit))
 
     @staticmethod
-    @wraps(from_wei)
-    def fromWei(number: int, unit: str) -> Union[int, decimal.Decimal]:
-        return from_wei(number, unit)
+    @wraps(from_von)
+    def fromVon(number: int, unit: str) -> Union[int, decimal.Decimal]:
+        return from_von(number, unit)
 
     # Address Utility
     @staticmethod
@@ -220,17 +231,14 @@ class Web3:
 
     # mypy Types
     platon: Platon
-    parity: Parity
-    node: Node
     net: Net
-    # todo: add inner contract
+    version: Version
+    restricting: Restricting
     ppos: Ppos
     pip: Pip
-    # staking: None
-    # restricting: None
-    # slashing: None
-    # govern: None
-    # reward: None
+    node: Node
+    # parity: Parity
+    debug: Debug
 
     def __init__(
             self,

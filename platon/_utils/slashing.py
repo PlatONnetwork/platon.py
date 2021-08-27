@@ -1,9 +1,18 @@
-from typing import Union
+from typing import (
+    Union,
+)
 
-from platon_typing import NodeID, HexStr
-from platon_typing.evm import BlockNumber
+from platon_typing import (
+    NodeID,
+    HexStr,
+)
+from platon_typing.evm import (
+    BlockNumber,
+)
 
-from platon.types import InnerFn
+from platon.types import (
+    InnerFn, BlockIdentifier,
+)
 from platon.inner_contract import (
     InnerContract,
 )
@@ -13,7 +22,8 @@ class Slashing(InnerContract):
     _HEX_ADDRESS = '0x1000000000000000000000000000000000000004'
 
     def report_duplicate_sign(self, report_type: int, data: str):
-        """ Report duplicate sign
+        """
+        Report a node signs the illegal consensus message after it signs the correct consensus message.
 
         :param report_type: duplicate sign type, prepareBlock: 1, prepareVote: 2, viewChange: 3
         :param data: a JSON string of evidence, format reference RPC platon_Evidences
@@ -23,13 +33,16 @@ class Slashing(InnerContract):
     def check_duplicate_sign(self,
                              report_type: int,
                              node_id: Union[NodeID, HexStr],
-                             block_number: BlockNumber,
+                             block_identifier: BlockIdentifier,
                              ):
         """
-        Query whether the node has been reported duplicate-sign
+        get whether the node has been reported for duplicate-signed from someone
 
         :param report_type: duplicate sign type, prepareBlock: 1, prepareVote: 2, viewChange: 3
         :param node_id: node id to report
-        :param block_number: duplicate-signed block number
+        :param block_identifier: duplicate-signed block identifier
         """
-        return self.function_processor(InnerFn.slashing_checkDuplicateSign, locals())
+        block = self.web3.platon.get_block(block_identifier)
+        kwargs = locals()
+        kwargs['block_identifier'] = block['number']
+        return self.function_processor(InnerFn.slashing_checkDuplicateSign, kwargs)

@@ -1,6 +1,5 @@
 from typing import (
     Callable,
-    NoReturn,
 )
 
 from platon._utils.rpc_abi import (
@@ -48,7 +47,6 @@ class Version(BaseVersion):
     def platon(self) -> str:
         return self._get_protocol_version()
 
-    # todo: no qa
     @property
     def chain(self) -> str:
         return self.web3.pip.get_chain_version()

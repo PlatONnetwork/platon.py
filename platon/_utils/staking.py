@@ -1,12 +1,28 @@
-from typing import Union
+from typing import (
+    Union,
+)
 
-from platon_typing import NodeID, URI, BLSPubkey, BLSSignature, HexStr, Decodable
-from platon_typing.evm import Bech32Address, BlockNumber
-
-from platon.types import InnerFn
-from platon.types import Wei, Version
+from platon_typing import (
+    NodeID,
+    URI,
+    BLSPubkey,
+    BLSSignature,
+    HexStr,
+    Decodable,
+)
+from platon_typing.evm import (
+    Bech32Address,
+)
+from platon.types import (
+    InnerFn,
+)
+from platon.types import (
+    Von,
+    Version,
+)
 from platon.inner_contract import (
-    InnerContract, bubble_dict,
+    InnerContract,
+    bubble_dict,
 )
 
 
@@ -14,120 +30,124 @@ class Staking(InnerContract):
     _HEX_ADDRESS = '0x1000000000000000000000000000000000000002'
 
     def create_staking(self,
-                       balance_type: int,  # todo: add rangge int type
+                       balance_type: int,
                        benefit_address: Bech32Address,
                        node_id: Union[NodeID, HexStr],
                        external_id: str,
                        node_name: str,
                        website: URI,
                        details: str,
-                       amount: Wei,
+                       amount: Von,
                        reward_per: int,
                        node_version: Version,
-                       version_sign: Union[Decodable, HexStr],  # todo: noqa
+                       version_sign: Union[Decodable, HexStr],
                        bls_pubkey: Union[BLSPubkey, HexStr],
                        bls_proof: Union[BLSSignature, HexStr],
                        ):
-        """ Initiate Staking
-        :param balance_type: Indicates whether the account free amount or the account's lock amount is used for staking, 0: free amount; 1: lock amount;
-                    2: Give priority to lock amount , use free amount provided that staking amount over lock amount
-        :param benefit_address: Income account for accepting block rewards and staking rewards
-        :param node_id: The idled node Id (also called the candidate's node Id)
-        :param external_id: External Id (with length limit, Id for the third party to pull the node description)
-        :param node_name: The name of the staking node (with a length limit indicating the name of the node)
-        :param website: The third-party home page of the node (with a length limit indicating the home page of the node)
-        :param details: Description of the node (with a length limit indicating the description of the node)
-        :param amount: staking von (unit:von, 1LAT = 10**18 von)
-        :param node_version: The real version of the program, admin_getProgramVersion
-        :param version_sign: The real version of the program is signed, admin_getProgramVersion
-        :param bls_pubkey: Bls public key
-        :param bls_proof: Proof of bls, obtained by pulling the proof interface, admin_getSchnorrNIZKProve
-        :param reward_per: Proportion of the reward share obtained from the commission, using BasePoint 1BP = 0.01%
+        """
+        Staking a node to be candidate.
+
+        :param balance_type: staking balance type, including: 0: free balance, 1: restricting, 2: all and restricting first
+        :param benefit_address: the address that accepts the staking reward
+        :param node_id: id of the node to staking
+        :param external_id: custom external id, will be attached to the staking information
+        :param node_name: custom node name, will be attached to the staking information
+        :param website: custom node website, will be attached to the staking information
+        :param details: custom node detail, will be attached to the staking information
+        :param amount: staking amount
+        :param reward_per: the proportion of the staking reward allocated to the delegate, 1 BasePoint = 0.01%
+        :param node_version: node version, obtained by rpc 'admin_getProgramVersion' interface
+        :param version_sign: node version signature, obtained by rpc 'admin_getProgramVersion' interface
+        :param bls_pubkey: node bls public key, obtained by rpc 'admin_nodeInfo' interface
+        :param bls_proof: node bls Proof, obtained by rpc 'admin_getSchnorrNIZKProve' interface
         """
         return self.function_processor(InnerFn.staking_createStaking, locals())
 
-    def edit_candidate(self,
-                       node_id: Union[NodeID, HexStr],
-                       benefit_address: Bech32Address = None,
-                       external_id: str = None,
-                       node_name: str = None,
-                       website: str = None,
-                       details: str = None,
-                       reward_per: int = None,
-                       ):
-        """ Modify staking information
-        :param benefit_address: Income account for accepting block rewards and staking rewards
-        :param node_id: The idled node Id (also called the candidate's node Id)
-        :param external_id: External Id (with length limit, Id for the third party to pull the node description)
-        :param node_name: The name of the staking node (with a length limit indicating the name of the node)
-        :param website: The third-party home page of the node (with a length limit indicating the home page of the node)
-        :param details: Description of the node (with a length limit indicating the description of the node)
-        :param reward_per: Proportion of the reward share obtained from the commission, using BasePoint 1BP = 0.01%
+    def edit_staking(self,
+                     node_id: Union[NodeID, HexStr],
+                     benefit_address: Bech32Address = None,
+                     external_id: str = None,
+                     node_name: str = None,
+                     website: str = None,
+                     details: str = None,
+                     reward_per: int = None,
+                     ):
         """
-        # Put benefit address at the top to fit the parameter order
+        edit staking information.
+
+        :param node_id: id of node that has been staking
+        :param benefit_address: the address that accepts the staking reward
+        :param external_id: custom external id, will be attached to the staking information
+        :param node_name: custom node name, will be attached to the staking information
+        :param website: custom node website, will be attached to the staking information
+        :param details: custom node detail, will be attached to the staking information
+        :param reward_per: the proportion of the staking reward allocated to the delegate, 1 BasePoint = 0.01%
+        """
         kwargs = bubble_dict(locals(), 'benefit_address')
-        return self.function_processor(InnerFn.staking_editCandidate, kwargs)
+        return self.function_processor(InnerFn.staking_editStaking, kwargs)
 
     def increase_staking(self,
                          balance_type: int,
                          node_id: Union[NodeID, HexStr],
-                         amount: Wei,
+                         amount: Von,
                          ):
         """
-        Increase staking
-        :param balance_type: Indicates whether the account free amount or the account's lock amount is used for staking, 0: free amount; 1: lock amount;
-                    2: Give priority to lock amount , use free amount provided that staking amount over lock amount
-        :param node_id: The idled node Id (also called the candidate's node Id)
-        :param amount: staking von (unit:von, 1LAT = 10**18 von)
+        Increase the amount of staking.
+
+        :param balance_type: balance type of increase staking, including: 0: free balance, 1: restricting
+        :param node_id: id of node that has been staking
+        :param amount: increase staking amount
         """
         return self.function_processor(InnerFn.staking_increaseStaking, locals())
 
     def withdrew_staking(self, node_id: Union[NodeID, HexStr]):
         """
-        Withdrawal of staking (one-time initiation of all cancellations, multiple arrivals)
-        :param node_id: The idled node Id (also called the candidate's node Id)
+        Revoke the staking of the node and withdraw the staking amount.
+
+        :param node_id: id of the node to be withdrew staking
         """
         return self.function_processor(InnerFn.staking_withdrewStaking, locals())
 
+    def get_candidate_list(self):
+        """
+        Gets all staking node information.
+        """
+        return self.function_processor(InnerFn.staking_getCandidateList, locals(), is_call=True)
+
     def get_verifier_list(self):
         """
-        Query the certified queue for the current billing cycle
+        Get all verifier node information.
         """
         return self.function_processor(InnerFn.staking_getVerifierList, locals(), is_call=True)
 
     def get_validator_list(self):
         """
-        Query the list of certified for the current consensus cycle
+        get information about the current consensus verifier node.
         """
         return self.function_processor(InnerFn.staking_getValidatorList, locals(), is_call=True)
 
-    def get_candidate_list(self):
-        """
-        Query all real-time candidate lists
-        """
-        return self.function_processor(InnerFn.staking_getCandidateList, locals(), is_call=True)
-
     def get_candidate_info(self, node_id: Union[NodeID, HexStr]):
         """
-        Query the staking information of the current node
-        :param node_id: Verifier's node ID
+        Get staking node information.
+
+        :param node_id: staking node id
         """
         return self.function_processor(InnerFn.staking_getCandidateInfo, locals(), is_call=True)
 
-    def get_package_reward(self):
+    def get_block_reward(self):
         """
-
+        get the current block reward, which is updated every epoch.
         """
-        return self.function_processor(InnerFn.staking_getPackageReward, locals(), is_call=True)
+        return self.function_processor(InnerFn.staking_getBlockReward, locals(), is_call=True)
 
     def get_staking_reward(self):
         """
-
+        get the current staking reward, which is updated every epoch.
         """
         return self.function_processor(InnerFn.staking_getStakingReward, locals(), is_call=True)
 
-    def get_avg_pack_time(self):
+    def get_avg_block_time(self):
         """
-
+        Get the average block time over history.
         """
-        return self.function_processor(InnerFn.staking_getAvgPackTime, locals(), is_call=True)
+        return self.function_processor(InnerFn.staking_getAvgBlockTime, locals(), is_call=True)

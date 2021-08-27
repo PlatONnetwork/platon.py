@@ -15,7 +15,7 @@ from platon.method import (
 )
 from platon.types import (
     BlockNumber,
-    Wei,
+    Von,
 )
 
 make_dag: Method[Callable[[BlockNumber], bool]] = Method(
@@ -36,7 +36,7 @@ set_etherbase: Method[Callable[[Bech32Address], bool]] = Method(
 )
 
 
-set_gas_price: Method[Callable[[Wei], bool]] = Method(
+set_gas_price: Method[Callable[[Von], bool]] = Method(
     RPC.miner_setGasPrice,
     mungers=[default_root_munger],
 )

@@ -34,7 +34,7 @@ from platon.types import (
     BlockNumber,
     GasPriceStrategy,
     TxParams,
-    Wei,
+    Von,
 )
 
 MinerData = collections.namedtuple(
@@ -77,7 +77,7 @@ def _get_weighted_avg_block_time(w3: Web3, sample_size: int) -> float:
 
 def _get_raw_miner_data(
     w3: Web3, sample_size: int
-) -> Iterable[Tuple[Bech32Address, HexBytes, Wei]]:
+) -> Iterable[Tuple[Bech32Address, HexBytes, Von]]:
     latest = w3.platon.get_block('latest', full_transactions=True)
 
     for transaction in latest['transactions']:
@@ -99,14 +99,14 @@ def _get_raw_miner_data(
 
 
 def _aggregate_miner_data(
-    raw_data: Iterable[Tuple[Bech32Address, HexBytes, Wei]]
+    raw_data: Iterable[Tuple[Bech32Address, HexBytes, Von]]
 ) -> Iterable[MinerData]:
     data_by_miner = groupby(0, raw_data)
 
     for miner, miner_data in data_by_miner.items():
         _, block_hashes, gas_prices = map(set, zip(*miner_data))
         try:
-            # types ignored b/c mypy has trouble inferring gas_prices: Sequence[Wei]
+            # types ignored b/c mypy has trouble inferring gas_prices: Sequence[Von]
             price_percentile = percentile(gas_prices, percentile=20)  # type: ignore
         except InsufficientData:
             price_percentile = min(gas_prices)  # type: ignore
@@ -138,7 +138,7 @@ def _compute_probabilities(
         yield Probability(low_percentile_gas_price, probability_accepted)
 
 
-def _compute_gas_price(probabilities: Sequence[Probability], desired_probability: float) -> Wei:
+def _compute_gas_price(probabilities: Sequence[Probability], desired_probability: float) -> Von:
     """
     Given a sorted range of ``Probability`` named-tuples returns a gas price
     computed based on where the ``desired_probability`` would fall within the
@@ -152,9 +152,9 @@ def _compute_gas_price(probabilities: Sequence[Probability], desired_probability
     last = probabilities[-1]
 
     if desired_probability >= first.prob:
-        return Wei(int(first.gas_price))
+        return Von(int(first.gas_price))
     elif desired_probability <= last.prob:
-        return Wei(int(last.gas_price))
+        return Von(int(last.gas_price))
 
     for left, right in sliding_window(2, probabilities):
         if desired_probability < right.prob:
@@ -170,7 +170,7 @@ def _compute_gas_price(probabilities: Sequence[Probability], desired_probability
         position = adj_prob / window_size
         gas_window_size = left.gas_price - right.gas_price
         gas_price = int(math.ceil(right.gas_price + gas_window_size * position))
-        return Wei(gas_price)
+        return Von(gas_price)
     else:
         # The initial `if/else` clause in this function handles the case where
         # the `desired_probability` is either above or below the min/max
@@ -201,7 +201,7 @@ def construct_time_based_gas_price_strategy(
         and 100 means 100%.
     """
 
-    def time_based_gas_price_strategy(web3: Web3, transaction_params: TxParams) -> Wei:
+    def time_based_gas_price_strategy(web3: Web3, transaction_params: TxParams) -> Von:
         if weighted:
             avg_block_time = _get_weighted_avg_block_time(web3, sample_size=sample_size)
         else:
