@@ -12,7 +12,7 @@ INNER_CONTRACT_NORMALIZERS = [
     abi_address_to_bytes,
 ]
 
-INNER_CONTRACT_DEFAULT_ABIS = {
+DEFAULT_PARAM_ABIS = {
     'address': 'address',
     'node_id': 'bytes',
     'proposal_id': 'bytes',

@@ -136,7 +136,7 @@ class Method(Generic[TFunc]):
                 obj_type: Optional[Type["Module"]] = None) -> TFunc:
         if obj is None:
             raise TypeError(
-                "Direct calls to methods are not supported. "
+                "01Direct calls to methods are not supported. "
                 "Methods must be called from an module instance, "
                 "usually attached to a platon instance.")
         return obj.retrieve_caller_fn(self)

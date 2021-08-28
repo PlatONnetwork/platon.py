@@ -1,13 +1,15 @@
 import copy
 from typing import Optional, Any, cast, TYPE_CHECKING
+from collections import Iterable
 
 import rlp
+from platon.exceptions import ContractLogicError
 from platon_typing import HexStr, Bech32Address
 from platon_utils import to_bech32_address
 from platon._utils.empty import empty
 from platon._utils.rpc_abi import apply_abi_formatters_to_dict
 from platon._utils.transactions import fill_transaction_defaults
-from platon._utils.argument_formatter import INNER_CONTRACT_ABIS, INNER_CONTRACT_NORMALIZERS, INNER_CONTRACT_DEFAULT_ABIS
+from platon._utils.argument_formatter import INNER_CONTRACT_ABIS, INNER_CONTRACT_NORMALIZERS, DEFAULT_PARAM_ABIS
 from platon.types import TxParams, BlockIdentifier, CallOverrideParams, FunctionIdentifier
 
 if TYPE_CHECKING:
@@ -105,7 +107,10 @@ class InnerContractFunction:
         # todo: format the return data
         return_data = self.web3.platon.call(call_transaction,
                                             block_identifier=block_identifier,
-                                            state_override=state_override, )
+                                            state_override=state_override,
+                                            )
+
+        # self._formatter_result()
 
         return return_data
 
@@ -142,8 +147,8 @@ class InnerContractFunction:
 
     def build_transaction(self, transaction: Optional[TxParams] = None) -> TxParams:
         """
-            Build the transaction dictionary without sending
-        """
+                Build the transaction dictionary without sending
+            """
         if transaction is None:
             built_transaction: TxParams = {}
         else:
@@ -189,11 +194,47 @@ class InnerContractFunction:
         Format transaction so that it can be used correctly during RPC encoding
         """
         kwargs = apply_abi_formatters_to_dict(INNER_CONTRACT_NORMALIZERS,
-                                              INNER_CONTRACT_DEFAULT_ABIS,
+                                              DEFAULT_PARAM_ABIS,
                                               kwargs)
         function_abis = INNER_CONTRACT_ABIS.get(func_id)
         if function_abis:
             return apply_abi_formatters_to_dict(INNER_CONTRACT_NORMALIZERS, function_abis, kwargs)
+        return kwargs
+
+    @staticmethod
+    def _formatter_result(func_id: FunctionIdentifier, result: dict):
+        """
+        Format transaction so that it can be used correctly during RPC encoding
+        """
+        if type(result) is not dict:
+            return result
+
+        if 'Code' not in result.keys() or 'Ret' not in result.keys():
+            return result
+
+        # todo: Wait to resolve the return value issue
+        # if result.get('Code') != 0:
+        #     raise ContractLogicError()
+
+        rets = result.get('Ret')
+        if type(rets) is not Iterable:
+            rets = [rets]
+
+        if type(rets) is not list:
+            try:
+                rets = list(rets)
+            except Exception:
+                raise ValueError(f"Failed to convert value {rets} to list")
+
+        function_abis = INNER_CONTRACT_ABIS.get(func_id)
+
+        for ret in rets:
+            kwargs = apply_abi_formatters_to_dict(INNER_CONTRACT_NORMALIZERS,
+                                                  DEFAULT_PARAM_ABIS,
+                                                  ret,
+                                                  )
+            if function_abis:
+                return apply_abi_formatters_to_dict(INNER_CONTRACT_NORMALIZERS, function_abis, kwargs)
         return kwargs
 
 
