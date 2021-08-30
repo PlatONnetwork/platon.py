@@ -1,16 +1,48 @@
 import copy
-from typing import Optional, Any, cast, TYPE_CHECKING
+import json
+from typing import (
+    Optional,
+    Any,
+    cast,
+    TYPE_CHECKING,
+)
 from collections import Iterable
 
 import rlp
-from platon.exceptions import ContractLogicError
-from platon_typing import HexStr, Bech32Address
-from platon_utils import to_bech32_address
-from platon._utils.empty import empty
-from platon._utils.rpc_abi import apply_abi_formatters_to_dict
-from platon._utils.transactions import fill_transaction_defaults
-from platon._utils.argument_formatter import INNER_CONTRACT_ABIS, INNER_CONTRACT_NORMALIZERS, DEFAULT_PARAM_ABIS
-from platon.types import TxParams, BlockIdentifier, CallOverrideParams, FunctionIdentifier
+from hexbytes import HexBytes
+from platon.module import apply_result_formatters
+
+from platon.exceptions import (
+    ContractLogicError,
+)
+from platon_typing import (
+    HexStr,
+    Bech32Address,
+)
+from platon_utils import (
+    to_bech32_address,
+)
+from platon._utils.empty import (
+    empty,
+)
+from platon._utils.rpc_abi import (
+    apply_abi_formatters_to_dict,
+)
+from platon._utils.transactions import (
+    fill_transaction_defaults,
+)
+from platon._utils.argument_formatter import (
+    INNER_CONTRACT_PARAM_ABIS,
+    DEFAULT_PARAM_NORMALIZERS,
+    DEFAULT_PARAM_ABIS,
+    INNER_CONTRACT_RESULT_FORMATTERS,
+)
+from platon.types import (
+    TxParams,
+    BlockIdentifier,
+    CallOverrideParams,
+    FunctionIdentifier,
+)
 
 if TYPE_CHECKING:
     from platon import Web3
@@ -104,15 +136,12 @@ class InnerContractFunction:
 
         call_transaction['data'] = self._encode_transaction_data()
 
-        # todo: format the return data
         return_data = self.web3.platon.call(call_transaction,
                                             block_identifier=block_identifier,
                                             state_override=state_override,
                                             )
 
-        # self._formatter_result()
-
-        return return_data
+        return self._formatter_result(self.func_id, return_data)
 
     def transact(self):
         # todo: wait coding
@@ -191,51 +220,42 @@ class InnerContractFunction:
     @staticmethod
     def _formatter_kwargs(func_id: FunctionIdentifier, kwargs: dict):
         """
-        Format transaction so that it can be used correctly during RPC encoding
+        Format parameters so that it can be used correctly during RPC encoding
         """
-        kwargs = apply_abi_formatters_to_dict(INNER_CONTRACT_NORMALIZERS,
+        kwargs = apply_abi_formatters_to_dict(DEFAULT_PARAM_NORMALIZERS,
                                               DEFAULT_PARAM_ABIS,
                                               kwargs)
-        function_abis = INNER_CONTRACT_ABIS.get(func_id)
+        function_abis = INNER_CONTRACT_PARAM_ABIS.get(func_id)
         if function_abis:
-            return apply_abi_formatters_to_dict(INNER_CONTRACT_NORMALIZERS, function_abis, kwargs)
+            return apply_abi_formatters_to_dict(DEFAULT_PARAM_NORMALIZERS, function_abis, kwargs)
         return kwargs
 
     @staticmethod
-    def _formatter_result(func_id: FunctionIdentifier, result: dict):
+    def _formatter_result(func_id: FunctionIdentifier, result: Any):
         """
-        Format transaction so that it can be used correctly during RPC encoding
+        Format result to make its easier to use
         """
-        if type(result) is not dict:
-            return result
+        if type(result) in [bytes, HexBytes]:
+            result = json.loads(HexBytes(result).decode('utf-8'))
 
         if 'Code' not in result.keys() or 'Ret' not in result.keys():
             return result
 
-        # todo: Wait to resolve the return value issue
-        # if result.get('Code') != 0:
-        #     raise ContractLogicError()
-
         rets = result.get('Ret')
-        if type(rets) is not Iterable:
-            rets = [rets]
 
-        if type(rets) is not list:
-            try:
-                rets = list(rets)
-            except Exception:
-                raise ValueError(f"Failed to convert value {rets} to list")
+        # todo: Wait to resolve the return value issue
+        if result.get('Code') != 0:
+            raise ContractLogicError(rets)
 
-        function_abis = INNER_CONTRACT_ABIS.get(func_id)
+        if not rets:
+            return rets
 
-        for ret in rets:
-            kwargs = apply_abi_formatters_to_dict(INNER_CONTRACT_NORMALIZERS,
-                                                  DEFAULT_PARAM_ABIS,
-                                                  ret,
-                                                  )
-            if function_abis:
-                return apply_abi_formatters_to_dict(INNER_CONTRACT_NORMALIZERS, function_abis, kwargs)
-        return kwargs
+        function_formatter = INNER_CONTRACT_RESULT_FORMATTERS.get(func_id)
+
+        if function_formatter:
+            return apply_result_formatters(function_formatter, rets)
+
+        return rets
 
 
 def bubble_dict(target: dict, *keys: Any):

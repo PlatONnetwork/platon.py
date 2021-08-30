@@ -36,4 +36,4 @@ class Restricting(InnerContract):
 
         :param release_address: release address for the restricting
         """
-        return self.function_processor(InnerFn.restricting_getRestrictingInfo, locals())
+        return self.function_processor(InnerFn.restricting_getRestrictingInfo, locals(), is_call=True)

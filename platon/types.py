@@ -52,51 +52,6 @@ FunctionType = Union[str, Type[FallbackFn], Type[ReceiveFn]]
 
 FunctionIdentifier = NewType('FunctionIdentifier', int)  # Only used in inner contracts
 
-
-class InnerFn:
-    # staking
-    staking_createStaking = FunctionIdentifier(1000)
-    staking_editCandidate = FunctionIdentifier(1001)
-    staking_increaseStaking = FunctionIdentifier(1002)
-    staking_withdrewStaking = FunctionIdentifier(1003)
-    staking_delegate = FunctionIdentifier(1004)
-    staking_withdrewDelegation = FunctionIdentifier(1005)
-    staking_redeemDelegation = FunctionIdentifier(1006)
-    staking_getVerifierList = FunctionIdentifier(1100)
-    staking_getValidatorList = FunctionIdentifier(1101)
-    staking_getCandidateList = FunctionIdentifier(1102)
-    staking_getDelegateList = FunctionIdentifier(1103)
-    staking_getDelegateInfo = FunctionIdentifier(1104)
-    staking_getCandidateInfo = FunctionIdentifier(1105)
-    staking_getPackageReward = FunctionIdentifier(1200)
-    staking_getStakingReward = FunctionIdentifier(1201)
-    staking_getAvgPackTime = FunctionIdentifier(1202)
-    # govern
-    govern_submitTextProposal = FunctionIdentifier(2000)
-    govern_submitVersionProposal = FunctionIdentifier(2001)
-    govern_submitParamProposal = FunctionIdentifier(2002)
-    govern_vote = FunctionIdentifier(2003)
-    govern_declareVersion = FunctionIdentifier(2004)
-    govern_submitCancelProposal = FunctionIdentifier(2005)
-    govern_getProposal = FunctionIdentifier(2100)
-    govern_getTallyResult = FunctionIdentifier(2101)
-    govern_proposalList = FunctionIdentifier(2102)
-    govern_getChainVersion = FunctionIdentifier(2103)
-    govern_getGovernParam = FunctionIdentifier(2104)
-    govern_getProposalVotes = FunctionIdentifier(2105)
-    govern_governParamList = FunctionIdentifier(2106)
-    # slashing
-    slashing_reportDuplicateSign = FunctionIdentifier(3000)
-    slashing_checkDuplicateSign = FunctionIdentifier(3001)
-    slashing_zeroProduceNodeList = FunctionIdentifier(3002)
-    # restricting
-    restricting_createRestricting = FunctionIdentifier(4000)
-    restricting_getRestrictingInfo = FunctionIdentifier(4100)
-    # reward
-    reward_withdrawDelegateReward = FunctionIdentifier(5000)
-    reward_getDelegateReward = FunctionIdentifier(5100)
-
-
 # bytes, hexbytes, or hexstr representing a 32 byte hash
 _Hash32 = Union[Hash32, HexBytes, HexStr]
 EnodeURI = NewType("EnodeURI", str)
