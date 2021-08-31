@@ -82,9 +82,9 @@ class InnerContract:
     def process_kwargs(kwargs: dict):
         kwargs.pop("self")
         for key, value in kwargs.items():
-            if type(value) in (tuple, list, dict):
+            if type(value) is dict:
                 raise ValueError(
-                    "Invalid argument: {}, the value cannot be a tuple, list, or dictionary".format(key))
+                    "Invalid argument: {}, the value cannot be a dict".format(key))
 
 
 class InnerContractFunction:
@@ -243,9 +243,10 @@ class InnerContractFunction:
 
         rets = result.get('Ret')
 
-        # todo: Wait to resolve the return value issue
         if result.get('Code') != 0:
-            raise ContractLogicError(rets)
+            # todo: Wait to resolve the return value issue
+            # raise ContractLogicError(rets)
+            return rets
 
         if not rets:
             return rets
