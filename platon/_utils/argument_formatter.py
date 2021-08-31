@@ -72,11 +72,17 @@ INNER_CONTRACT_PARAM_ABIS = {
     InnerFn.govern_declareVersion: DECLARE_VERSION_PARAM_ABIS,
 }
 
+RESTRICTING_PLAN_FORMATTER = {
+    'amount': to_integer_if_hex,
+}
+
+restricting_plan_formatter = apply_formatters_to_dict(RESTRICTING_PLAN_FORMATTER)
+
 RESTRICTING_INFO_FORMATTER = {
     'balance': to_integer_if_hex,
     'pledge': to_integer_if_hex,
     'debt': to_integer_if_hex,
-    'amount': to_integer_if_hex,
+    'plans': apply_list_to_array_formatter(restricting_plan_formatter),
 }
 
 restricting_info_formatter = apply_formatters_to_dict(RESTRICTING_INFO_FORMATTER)
