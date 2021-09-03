@@ -10,6 +10,8 @@ from collections import Iterable
 
 import rlp
 from hexbytes import HexBytes
+
+from platon._utils.error_code import ERROR_CODE
 from platon.module import apply_result_formatters
 
 from platon.exceptions import (
@@ -20,7 +22,7 @@ from platon_typing import (
     Bech32Address,
 )
 from platon_utils import (
-    to_bech32_address,
+    to_bech32_address, remove_0x_prefix,
 )
 from platon._utils.empty import (
     empty,
@@ -41,7 +43,7 @@ from platon.types import (
     TxParams,
     BlockIdentifier,
     CallOverrideParams,
-    FunctionIdentifier,
+    FunctionIdentifier, TxReceipt, EventData, LogReceipt, CodeData,
 )
 
 if TYPE_CHECKING:
@@ -51,7 +53,8 @@ if TYPE_CHECKING:
 class InnerContract:
     _HEX_ADDRESS = None
     _address = None
-    _contract_function = None
+    _function = None
+    _event = None
 
     # If you want to get the result of the transaction, please set it to True,
     # if you only want to get the transaction hash, please set it to False
@@ -67,24 +70,29 @@ class InnerContract:
         return self._address
 
     @property
-    def contract_function(self):
-        if not self._contract_function:
-            self._contract_function = InnerContractFunction(self.web3, self.address)
-        return self._contract_function
+    def function(self):
+        if not self._function:
+            self._function = InnerContractFunction(self.web3, self.address)
+        return self._function
+
+    @property
+    def event(self):
+        if not self._event:
+            self._event = InnerContractEvent()
+        return self._event
 
     def function_processor(self, func_type: FunctionIdentifier, kwargs: dict, is_call: bool = False) -> callable:
-        self.process_kwargs(kwargs)
+        self.kwargs_process(kwargs)
         if is_call:
-            return self.contract_function(func_type, kwargs).call()
-        return self.contract_function(func_type, kwargs)
+            return self.function(func_type, kwargs).call()
+        return self.function(func_type, kwargs)
 
     @staticmethod
-    def process_kwargs(kwargs: dict):
+    def kwargs_process(kwargs: dict):
         kwargs.pop("self")
         for key, value in kwargs.items():
             if type(value) is dict:
-                raise ValueError(
-                    "Invalid argument: {}, the value cannot be a dict".format(key))
+                raise ValueError("Invalid argument: {}, the value cannot be a dict".format(key))
 
 
 class InnerContractFunction:
@@ -176,8 +184,8 @@ class InnerContractFunction:
 
     def build_transaction(self, transaction: Optional[TxParams] = None) -> TxParams:
         """
-                Build the transaction dictionary without sending
-            """
+        Build the transaction dictionary without sending
+        """
         if transaction is None:
             built_transaction: TxParams = {}
         else:
@@ -259,10 +267,39 @@ class InnerContractFunction:
         return rets
 
 
+class InnerContractEvent:
+
+    @classmethod
+    def get_event(cls, transaction_receipt: TxReceipt) -> EventData:
+        logs = transaction_receipt['logs']
+        code_data = cls._get_code(logs[0])
+        # todo: add code data to event data
+        return code_data
+
+    @classmethod
+    def _get_code(cls, log: LogReceipt) -> CodeData:
+        encoded_data = log.get('data')
+        if type(encoded_data) is str:
+            encoded_data = remove_0x_prefix(encoded_data)
+        rlp_data_list = rlp.decode(bytes.fromhex(encoded_data))
+        data = bytes.decode(rlp_data_list[0])
+        try:
+            # compatible historical versions
+            return json.loads(data)
+        finally:
+            code = int(data)
+            error_msg = ERROR_CODE.get(int(code), 'Unknown error code')
+            return {'code': code, 'message': error_msg}
+
+
 def bubble_dict(target: dict, *keys: Any):
+    """
+    rebuild dict and bubble the keys to top
+    """
     copy_dict = copy.copy(target)
     new_dict = dict()
-    for key in reversed(keys):
+    for key in keys:
         value = copy_dict.pop(key)
-        new_dict.update({value: keys})
-    return new_dict.update(copy_dict)
+        new_dict.update({key: value})
+    new_dict.update(copy_dict)
+    return new_dict

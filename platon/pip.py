@@ -143,8 +143,8 @@ class Pip(InnerContract):
         :param proposal_id: hash id of the proposal
         :param block_identifier: block identifier
         """
+        kwargs = dict(locals())
         block = self.web3.platon.get_block(block_identifier)
-        kwargs = locals()
         kwargs['block_identifier'] = block['hash']
         return self.function_processor(InnerFn.govern_getProposalVotes, kwargs, is_call=True)
 

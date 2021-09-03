@@ -26,8 +26,8 @@ class _DelegatePart(InnerContract):
     _HEX_ADDRESS = '0x1000000000000000000000000000000000000002'
 
     def delegate(self,
-                 balance_type: int,
                  node_id: Union[NodeID, HexStr],
+                 balance_type: int,
                  amount: Von,
                  ):
         """
@@ -37,7 +37,8 @@ class _DelegatePart(InnerContract):
         :param node_id: id of the candidate node to delegate
         :param amount: delegate amount
         """
-        return self.function_processor(InnerFn.delegate_delegate, locals())
+        kwargs = bubble_dict(dict(locals()), 'balance_type')
+        return self.function_processor(InnerFn.delegate_delegate, kwargs)
 
     def withdrew_delegate(self,
                           node_id: Union[NodeID, HexStr],
@@ -52,7 +53,7 @@ class _DelegatePart(InnerContract):
         :param staking_block_identifier: the identifier of the staking block when delegate
         :param amount: withdrew amount
         """
-        kwargs = bubble_dict(locals(), 'staking_block_identifier')
+        kwargs = bubble_dict(dict(locals()), 'staking_block_identifier')
         block = self.web3.platon.get_block(staking_block_identifier)
         kwargs['staking_block_identifier'] = block['number']
         return self.function_processor(InnerFn.delegate_withdrewDelegation, kwargs)
@@ -75,7 +76,7 @@ class _DelegatePart(InnerContract):
         :param node_id: id of the node that has been delegated
         :param staking_block_identifier: the identifier of the staking block when delegate
         """
-        kwargs = bubble_dict(locals(), 'staking_block_identifier')
+        kwargs = bubble_dict(dict(locals()), 'staking_block_identifier')
         block = self.web3.platon.get_block(staking_block_identifier)
         kwargs['staking_block_identifier'] = block['number']
         return self.function_processor(InnerFn.staking_getCandidateInfo, kwargs, is_call=True)
@@ -92,15 +93,55 @@ class _DelegateReward(InnerContract):
 
     def get_delegate_reward(self,
                             address: Bech32Address,
-                            node_ids: list = [HexStr],
+                            node_ids: [HexStr] = None,
                             ):
         """
         Get the delegate reward information of the address, it can be filtered by node id.
         """
-        kwargs = locals()
+        kwargs = dict(locals())
         kwargs['node_ids'] = [bytes.fromhex(remove_0x_prefix(node_id)) for node_id in node_ids]
-        return self.function_processor(InnerFn.delegate_getDelegateReward, kwargs)
+        return self.function_processor(InnerFn.delegate_getDelegateReward, kwargs, is_call=True)
 
 
-class Delegate(_DelegatePart, _DelegateReward):
-    pass
+class Delegate:
+    """
+    Delegate is a contract structure, not a contract,
+    and you can also use contract object by self.delegateBase or self.delegateReward
+    """
+
+    def __init__(self, web3: "Web3"):
+        self.delegateBase = _DelegatePart(web3)
+        self.delegateReward = _DelegateReward(web3)
+
+    def delegate(self,
+                 node_id: Union[NodeID, HexStr],
+                 balance_type: int,
+                 amount: Von,
+                 ):
+        return self.delegateBase.delegate(node_id, balance_type, amount)
+
+    def withdrew_delegate(self,
+                          node_id: Union[NodeID, HexStr],
+                          staking_block_identifier: BlockIdentifier,
+                          amount: Von,
+                          ):
+        return self.delegateBase.withdrew_delegate(node_id, staking_block_identifier, amount)
+
+    def get_delegate_list(self, address: Bech32Address):
+        return self.delegateBase.get_delegate_list(address)
+
+    def get_delegate_info(self,
+                          address: Bech32Address,
+                          node_id: Union[NodeID, HexStr],
+                          staking_block_identifier: BlockIdentifier,
+                          ):
+        return self.delegateBase.get_delegate_info(address, node_id, staking_block_identifier)
+
+    def withdraw_delegate_reward(self):
+        return self.delegateReward.withdraw_delegate_reward()
+
+    def get_delegate_reward(self,
+                            address: Bech32Address,
+                            node_ids: [HexStr] = None,
+                            ):
+        return self.delegateReward.get_delegate_reward(address, node_ids)

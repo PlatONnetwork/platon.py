@@ -26,7 +26,7 @@ class Restricting(InnerContract):
                 Amount: Von  # restricting amount
             }
         """
-        kwargs = dict(locals())
+        kwargs = dict(locals())     # new dict
         kwargs['plans'] = [list(plan.values()) for plan in plans]
         return self.function_processor(InnerFn.restricting_createRestricting, kwargs)
 

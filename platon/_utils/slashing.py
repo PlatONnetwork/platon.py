@@ -42,7 +42,7 @@ class Slashing(InnerContract):
         :param node_id: node id to report
         :param block_identifier: duplicate-signed block identifier
         """
+        kwargs = dict(locals())
         block = self.web3.platon.get_block(block_identifier)
-        kwargs = locals()
         kwargs['block_identifier'] = block['number']
-        return self.function_processor(InnerFn.slashing_checkDuplicateSign, kwargs)
+        return self.function_processor(InnerFn.slashing_checkDuplicateSign, kwargs, is_call=True)

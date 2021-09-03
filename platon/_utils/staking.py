@@ -66,11 +66,11 @@ class Staking(InnerContract):
     def edit_staking(self,
                      node_id: Union[NodeID, HexStr],
                      benefit_address: Bech32Address = None,
+                     reward_per: int = None,
                      external_id: str = None,
                      node_name: str = None,
                      website: str = None,
                      details: str = None,
-                     reward_per: int = None,
                      ):
         """
         edit staking information.
@@ -83,12 +83,12 @@ class Staking(InnerContract):
         :param details: custom node detail, will be attached to the staking information
         :param reward_per: the proportion of the staking reward allocated to the delegate, 1 BasePoint = 0.01%
         """
-        kwargs = bubble_dict(locals(), 'benefit_address')
+        kwargs = bubble_dict(dict(locals()), 'benefit_address')
         return self.function_processor(InnerFn.staking_editStaking, kwargs)
 
     def increase_staking(self,
-                         balance_type: int,
                          node_id: Union[NodeID, HexStr],
+                         balance_type: int,
                          amount: Von,
                          ):
         """

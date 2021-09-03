@@ -119,6 +119,11 @@ class EventData(TypedDict):
     transactionIndex: int
 
 
+class CodeData(TypedDict):
+    code: int
+    message: str
+
+
 class RPCError(TypedDict):
     code: int
     message: str
