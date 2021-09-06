@@ -1,6 +1,6 @@
 import pytest
 
-from platon._utils.module_testing import (  # noqa: F401
+from platon._utils.module_testing import (
     AsyncPlatonModuleTest,
     PlatonModuleTest,
     GoPlatonAdminModuleTest,

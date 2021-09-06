@@ -4,7 +4,7 @@ from flaky import (
     flaky,
 )
 
-from platon._utils.module_testing import (  # noqa: F401
+from platon._utils.module_testing import (
     PlatonModuleTest,
     ParityModuleTest,
     ParityPersonalModuleTest,

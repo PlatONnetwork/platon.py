@@ -26,8 +26,8 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
-    from platon.contract import Contract  # noqa: F401
+    from platon import Web3
+    from platon.contract import Contract
 
 
 class ParityTraceModuleTest:
@@ -101,7 +101,7 @@ class ParityTraceModuleTest:
         funded_account_for_raw_txn: Bech32Address,
     ) -> None:
         # address 0x39EEed73fb1D3855E90Cbd42f348b3D7b340aAA6
-        raw_transaction = HexStr('0xf8648085174876e8008252089439eeed73fb1d3855e90cbd42f348b3d7b340aaa601801ba0ec1295f00936acd0c2cb90ab2cdaacb8bf5e11b3d9957833595aca9ceedb7aada05dfc8937baec0e26029057abd3a1ef8c505dca2cdc07ffacb046d090d2bea06a')  # noqa: E501
+        raw_transaction = HexStr('0xf8648085174876e8008252089439eeed73fb1d3855e90cbd42f348b3d7b340aaa601801ba0ec1295f00936acd0c2cb90ab2cdaacb8bf5e11b3d9957833595aca9ceedb7aada05dfc8937baec0e26029057abd3a1ef8c505dca2cdc07ffacb046d090d2bea06a')
         trace = web3.parity.trace_raw_transaction(raw_transaction)
         assert trace['stateDiff'] is None
         assert trace['vmTrace'] is None
@@ -120,7 +120,7 @@ class ParityTraceModuleTest:
 class ParityModuleTest:
 
     def test_add_reserved_peer(self, web3: "Web3") -> None:
-        peer_addr = EnodeURI('enode://f1a6b0bdbf014355587c3018454d070ac57801f05d3b39fe85da574f002a32e929f683d72aa5a8318382e4d3c7a05c9b91687b0d997a39619fb8a6e7ad88e512@1.1.1.1:30300')  # noqa: E501
+        peer_addr = EnodeURI('enode://f1a6b0bdbf014355587c3018454d070ac57801f05d3b39fe85da574f002a32e929f683d72aa5a8318382e4d3c7a05c9b91687b0d997a39619fb8a6e7ad88e512@1.1.1.1:30300')
         assert web3.parity.add_reserved_peer(peer_addr)
 
     def test_list_storage_keys_no_support(

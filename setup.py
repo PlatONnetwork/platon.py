@@ -8,7 +8,7 @@ from setuptools import (
 extras_require = {
     'tester': [
         "platon-tester[py-evm]==v0.5.0-beta.4",
-        "py-node>=3.2.0,<4",
+        # "py-node>=3.2.0,<4",
     ],
     'linter': [
         "flake8==3.8.3",

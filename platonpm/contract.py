@@ -1,4 +1,4 @@
-from typing import (  # noqa: F401
+from typing import (
     TYPE_CHECKING,
     Any,
     Dict,
@@ -36,7 +36,7 @@ from platon.contract import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 class LinkableContract(Contract):
@@ -176,6 +176,6 @@ def apply_link_ref(offset: int, length: int, value: bytes, bytecode: bytes) -> b
     address = value if is_canonical_address(value) else to_canonical_address(value)
     new_bytes = (
         # Ignore linting error b/c conflict b/w black & flake8
-        bytecode[:offset] + address + bytecode[offset + length:]  # noqa: E201, E203
+        bytecode[:offset] + address + bytecode[offset + length:]
     )
     return new_bytes

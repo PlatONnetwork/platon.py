@@ -16,11 +16,11 @@ class Dependencies:
 
     # ignoring Package type here and below to avoid a circular dependency
     def __init__(
-        self, build_dependencies: Dict[str, "Package"]  # type: ignore  # noqa: F821
+        self, build_dependencies: Dict[str, "Package"]  # type: ignore
     ) -> None:
         self.build_dependencies = build_dependencies
 
-    def __getitem__(self, key: str) -> "Package":  # type: ignore  # noqa: F821
+    def __getitem__(self, key: str) -> "Package":  # type: ignore
         return self.build_dependencies.get(key)
 
     def __contains__(self, key: str) -> bool:
@@ -31,7 +31,7 @@ class Dependencies:
         if name not in self.build_dependencies:
             raise KeyError(f"Package name: {name} not found in build dependencies.")
 
-    def items(self) -> Tuple[Tuple[str, "Package"], ...]:  # type: ignore  # noqa: F821
+    def items(self) -> Tuple[Tuple[str, "Package"], ...]:  # type: ignore
         """
         Return an iterable containing package name and
         corresponding `Package` instance that are available.
@@ -41,7 +41,7 @@ class Dependencies:
         }
         return tuple(item_dict.items())
 
-    def values(self) -> List["Package"]:  # type: ignore  # noqa: F821
+    def values(self) -> List["Package"]:  # type: ignore
         """
         Return an iterable of the available `Package` instances.
         """
@@ -50,7 +50,7 @@ class Dependencies:
 
     def get_dependency_package(
         self, package_name: str
-    ) -> "Package":  # type: ignore # noqa: F821
+    ) -> "Package":  # type: ignore
         """
         Return the dependency Package for a given package name.
         """

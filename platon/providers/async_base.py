@@ -28,7 +28,7 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 class AsyncBaseProvider:
@@ -55,7 +55,7 @@ class AsyncBaseProvider:
     async def request_func(
         self, web3: "Web3", outer_middlewares: MiddlewareOnion
     ) -> Callable[[RPCEndpoint], Any]:
-        all_middlewares: Tuple[Middleware] = tuple(outer_middlewares) + tuple(self.middlewares)  # type: ignore # noqa: E501
+        all_middlewares: Tuple[Middleware] = tuple(outer_middlewares) + tuple(self.middlewares)  # type: ignore
 
         cache_key = self._request_func_cache[0]
         if cache_key is None or cache_key != all_middlewares:

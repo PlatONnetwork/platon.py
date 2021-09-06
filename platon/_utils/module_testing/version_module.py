@@ -8,7 +8,7 @@ from platon_utils import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 class VersionModuleTest:

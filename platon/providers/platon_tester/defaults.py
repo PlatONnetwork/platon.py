@@ -47,7 +47,7 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon_tester import (  # noqa: F401
+    from platon_tester import (
         PlatonTester,
     )
 
@@ -211,7 +211,6 @@ API_ENDPOINTS = {
             call_platon_tester('get_accounts'),
         ),
         'mining': static_return(False),
-        'hashrate': static_return(0),
         'chainId': static_return('0x3d'),
         'gasPrice': static_return(1),
         'accounts': call_platon_tester('get_accounts'),
@@ -274,7 +273,6 @@ API_ENDPOINTS = {
         'getLogs': get_logs,
         'getWork': not_implemented,
         'submitWork': not_implemented,
-        'submitHashrate': not_implemented,
     },
     'db': {
         'putString': not_implemented,

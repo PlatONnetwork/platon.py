@@ -18,13 +18,13 @@ from hexbytes import (
     HexBytes,
 )
 
-from platon.types import (  # noqa: F401
+from platon.types import (
     TxParams,
     Von,
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 PRIVATE_KEY_HEX = '0x56ebb41875ceedd42e395f730e03b5c44989393c9f0484ee6bc05f933673458f'
 SECOND_PRIVATE_KEY_HEX = '0x56ebb41875ceedd42e395f730e03b5c44989393c9f0484ee6bc05f9336712345'

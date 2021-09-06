@@ -11,13 +11,13 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 class GoPlatonAdminModuleTest:
     def test_add_peer(self, web3: "Web3") -> None:
         result = web3.node.admin.add_peer(
-            EnodeURI('enode://f1a6b0bdbf014355587c3018454d070ac57801f05d3b39fe85da574f002a32e929f683d72aa5a8318382e4d3c7a05c9b91687b0d997a39619fb8a6e7ad88e512@1.1.1.1:30303'),)  # noqa: E501
+            EnodeURI('enode://f1a6b0bdbf014355587c3018454d070ac57801f05d3b39fe85da574f002a32e929f683d72aa5a8318382e4d3c7a05c9b91687b0d997a39619fb8a6e7ad88e512@1.1.1.1:30303'),)
         assert result is True
 
     def test_admin_datadir(self, web3: "Web3", datadir: str) -> None:

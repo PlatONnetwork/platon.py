@@ -4,7 +4,7 @@ from platon import Web3
 from platon.exceptions import (
     InvalidAddress,
 )
-from platon.middleware import (  # noqa: F401
+from platon.middleware import (
     construct_fixture_middleware,
     name_to_address_middleware,
 )

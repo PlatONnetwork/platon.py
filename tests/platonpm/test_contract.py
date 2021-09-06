@@ -55,8 +55,8 @@ def test_linkable_contract_class_handles_link_refs(
     offset = factory.unlinked_references[0]["offsets"][0]
     link_address = to_canonical_address(list(attr_dict.values())[0])
     # Ignore lint error b/c black conflict
-    assert factory.bytecode[offset : offset + 20] == b"\00" * 20  # noqa: E203
-    assert linked_factory.bytecode[offset : offset + 20] == link_address  # noqa: E203
+    assert factory.bytecode[offset : offset + 20] == b"\00" * 20
+    assert linked_factory.bytecode[offset : offset + 20] == link_address
 
 
 def test_linkable_contract_class_handles_missing_link_refs(get_manifest, w3):

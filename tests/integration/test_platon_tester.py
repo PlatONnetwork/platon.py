@@ -27,7 +27,7 @@ from platon._utils.module_testing.emitter_contract import (
 from platon.providers.platon_tester import (
     PlatonTesterProvider,
 )
-from platon.types import (  # noqa: F401
+from platon.types import (
     BlockData,
 )
 

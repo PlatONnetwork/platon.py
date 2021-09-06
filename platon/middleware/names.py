@@ -18,7 +18,7 @@ from .formatting import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 def name_to_address_middleware(w3: "Web3") -> Middleware:

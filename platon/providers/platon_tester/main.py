@@ -33,7 +33,7 @@ from .middleware import (
 )
 
 if TYPE_CHECKING:
-    from platon_tester import (  # noqa: F401
+    from platon_tester import (
         PlatonTester,
     )
 
@@ -62,7 +62,7 @@ class PlatonTesterProvider(BaseProvider):
         api_endpoints: Optional[Dict[str, Dict[str, Callable[..., RPCResponse]]]] = None
     ) -> None:
         # do not import platon_tester until runtime, it is not a default dependency
-        from platon_tester import PlatonTester  # noqa: F811
+        from platon_tester import PlatonTester
         from platon_tester.backends.base import BaseChainBackend
         if platon_tester is None:
             self.platon_tester = PlatonTester()

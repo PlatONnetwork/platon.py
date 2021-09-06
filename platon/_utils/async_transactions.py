@@ -11,8 +11,8 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
-    from platon.platon import AsyncPlaton  # noqa: F401
+    from platon import Web3
+    from platon.platon import AsyncPlaton
 
 
 async def get_block_gas_limit(

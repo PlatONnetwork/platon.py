@@ -122,7 +122,7 @@ from platon.providers.rpc import (
 from platon.providers.websocket import (
     WebsocketProvider,
 )
-from platon.types import (  # noqa: F401
+from platon.types import (
     Middleware,
     MiddlewareOnion,
     Von,
@@ -132,7 +132,7 @@ from platon.version import (
 )
 
 if TYPE_CHECKING:
-    from platon.pm import PM  # noqa: F401
+    from platon.pm import PM
 
 
 def get_default_modules() -> Dict[str, Sequence[Any]]:
@@ -369,7 +369,7 @@ class Web3:
             )
 
     def enable_unstable_package_management_api(self) -> None:
-        from platon.pm import PM  # noqa: F811
+        from platon.pm import PM
         if not hasattr(self, '_pm'):
             attach_modules(self, {'_pm': (PM,)})
 

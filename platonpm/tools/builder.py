@@ -68,7 +68,7 @@ from platon._utils.validation import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 def build(obj: Dict[str, Any], *fns: Callable[..., Any]) -> Dict[str, Any]:
@@ -588,7 +588,7 @@ def process_bytecode(link_refs: Dict[str, Any], bytecode: bytes) -> HexStr:
 @curry
 def replace_link_ref_in_bytecode(offset: int, length: int, bytecode: str) -> str:
     new_bytes = (
-        bytecode[:offset] + "0" * length + bytecode[offset + length :]  # noqa: E203
+        bytecode[:offset] + "0" * length + bytecode[offset + length :]
     )
     return new_bytes
 

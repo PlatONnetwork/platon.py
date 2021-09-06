@@ -11,17 +11,17 @@ from platon.types import (
     RPCResponse,
     Middleware,
 )
-from .abi import (  # noqa: F401
+from .abi import (
     abi_middleware,
 )
-from .attrdict import (  # noqa: F401
+from .attrdict import (
     attrdict_middleware,
 )
-from .buffered_gas_estimate import (  # noqa: F401
+from .buffered_gas_estimate import (
     async_buffered_gas_estimate_middleware,
     buffered_gas_estimate_middleware,
 )
-from .cache import (  # noqa: F401
+from .cache import (
     _latest_block_based_cache_middleware as latest_block_based_cache_middleware,
     _simple_cache_middleware as simple_cache_middleware,
     _time_based_cache_middleware as time_based_cache_middleware,
@@ -29,51 +29,51 @@ from .cache import (  # noqa: F401
     construct_simple_cache_middleware,
     construct_time_based_cache_middleware,
 )
-from .exception_handling import (  # noqa: F401
+from .exception_handling import (
     construct_exception_handler_middleware,
 )
-from .exception_retry_request import (  # noqa: F401
+from .exception_retry_request import (
     http_retry_request_middleware,
 )
-from .filter import (  # noqa: F401
+from .filter import (
     local_filter_middleware,
 )
-from .fixture import (  # noqa: F401
+from .fixture import (
     construct_error_generator_middleware,
     construct_fixture_middleware,
     construct_result_generator_middleware,
 )
-from .formatting import (  # noqa: F401
+from .formatting import (
     construct_formatting_middleware,
 )
-from .gas_price_strategy import (  # noqa: F401
+from .gas_price_strategy import (
     async_gas_price_strategy_middleware,
     gas_price_strategy_middleware,
 )
-from .gplaton_poa import (  # noqa: F401
+from .gplaton_poa import (
     gplaton_poa_middleware,
 )
-from .names import (  # noqa: F401
+from .names import (
     name_to_address_middleware,
 )
-from .normalize_request_parameters import (  # noqa: F401
+from .normalize_request_parameters import (
     request_parameter_normalizer,
 )
-from .pythonic import (  # noqa: F401
+from .pythonic import (
     pythonic_middleware,
 )
-from .signing import (  # noqa: F401
+from .signing import (
     construct_sign_and_send_raw_middleware,
 )
-from .stalecheck import (  # noqa: F401
+from .stalecheck import (
     make_stalecheck_middleware,
 )
-from .validation import (  # noqa: F401
+from .validation import (
     validation_middleware,
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 def combine_middlewares(

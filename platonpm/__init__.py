@@ -16,5 +16,5 @@ def get_platonpm_spec_dir() -> Path:
     return platonpm_spec_dir
 
 
-from .package import Package  # noqa: E402, F401
-from .backends.registry import RegistryURI  # noqa: E402, F401
+from .package import Package
+from .backends.registry import RegistryURI

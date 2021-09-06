@@ -31,7 +31,7 @@ def chain_setup(w3):
         f"blockchain://1234/block/{block_hash}": {"x": "x"},
     }
     no_match_data = {
-        f"blockchain://56775ac59d0774e6b603a79c4218efeb5653b99ba0ff14db983bac2662251a8a/block/{block_hash}": {  # noqa: E501
+        f"blockchain://56775ac59d0774e6b603a79c4218efeb5653b99ba0ff14db983bac2662251a8a/block/{block_hash}": {
             "x": "x"
         }
     }

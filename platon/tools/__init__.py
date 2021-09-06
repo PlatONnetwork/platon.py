@@ -1,4 +1,4 @@
-from .pytest_platon import (  # noqa: F401
+from .pytest_platon import (
     deployer,
     linker,
 )

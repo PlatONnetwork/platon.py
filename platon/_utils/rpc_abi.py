@@ -71,7 +71,6 @@ class RPC:
     platon_getTransactionCount = RPCEndpoint("platon_getTransactionCount")
     platon_getTransactionReceipt = RPCEndpoint("platon_getTransactionReceipt")
     platon_getWork = RPCEndpoint("platon_getWork")
-    platon_hashrate = RPCEndpoint("platon_hashrate")
     platon_mining = RPCEndpoint("platon_mining")
     platon_newBlockFilter = RPCEndpoint("platon_newBlockFilter")
     platon_newFilter = RPCEndpoint("platon_newFilter")
@@ -82,7 +81,6 @@ class RPC:
     platon_sign = RPCEndpoint("platon_sign")
     platon_signTransaction = RPCEndpoint("platon_signTransaction")
     platon_signTypedData = RPCEndpoint("platon_signTypedData")
-    platon_submitHashrate = RPCEndpoint("platon_submitHashrate")
     platon_submitWork = RPCEndpoint("platon_submitWork")
     platon_syncing = RPCEndpoint("platon_syncing")
     platon_uninstallFilter = RPCEndpoint("platon_uninstallFilter")
@@ -198,7 +196,6 @@ RPC_ABIS = {
     'platon_signTransaction': TRANSACTION_PARAMS_ABIS,
     'platon_sign': ['address', 'bytes'],
     'platon_signTypedData': ['address', None],
-    'platon_submitHashrate': ['uint', 'bytes32'],
     'platon_submitWork': ['bytes8', 'bytes32', 'bytes32'],
     # personal
     'personal_sendTransaction': TRANSACTION_PARAMS_ABIS,

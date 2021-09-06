@@ -149,7 +149,7 @@ def test_get_linked_deployments(escrow_package):
                 "Escrow": {
                     "contractType": "Escrow",
                     "address": "0x8c1968deB27251A3f1F4508df32dA4dfD1b7b57f",
-                    "transaction": "0xc60e32c63abf34579390ef65d83cc5eb52225de38c3eeca2e5afa961d71c16d0",  # noqa: E501
+                    "transaction": "0xc60e32c63abf34579390ef65d83cc5eb52225de38c3eeca2e5afa961d71c16d0",
                     "block": "0x4d1a618802bb87752d95db453dddeea622820424a2f836bedf8769a67ee276b8",
                     "runtimeBytecode": {
                         "linkDependencies": [

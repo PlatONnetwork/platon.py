@@ -46,7 +46,6 @@ class Pip(InnerContract):
                               name: str,
                               value: str,
                               ):
-        # todo: add attribute dict for module
         """
         Submit a parameter proposal to change the value of the governable parameter.
         Use 'self.govern_param_list' to get all governable parameters.

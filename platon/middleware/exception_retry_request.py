@@ -19,7 +19,7 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 whitelist = [
     'admin',
@@ -32,7 +32,6 @@ whitelist = [
     'platon_syncing',
     'platon_coinbase',
     'platon_mining',
-    'platon_hashrate',
     'platon_gasPrice',
     'platon_accounts',
     'platon_blockNumber',

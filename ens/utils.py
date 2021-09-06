@@ -45,8 +45,8 @@ default = object()
 
 
 if TYPE_CHECKING:
-    from platon import Web3 as _Web3  # noqa: F401
-    from platon.providers import (  # noqa: F401
+    from platon import Web3 as _Web3
+    from platon.providers import (
         BaseProvider,
     )
 

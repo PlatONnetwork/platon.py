@@ -1,5 +1,5 @@
 import time
-from typing import (  # noqa: F401
+from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
@@ -18,7 +18,7 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 SKIP_STALECHECK_FOR_METHODS = set([
     'platon_getBlockByNumber',

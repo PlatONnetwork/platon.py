@@ -48,7 +48,7 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon import (  # noqa: F401
+    from platon import (
         Web3,
     )
 

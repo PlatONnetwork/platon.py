@@ -46,7 +46,7 @@ class HTTPProvider(JSONBaseProvider):
     _request_args = None
     _request_kwargs = None
     # type ignored b/c conflict with _middlewares attr on BaseProvider
-    _middlewares: Tuple[Middleware, ...] = NamedElementOnion([(http_retry_request_middleware, 'http_retry_request')])  # type: ignore # noqa: E501
+    _middlewares: Tuple[Middleware, ...] = NamedElementOnion([(http_retry_request_middleware, 'http_retry_request')])  # type: ignore
 
     def __init__(
         self, endpoint_uri: Optional[Union[URI, str]] = None,

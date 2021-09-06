@@ -87,7 +87,7 @@ from platon.platon import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 class Package(object):
@@ -233,7 +233,7 @@ class Package(object):
 
         .. code:: python
 
-           OwnedPackage = Package.from_uri('ipfs://QmbeVyFLSuEUxiXKwSsEjef7icpdTdA4kGG9BcrJXKNKUW', w3)  # noqa: E501
+           OwnedPackage = Package.from_uri('ipfs://QmbeVyFLSuEUxiXKwSsEjef7icpdTdA4kGG9BcrJXKNKUW', w3)
         """
         contents = to_text(resolve_uri_contents(uri))
         validate_raw_manifest_format(contents)

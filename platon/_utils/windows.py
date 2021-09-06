@@ -3,8 +3,8 @@ from typing import (
     Tuple,
 )
 
-import pywintypes  # noqa: E402
-import win32file  # noqa: E402
+import pywintypes
+import win32file
 
 if sys.platform != 'win32':
     raise ImportError("This module should not be imported on non `win32` platforms")

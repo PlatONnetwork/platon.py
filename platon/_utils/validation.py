@@ -52,7 +52,7 @@ from platon._utils.abi import (
 from platon.exceptions import (
     InvalidAddress,
 )
-from platon.types import (  # noqa: F401
+from platon.types import (
     ABI,
     ABIEvent,
     ABIFunction,

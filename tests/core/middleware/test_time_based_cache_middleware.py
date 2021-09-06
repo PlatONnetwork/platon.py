@@ -7,7 +7,7 @@ from platon import Web3
 from platon._utils.caching import (
     generate_cache_key,
 )
-from platon.middleware import (  # noqa: F401
+from platon.middleware import (
     construct_error_generator_middleware,
     construct_result_generator_middleware,
     construct_time_based_cache_middleware,

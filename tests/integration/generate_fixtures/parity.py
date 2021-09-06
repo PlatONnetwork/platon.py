@@ -278,7 +278,7 @@ def generate_parity_fixture(destination_dir):
         parity_port = get_open_port()
         parity_binary = get_parity_binary()
 
-        parity_proc = stack.enter_context(get_parity_process(  # noqa: F841
+        parity_proc = stack.enter_context(get_parity_process(
             parity_binary=parity_binary,
             datadir=datadir,
             ipc_path=parity_ipc_path,
@@ -303,7 +303,7 @@ def generate_parity_fixture(destination_dir):
 
         shutil.copytree(datadir, destination_dir)
 
-        parity_proc = stack.enter_context(parity_export_blocks_process(  # noqa: F841
+        parity_proc = stack.enter_context(parity_export_blocks_process(
             parity_binary=parity_binary,
             datadir=destination_dir,
             chain_config_file_path=os.path.join(destination_dir, 'chain_config.json'),

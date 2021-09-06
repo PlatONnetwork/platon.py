@@ -25,7 +25,7 @@ from platonpm.exceptions import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 def get_linked_deployments(deployments: Dict[str, Any]) -> Dict[str, Any]:
@@ -64,7 +64,7 @@ def validate_linked_references(
         dep_length = len(value)
         end_of_bytes = offset_value + dep_length
         # Ignore b/c whitespace around ':' conflict b/w black & flake8
-        actual_bytes = bytecode[offset_value:end_of_bytes]  # noqa: E203
+        actual_bytes = bytecode[offset_value:end_of_bytes]
         if actual_bytes != values[idx]:
             raise PlatonPMValidationError(
                 "Error validating linked reference. "

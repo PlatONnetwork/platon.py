@@ -8,7 +8,7 @@ from platon.exceptions import (
 
 @pytest.fixture()
 def abi():
-    return '''[{"anonymous":false,"inputs":[{"indexed":false,"name":"value","type":"uint256"}],"name":"Increased","type":"function"}, {"anonymous":false,"inputs":[{"indexed":false,"name":"value","type":"uint256"}],"name":"Increased","type":"event"}]'''  # noqa: E501
+    return '''[{"anonymous":false,"inputs":[{"indexed":false,"name":"value","type":"uint256"}],"name":"Increased","type":"function"}, {"anonymous":false,"inputs":[{"indexed":false,"name":"value","type":"uint256"}],"name":"Increased","type":"event"}]'''
 
 
 @pytest.mark.parametrize(

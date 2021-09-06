@@ -242,7 +242,7 @@ def test_to_json(val, expected):
                 'v': 27,
                 'value': 2907000000000000
             }),
-            '{"blockHash": "0x849044202a39ae36888481f90d62c3826bca8269c2716d7a38696b4f45e61d83", "blockNumber": 6928809, "from": "0xDEA141eF43A2fdF4e795adA55958DAf8ef5FA619", "gas": 21000, "gasPrice": 19110000000, "hash": "0x1ccddd19830e998d7cf4d921b19fafd5021c9d4c4ba29680b66fb535624940fc", "input": "0x", "nonce": 5522, "r": "0x71ef3eed6242230a219d9dc7737cb5a3a16059708ee322e96b8c5774105b9b00", "s": "0x48a076afe10b4e1ae82ef82b747e9be64e0bbb1cc90e173db8d53e7baba8ac46", "to": "0x3a84E09D30476305Eda6b2DA2a4e199E2Dd1bf79", "transactionIndex": 8, "v": 27, "value": 2907000000000000}'  # noqa: E501
+            '{"blockHash": "0x849044202a39ae36888481f90d62c3826bca8269c2716d7a38696b4f45e61d83", "blockNumber": 6928809, "from": "0xDEA141eF43A2fdF4e795adA55958DAf8ef5FA619", "gas": 21000, "gasPrice": 19110000000, "hash": "0x1ccddd19830e998d7cf4d921b19fafd5021c9d4c4ba29680b66fb535624940fc", "input": "0x", "nonce": 5522, "r": "0x71ef3eed6242230a219d9dc7737cb5a3a16059708ee322e96b8c5774105b9b00", "s": "0x48a076afe10b4e1ae82ef82b747e9be64e0bbb1cc90e173db8d53e7baba8ac46", "to": "0x3a84E09D30476305Eda6b2DA2a4e199E2Dd1bf79", "transactionIndex": 8, "v": 27, "value": 2907000000000000}'
         ),
     ),
 )

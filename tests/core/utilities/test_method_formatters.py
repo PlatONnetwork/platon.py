@@ -85,7 +85,7 @@ GANACHE_RESPONSE = RPCResponse({
         (REVERT_WITH_MSG, 'execution reverted: not allowed to monitor'),
         (REVERT_WITHOUT_MSG, 'execution reverted'),
         (NODE_RESPONSE, 'execution reverted: Function has been reverted.'),
-        (GANACHE_RESPONSE, 'execution reverted: VM Exception while processing transaction: revert Custom revert message'),  # noqa: 501
+        (GANACHE_RESPONSE, 'execution reverted: VM Exception while processing transaction: revert Custom revert message'),
     ),
     ids=[
         'test-get-revert-reason-with-msg',

@@ -54,7 +54,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'platon.py'
-copyright = u'2018, Piper Merriam, Jason Carver'
+copyright = u'2018, shing'
 
 __version__ = setup_version
 # The version info for the project you're documenting, acts as replacement for
@@ -288,7 +288,7 @@ texinfo_documents = [
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3.5', None),
-    'platon-account': ('http://platon-account.readthedocs.io/en/latest/', None),
+    # 'platon-account': ('http://platon-account.readthedocs.io/en/latest/', None),
     # does not exist yet: 'platon-tester': ('http://platon-tester.readthedocs.io/en/latest/', None),
     'hexbytes': ('http://hexbytes.readthedocs.io/en/latest/', None),
 }

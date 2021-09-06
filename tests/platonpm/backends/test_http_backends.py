@@ -19,7 +19,7 @@ from platonpm.constants import (
 @pytest.mark.parametrize(
     "uri",
     (
-        "https://api.github.com/repos/platonpm/platonpm-spec/git/blobs/899042f95ad624d5ecf0b96b0926c96cd682522d",  # noqa: E501
+        "https://api.github.com/repos/platonpm/platonpm-spec/git/blobs/899042f95ad624d5ecf0b96b0926c96cd682522d",
     ),
 )
 @pytest.mark.skipif('WEB3_INFURA_PROJECT_ID' not in os.environ, reason='Infura API key unavailable')
@@ -34,6 +34,6 @@ def test_github_over_https_backend_fetch_uri_contents(uri, owned_contract, w3):
 
 @pytest.mark.skipif('WEB3_INFURA_PROJECT_ID' not in os.environ, reason='Infura API key unavailable')
 def test_github_over_https_backend_raises_error_with_invalid_content_hash(w3):
-    invalid_uri = "https://api.github.com/repos/platonpm/py-platonpm/git/blobs/a7232a93f1e9e75d606f6c1da18aa16037e03123"  # noqa: E501
+    invalid_uri = "https://api.github.com/repos/platonpm/py-platonpm/git/blobs/a7232a93f1e9e75d606f6c1da18aa16037e03123"
     with pytest.raises(HTTPError):
         Package.from_uri(invalid_uri, w3)

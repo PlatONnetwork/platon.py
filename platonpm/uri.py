@@ -43,7 +43,7 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa F401
+    from platon import Web3
 
 
 def resolve_uri_contents(uri: URI, fingerprint: bool = None) -> bytes:

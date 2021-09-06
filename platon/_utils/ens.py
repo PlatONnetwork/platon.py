@@ -25,8 +25,8 @@ from platon.exceptions import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
-    from platon.contract import (  # noqa: F401
+    from platon import Web3
+    from platon.contract import (
         Contract,
     )
 

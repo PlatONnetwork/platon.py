@@ -39,7 +39,7 @@ from platon._utils.formatters import (
 from platon._utils.rpc_abi import (
     RPC,
 )
-from platon.types import (  # noqa: F401
+from platon.types import (
     FilterParams,
     LatestBlockParam,
     LogReceipt,
@@ -49,7 +49,7 @@ from platon.types import (  # noqa: F401
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 if "WEB3_MAX_BLOCK_REQUEST" in os.environ:
     MAX_BLOCK_REQUEST = to_int(text=os.environ["WEB3_MAX_BLOCK_REQUEST"])

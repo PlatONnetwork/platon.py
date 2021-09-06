@@ -27,7 +27,7 @@ from platonpm.constants import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 def get_genesis_block_hash(web3: "Web3") -> HexBytes:

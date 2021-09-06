@@ -49,14 +49,14 @@ from ens.utils import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
-    from platon.contract import (  # noqa: F401
+    from platon import Web3
+    from platon.contract import (
         Contract,
     )
-    from platon.providers import (  # noqa: F401
+    from platon.providers import (
         BaseProvider,
     )
-    from platon.types import (  # noqa: F401
+    from platon.types import (
         TxParams,
     )
 

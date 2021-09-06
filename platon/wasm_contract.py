@@ -1,4 +1,4 @@
-"""Interaction with smart contracts over Web3 connector.
+"""Interaction with wasm contracts over Web3 connector.
 
 """
 import copy
@@ -285,12 +285,12 @@ class Contract:
     this base class.
 
     After you have your Contract proxy class created you can interact with
-    smart contracts
+    wasm contracts
 
-    * Create a Contract proxy object for an existing deployed smart contract by
+    * Create a Contract proxy object for an existing deployed wasm contract by
       its address using :meth:`__init__`
 
-    * Deploy a new smart contract using :py:meth:`Contract.constructor.transact()`
+    * Deploy a new wasm contract using :py:meth:`Contract.constructor.transact()`
     """
 
     # set during class construction
@@ -324,7 +324,7 @@ class Contract:
     user_doc = None
 
     def __init__(self, address: Optional[Bech32Address] = None) -> None:
-        """Create a new smart contract proxy object.
+        """Create a new wasm contract proxy object.
 
         :param address: Contract address as 0x hex string
         """

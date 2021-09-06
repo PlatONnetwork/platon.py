@@ -23,7 +23,7 @@ from platon.providers.ipc import (
 
 # Ugly hack to import infura now that API KEY is required
 os.environ['WEB3_INFURA_API_KEY'] = 'test'
-from platon.auto import (  # noqa E402 isort:skip
+from platon.auto import (
     infura,
 )
 

@@ -40,7 +40,7 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 MAX_EXTRADATA_LENGTH = 97
 

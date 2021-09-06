@@ -41,7 +41,7 @@ def test_platon_beacon_get_validators(beacon):
 
 
 def test_platon_beacon_get_validator(beacon):
-    pyrmont_validator_pub_key = "0xa09c261fc2b44badc0059b6eeb8e6935f2b795f15dad32449afeec3bc635ef0ae92fe0bab5edba31aebfde1947e2acf5"  # noqa: E501
+    pyrmont_validator_pub_key = "0xa09c261fc2b44badc0059b6eeb8e6935f2b795f15dad32449afeec3bc635ef0ae92fe0bab5edba31aebfde1947e2acf5"
     response = beacon.get_validator(pyrmont_validator_pub_key)
     assert response is not None
 

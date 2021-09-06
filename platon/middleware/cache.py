@@ -21,7 +21,7 @@ from platon._utils.compat import (
     Literal,
     TypedDict,
 )
-from platon.types import (  # noqa: F401
+from platon.types import (
     BlockData,
     BlockNumber,
     Middleware,
@@ -30,7 +30,7 @@ from platon.types import (  # noqa: F401
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 SIMPLE_CACHE_RPC_WHITELIST = cast(Set[RPCEndpoint], {
     'web3_clientVersion',
@@ -40,7 +40,6 @@ SIMPLE_CACHE_RPC_WHITELIST = cast(Set[RPCEndpoint], {
     # 'net_listening',
     'platon_protocolVersion',
     # 'platon_syncing',
-    # 'platon_hashrate',
     # 'platon_gasPrice',
     # 'platon_accounts',
     # 'platon_blockNumber',
@@ -75,7 +74,6 @@ SIMPLE_CACHE_RPC_WHITELIST = cast(Set[RPCEndpoint], {
     # 'platon_getLogs',
     # 'platon_getWork',
     # 'platon_submitWork',
-    # 'platon_submitHashrate',
 })
 
 
@@ -149,7 +147,6 @@ TIME_BASED_CACHE_RPC_WHITELIST = cast(Set[RPCEndpoint], {
     # 'platon_syncing',
     'platon_coinbase',
     # 'platon_mining',
-    # 'platon_hashrate',
     # 'platon_gasPrice',
     'platon_accounts',
     # 'platon_blockNumber',
@@ -183,7 +180,6 @@ TIME_BASED_CACHE_RPC_WHITELIST = cast(Set[RPCEndpoint], {
     # 'platon_getLogs',
     # 'platon_getWork',
     # 'platon_submitWork',
-    # 'platon_submitHashrate',
 })
 
 
@@ -258,7 +254,6 @@ BLOCK_NUMBER_RPC_WHITELIST = cast(Set[RPCEndpoint], {
     # 'platon_syncing',
     # 'platon_coinbase',
     # 'platon_mining',
-    # 'platon_hashrate',
     'platon_gasPrice',
     # 'platon_accounts',
     'platon_blockNumber',
@@ -292,7 +287,6 @@ BLOCK_NUMBER_RPC_WHITELIST = cast(Set[RPCEndpoint], {
     'platon_getLogs',
     # 'platon_getWork',
     # 'platon_submitWork',
-    # 'platon_submitHashrate',
 })
 
 AVG_BLOCK_TIME_KEY: Literal['avg_block_time'] = 'avg_block_time'

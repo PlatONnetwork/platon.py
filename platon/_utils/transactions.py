@@ -61,7 +61,7 @@ TRANSACTION_DEFAULTS = {
 }
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 @curry

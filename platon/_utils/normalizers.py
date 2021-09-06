@@ -57,14 +57,14 @@ from platon._utils.validation import (
 from platon.exceptions import (
     InvalidAddress,
 )
-from platon.types import (  # noqa: F401
+from platon.types import (
     ABI,
     ABIEvent,
     ABIFunction,
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 def implicitly_identity(

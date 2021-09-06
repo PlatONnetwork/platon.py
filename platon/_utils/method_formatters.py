@@ -97,9 +97,9 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
-    from platon.module import Module  # noqa: F401
-    from platon.platon import Platon  # noqa: F401
+    from platon import Web3
+    from platon.module import Module
+    from platon.platon import Platon
 
 
 def bytes_to_ascii(value: bytes) -> str:
@@ -455,7 +455,6 @@ PYTHONIC_RESULT_FORMATTERS: Dict[RPCEndpoint, Callable[..., Any]] = {
         is_not_null,
         receipt_formatter,
     ),
-    RPC.platon_hashrate: to_integer_if_hex,
     RPC.platon_protocolVersion: compose(
         apply_formatter_if(is_0x_prefixed, to_integer_if_hex),
         apply_formatter_if(is_integer, str),
@@ -525,7 +524,7 @@ def raise_solidity_error_on_revert(response: RPCResponse) -> RPCResponse:
     # Parity/OpenPlaton case:
     if data.startswith('Reverted '):
         # "Reverted", function selector and offset are always the same for revert errors
-        prefix = 'Reverted 0x08c379a00000000000000000000000000000000000000000000000000000000000000020'  # noqa: 501
+        prefix = 'Reverted 0x08c379a00000000000000000000000000000000000000000000000000000000000000020'
         if not data.startswith(prefix):
             raise ContractLogicError('execution reverted')
 

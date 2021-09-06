@@ -244,7 +244,7 @@ class Platon(BasePlaton, Module):
     account = Account()
     _default_block: BlockIdentifier = "latest"
     # todo: add wasm contract
-    defaultContractFactory: Type[Union[Contract, ConciseContract, ContractCaller]] = Contract  # noqa: E704,E501
+    defaultContractFactory: Type[Union[Contract, ConciseContract, ContractCaller]] = Contract
     iban = Iban
 
     def namereg(self) -> NoReturn:
@@ -487,7 +487,7 @@ class Platon(BasePlaton, Module):
             transaction: TxParams,
             block_identifier: Optional[BlockIdentifier] = None,
             state_override: Optional[CallOverrideParams] = None,
-    ) -> Union[Tuple[TxParams, BlockIdentifier], Tuple[TxParams, BlockIdentifier, CallOverrideParams]]:  # noqa-E501
+    ) -> Union[Tuple[TxParams, BlockIdentifier], Tuple[TxParams, BlockIdentifier, CallOverrideParams]]:
         # TODO: move to middleware
         if 'from' not in transaction and is_bech32_address(self.default_account):
             transaction = assoc(transaction, 'from', self.default_account)
@@ -564,11 +564,6 @@ class Platon(BasePlaton, Module):
         mungers=[default_root_munger]
     )
 
-    submit_hashrate: Method[Callable[[int, _Hash32], bool]] = Method(
-        RPC.platon_submitHashrate,
-        mungers=[default_root_munger],
-    )
-
     submit_work: Method[Callable[[int, _Hash32, _Hash32], bool]] = Method(
         RPC.platon_submitWork,
         mungers=[default_root_munger],
@@ -581,13 +576,13 @@ class Platon(BasePlaton, Module):
 
     @overload
     def contract(self, address: None = None, **kwargs: Any) -> Type[Contract]:
-        ...  # noqa: E704,E501
+        ...
 
-    @overload  # noqa: F811
+    @overload
     def contract(self, address: Union[Address, Bech32Address, ENS], **kwargs: Any) -> Contract:
-        ...  # noqa: E704,E501
+        ...
 
-    def contract(  # noqa: F811
+    def contract(
             self, address: Optional[Union[Address, Bech32Address, ENS]] = None, **kwargs: Any
     ) -> Union[Type[Contract], Contract]:
         ContractFactoryClass = kwargs.pop('ContractFactoryClass', self.defaultContractFactory)

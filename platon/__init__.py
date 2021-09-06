@@ -4,24 +4,24 @@ import warnings
 import pkg_resources
 
 from platon_account import (
-    Account  # noqa: E402,
+    Account
 )
 from platon.main import (
-    Web3  # noqa: E402,
+    Web3
 )
-from platon.providers.platon_tester import (  # noqa: E402
+from platon.providers.platon_tester import (
     PlatonTesterProvider,
 )
-from platon.providers.ipc import (  # noqa: E402
+from platon.providers.ipc import (
     IPCProvider,
 )
-from platon.providers.rpc import (  # noqa: E402
+from platon.providers.rpc import (
     HTTPProvider,
 )
-from platon.providers.async_rpc import (  # noqa: E402
+from platon.providers.async_rpc import (
     AsyncHTTPProvider,
 )
-from platon.providers.websocket import (  # noqa: E402
+from platon.providers.websocket import (
     WebsocketProvider,
 )
 

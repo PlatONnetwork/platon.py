@@ -60,8 +60,8 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
-    from platon.platon import Platon  # noqa: F401
+    from platon import Web3
+    from platon.platon import Platon
 
 
 def construct_event_filter_params(

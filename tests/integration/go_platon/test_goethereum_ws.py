@@ -84,7 +84,7 @@ class TestGoPlatonAdminModuleTest(GoPlatonAdminModuleTest):
         super().test_admin_start_stop_ws(web3)
 
     def test_admin_start_stop_rpc(self, web3: "Web3") -> None:
-        pytest.xfail(reason="This test inconsistently causes all tests after it on CI to fail if it's allowed to run")  # noqa: E501
+        pytest.xfail(reason="This test inconsistently causes all tests after it on CI to fail if it's allowed to run")
         super().test_admin_start_stop_ws(web3)
 
 

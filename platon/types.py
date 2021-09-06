@@ -38,7 +38,7 @@ from platon.datastructures import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 TReturn = TypeVar("TReturn")
 TParams = TypeVar("TParams")
@@ -295,7 +295,7 @@ class SyncStatus(TypedDict):
 # todo: noqa
 class BlockData(TypedDict, total=False):
     # baseFeePerGas: Von
-    difficulty: int
+    # difficulty: int
     extraData: HexBytes
     gasLimit: Von
     gasUsed: Von

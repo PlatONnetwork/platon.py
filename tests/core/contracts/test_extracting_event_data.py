@@ -193,14 +193,14 @@ def test_event_data_extraction(web3,
         (
             [[b'13'], [b'54']],
             {
-                'arg0': b'H\x7f\xad\xb3\x16zAS7\xa5\x0c\xfe\xe2%T\xb7\x17\x81p\xf04~\x8d(\x93\x8e\x19\x97k\xd9"1',  # noqa: E501
+                'arg0': b'H\x7f\xad\xb3\x16zAS7\xa5\x0c\xfe\xe2%T\xb7\x17\x81p\xf04~\x8d(\x93\x8e\x19\x97k\xd9"1',
                 'arg1': [b'54']
             }
         ),
         (
             [[b'1'], [b'5']],
             {
-                'arg0': b' F=9\n\x03\xb6\xe1\x00\xc5\xb7\xce\xf5\xa5\xac\x08\x08\xb8\xaf\xc4d=\xdb\xda\xf1\x05|a\x0f.\xa1!',  # noqa: E501
+                'arg0': b' F=9\n\x03\xb6\xe1\x00\xc5\xb7\xce\xf5\xa5\xac\x08\x08\xb8\xaf\xc4d=\xdb\xda\xf1\x05|a\x0f.\xa1!',
                 'arg1': [b'5\x00']}
         ),
     )
@@ -259,7 +259,7 @@ def test_event_data_extraction_bytes_with_warning(web3,
 
         event_data = get_event_data(web3.codec, event_abi, log_entry)
         expected_args = {
-            'arg0': b']\x0b\xf6sp\xbe\xa2L\xa9is\xe4\xab\xb7\xfa+nVJpgt\xa7\x8f:\xa4\x9f\xdb\x93\xf0\x8f\xae',  # noqa: E501
+            'arg0': b']\x0b\xf6sp\xbe\xa2L\xa9is\xe4\xab\xb7\xfa+nVJpgt\xa7\x8f:\xa4\x9f\xdb\x93\xf0\x8f\xae',
             'arg1': [b'T\x00']
         }
 
@@ -627,7 +627,7 @@ def test_event_rich_log_with_byte_args(
         raise Exception('Unreachable!')
 
     expected_args = {
-        'arg0': b'H\x7f\xad\xb3\x16zAS7\xa5\x0c\xfe\xe2%T\xb7\x17\x81p\xf04~\x8d(\x93\x8e\x19\x97k\xd9"1',  # noqa: E501
+        'arg0': b'H\x7f\xad\xb3\x16zAS7\xa5\x0c\xfe\xe2%T\xb7\x17\x81p\xf04~\x8d(\x93\x8e\x19\x97k\xd9"1',
         'arg1': [b'54']
     }
     assert rich_log['args'] == expected_args

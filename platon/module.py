@@ -28,7 +28,7 @@ from platon.types import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 @curry
@@ -51,7 +51,7 @@ def retrieve_blocking_method_call_fn(
 ) -> Callable[..., Union[TReturn, LogFilter]]:
     def caller(*args: Any, **kwargs: Any) -> Union[TReturn, LogFilter]:
         try:
-            (method_str, params), response_formatters = method.process_params(module, *args, **kwargs)  # noqa: E501
+            (method_str, params), response_formatters = method.process_params(module, *args, **kwargs)
         except _UseExistingFilter as err:
             return LogFilter(platon_module=module, filter_id=err.filter_id)
         result_formatters, error_formatters, null_result_formatters = response_formatters

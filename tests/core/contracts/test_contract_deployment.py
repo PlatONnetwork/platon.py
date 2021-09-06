@@ -55,12 +55,12 @@ def test_contract_deployment_with_constructor_with_arguments(web3,
 
 
 @pytest.mark.parametrize('constructor_arg', (
-    b'1234\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',  # noqa: E501
+    b'1234\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
     '0x0000000000000000000000000000000000000000000000000000000000000000')
 )
 def test_contract_deployment_with_constructor_with_arguments_strict(w3_strict_abi,
-                                                                    WithConstructorArgumentsContractStrict,  # noqa: E501
-                                                                    WITH_CONSTRUCTOR_ARGUMENTS_RUNTIME,  # noqa: E501
+                                                                    WithConstructorArgumentsContractStrict,
+                                                                    WITH_CONSTRUCTOR_ARGUMENTS_RUNTIME,
                                                                     constructor_arg):
     deploy_txn = WithConstructorArgumentsContractStrict.constructor(
         1234, constructor_arg
@@ -77,18 +77,18 @@ def test_contract_deployment_with_constructor_with_arguments_strict(w3_strict_ab
 
 
 def test_contract_deployment_with_constructor_with_arguments_strict_error(w3_strict_abi,
-                                                                          WithConstructorArgumentsContractStrict,  # noqa: E501
-                                                                          WITH_CONSTRUCTOR_ARGUMENTS_RUNTIME):  # noqa: E501
+                                                                          WithConstructorArgumentsContractStrict,
+                                                                          WITH_CONSTRUCTOR_ARGUMENTS_RUNTIME):
     with pytest.raises(
         TypeError,
-        match="One or more arguments could not be encoded to the necessary ABI type.  Expected types are: uint256, bytes32"  # noqa: E501
+        match="One or more arguments could not be encoded to the necessary ABI type.  Expected types are: uint256, bytes32"
     ):
         WithConstructorArgumentsContractStrict.constructor(1234, 'abcd').transact()
 
 
 def test_contract_deployment_with_constructor_with_address_argument(web3,
-                                                                    WithConstructorAddressArgumentsContract,  # noqa: E501
-                                                                    WITH_CONSTRUCTOR_ADDRESS_RUNTIME):  # noqa: E501
+                                                                    WithConstructorAddressArgumentsContract,
+                                                                    WITH_CONSTRUCTOR_ADDRESS_RUNTIME):
     deploy_txn = WithConstructorAddressArgumentsContract.constructor(
         "0x16D9983245De15E7A9A73bC586E01FF6E08dE737",
     ).transact()

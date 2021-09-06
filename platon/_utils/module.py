@@ -12,8 +12,8 @@ from platon.exceptions import (
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
-    from platon.module import Module  # noqa: F401
+    from platon import Web3
+    from platon.module import Module
 
 
 def attach_modules(

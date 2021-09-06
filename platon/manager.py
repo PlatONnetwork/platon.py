@@ -1,5 +1,5 @@
 import logging
-from typing import (  # noqa: F401
+from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
@@ -21,7 +21,7 @@ from platon_utils.toolz import (
 from platon._utils.decorators import (
     deprecated_for,
 )
-from platon._utils.threads import (  # noqa: F401
+from platon._utils.threads import (
     ThreadWithReturn,
     spawn,
 )
@@ -42,7 +42,7 @@ from platon.providers import (
     AutoProvider,
     BaseProvider,
 )
-from platon.types import (  # noqa: F401
+from platon.types import (
     Middleware,
     MiddlewareOnion,
     RPCEndpoint,
@@ -50,7 +50,7 @@ from platon.types import (  # noqa: F401
 )
 
 if TYPE_CHECKING:
-    from platon import Web3  # noqa: F401
+    from platon import Web3
 
 
 def apply_error_formatters(

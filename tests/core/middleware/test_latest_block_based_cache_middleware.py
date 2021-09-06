@@ -17,7 +17,7 @@ from platon._utils.caching import (
 from platon._utils.formatters import (
     hex_to_integer,
 )
-from platon.middleware import (  # noqa: F401
+from platon.middleware import (
     construct_error_generator_middleware,
     construct_latest_block_based_cache_middleware,
     construct_result_generator_middleware,

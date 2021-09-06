@@ -71,7 +71,7 @@ def parity_import_blocks_command(parity_binary, ipc_path, datadir, passwordfile)
     )
 
 
-@pytest.fixture(scope="module")  # noqa: F811
+@pytest.fixture(scope="module")
 def web3(parity_process, ipc_path):
     wait_for_socket(ipc_path)
     _web3 = Web3(Web3.IPCProvider(ipc_path))
