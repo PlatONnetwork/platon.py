@@ -148,7 +148,7 @@ For example, the following retrieves the client enode endpoint for both node and
 Provider via Environment Variable
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Alternatively, you can set the environment variable ``WEB3_PROVIDER_URI``
+Alternatively, you can set the environment variable ``PLATON_PROVIDER_URI``
 before starting your script, and web3 will look for that provider first.
 
 Valid formats for this environment variable are:

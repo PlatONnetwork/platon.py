@@ -47,7 +47,7 @@ def delete_environment_variables(monkeypatch):
     ),
 )
 def test_load_provider_from_env(monkeypatch, uri, expected_type, expected_attrs):
-    monkeypatch.setenv('WEB3_PROVIDER_URI', uri)
+    monkeypatch.setenv('PLATON_PROVIDER_URI', uri)
     provider = load_provider_from_environment()
     assert isinstance(provider, expected_type)
     for attr, val in expected_attrs.items():
@@ -56,7 +56,7 @@ def test_load_provider_from_env(monkeypatch, uri, expected_type, expected_attrs)
 
 def test_get_dev_ipc_path(monkeypatch, tmp_path):
     uri = str(tmp_path)
-    monkeypatch.setenv('WEB3_PROVIDER_URI', uri)
+    monkeypatch.setenv('PLATON_PROVIDER_URI', uri)
     path = get_dev_ipc_path()
     assert path == uri
 

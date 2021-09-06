@@ -36,7 +36,7 @@ WS_SCHEMES = {'ws', 'wss'}
 
 
 def load_provider_from_environment() -> BaseProvider:
-    uri_string = URI(os.environ.get('WEB3_PROVIDER_URI', ''))
+    uri_string = URI(os.environ.get('PLATON_PROVIDER_URI', ''))
     if not uri_string:
         return None
 

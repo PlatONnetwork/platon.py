@@ -17,7 +17,7 @@ using ``pip`` as follows:
 
 .. code-block:: shell
 
-   $ pip install web3
+   $ pip install platon.py
 
 
 .. NOTE:: If you run into problems during installation, you might have a
@@ -34,12 +34,13 @@ in the :ref:`Providers<providers>` documentation. This Quickstart guide will hig
 a couple of the most common use cases.
 
 
-Provider: Local Pnode Node
+Provider: Local platon Node
 **************************
 
 For locally run nodes, an IPC connection is the most secure option, but HTTP and
-websocket configurations are also available. By default, `Pnode <https://node.platon.org/>`_
-exposes port ``8545`` to serve HTTP requests and ``8546`` for websocket requests. Connecting
+websocket configurations are also available. By default, `platon
+<https://devdocs.platon.network/docs/zh-CN/Become_PlatON_Main_Verification>`_
+exposes port ``6789`` to serve HTTP requests and ``6790`` for websocket requests. Connecting
 to this local node can be done as follows:
 
 .. code-block:: python
@@ -50,10 +51,10 @@ to this local node can be done as follows:
    >>> w3 = Web3(Web3.IPCProvider('./path/to/node.ipc'))
 
    # HTTPProvider:
-   >>> w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:8545'))
+   >>> w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:6789'))
 
    # WebsocketProvider:
-   >>> w3 = Web3(Web3.WebsocketProvider('ws://127.0.0.1:8546'))
+   >>> w3 = Web3(Web3.WebsocketProvider('ws://127.0.0.1:6790'))
 
    >>> w3.isConnected()
    True
@@ -68,35 +69,6 @@ and save a few keystrokes:
    >>> w3.isConnected()
    True
 
-Provider: Infura
-*****************
-
-The quickest way to interact with the Platon blockchain is to use a remote node provider,
-like `Infura <https://infura.io/>`_. You can connect to a remote node by specifying the
-endpoint, just like the previous local node example:
-
-.. code-block:: python
-
-   >>> from platon import Web3
-   >>> w3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/<infura-project-id>'))
-
-This endpoint is provided by Infura after you create a (free) account.
-
-Again, a convenience method exists to save a few keystrokes:
-
-.. code-block:: python
-
-    >>> from platon.auto.infura import w3
-    >>> w3.platon.block_number
-    4000000
-
-Note that this requires your Infura Project ID to be set as the environment variable
-``WEB3_INFURA_PROJECT_ID`` before running your script or application:
-
-.. code-block:: shell
-
-    $ export WEB3_INFURA_PROJECT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
 .. _first_w3_use:
 
 Getting Blockchain Info
@@ -108,23 +80,18 @@ to interact with the Platon blockchain. Try getting all the information about th
 .. code-block:: python
 
     >>> w3.platon.get_block('latest')
-    {'difficulty': 1,
-     'gasLimit': 6283185,
+    {'gasLimit': 6283185,
      'gasUsed': 0,
      'hash': HexBytes('0x53b983fe73e16f6ed8178f6c0e0b91f23dc9dad4cb30d0831f178291ffeb8750'),
      'logsBloom': HexBytes('0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'),
      'miner': '0x0000000000000000000000000000000000000000',
-     'mixHash': HexBytes('0x0000000000000000000000000000000000000000000000000000000000000000'),
      'nonce': HexBytes('0x0000000000000000'),
      'number': 0,
      'parentHash': HexBytes('0x0000000000000000000000000000000000000000000000000000000000000000'),
-     'proofOfAuthorityData': HexBytes('0x0000000000000000000000000000000000000000000000000000000000000000dddc391ab2bf6701c74d0c8698c2e13355b2e4150000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'),
      'receiptsRoot': HexBytes('0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421'),
-     'sha3Uncles': HexBytes('0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347'),
      'size': 622,
      'stateRoot': HexBytes('0x1f5e460eb84dc0606ab74189dbcfe617300549f8f4778c3c9081c119b5b5d1c1'),
      'timestamp': 0,
-     'totalDifficulty': 1,
      'transactions': [],
      'transactionsRoot': HexBytes('0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421'),
 

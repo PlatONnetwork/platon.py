@@ -105,7 +105,7 @@ from platon.net import (
 )
 from platon.ppos import Ppos
 from platon.providers import (
-    BaseProvider,
+    BaseProvider, AutoProvider,
 )
 from platon.providers.platon_tester import (
     PlatonTesterProvider,
@@ -227,7 +227,7 @@ class Web3:
 
     @staticmethod
     def to_bech32_address(value: Union[AnyAddress, str, bytes], hrp: str):
-        return to_bech32_address(value)
+        return to_bech32_address(value, hrp)
 
     # mypy Types
     platon: Platon
@@ -249,6 +249,9 @@ class Web3:
             chain_id: int = None,  # This value is required for versions earlier than 0.16.0
             hrp: str = None  # This value is required for versions earlier than 0.13.2
     ) -> None:
+        if provider is None:
+            provider = AutoProvider()
+
         self.manager = self.RequestManager(self, provider, middlewares)
         # this codec gets used in the module initialization,
         # so it needs to come before attach_modules
@@ -261,19 +264,23 @@ class Web3:
 
         self.ens = ens
 
-        self.chain_id = chain_id
-        if not self.chain_id:
-            if provider:
-                self.chain_id = self.platon.chain_id
-            else:
-                raise ValueError("Offline mode requires a chain id.")
+        self._chain_id = chain_id
 
-        self.hrp = hrp
-        if not self.hrp:
-            if provider:
-                self.hrp = self.platon.get_address_hrp()
-            else:
-                raise ValueError("Offline mode requires a hrp.")
+        self._hrp = hrp
+
+    @property
+    def chain_id(self):
+        if self._chain_id is None:
+            self._chain_id = self.platon.chain_id
+
+        return self._chain_id
+
+    @property
+    def hrp(self):
+        if self._hrp is None:
+            self._hrp = self.platon.get_address_hrp()
+
+        return self._hrp
 
     @property
     def middleware_onion(self) -> MiddlewareOnion:

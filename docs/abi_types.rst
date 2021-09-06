@@ -28,7 +28,7 @@ Strict Bytes Type Checking
 
 .. note ::
 
-  In version 6, this will be the default behavior
+  In future version, this will be the default behavior
 
 There is a method on web3 that will enable stricter bytes type checking.
 The default is to allow Python strings, and to allow bytestrings less
@@ -111,7 +111,7 @@ _________
 
 .. code-block:: python
 
-   contract_instance.functions.updateAddr("0x0000000000000000000000000000000000000000").transact()
+   contract_instance.functions.updateAddr("lat1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq542u6a").transact()
 
 Bytes
 _____
@@ -125,4 +125,4 @@ _______
 
 .. code-block:: python
 
-   contract_instance.functions.updateMapping({"sa": "0x0000000000000000000000000000000000000000", "sb": HexBytes(123)}).transact()
+   contract_instance.functions.updateMapping({"sa": "lat1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq542u6a", "sb": HexBytes(123)}).transact()
