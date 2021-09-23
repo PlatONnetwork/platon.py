@@ -13,7 +13,7 @@ Filtering
 
     .. code-block:: python
 
-        from platon.auto import w3
+        from platon.chains import w3
 
 The :meth:`web3.platon.Platon.filter` method can be used to setup filters for:
 
@@ -191,7 +191,7 @@ Synchronous
 
     .. code-block:: python
 
-        from platon.auto import w3
+        from platon.chains import w3
         import time
 
         def handle_event(event):
@@ -230,7 +230,7 @@ entries to a handler.
 
         .. code-block:: python
 
-            from platon.auto import w3
+            from platon.chains import w3
             import asyncio
 
 
@@ -269,7 +269,7 @@ releasing the ``main`` function for other tasks.
 
         .. code-block:: python
 
-            from platon.auto import w3
+            from platon.chains import w3
             from threading import Thread
             import time
 

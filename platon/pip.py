@@ -7,14 +7,14 @@ from platon_typing import (
     HexStr,
 )
 
-from platon._utils.argument_formatter import (
+from platon._utils.contract_formatter import (
     InnerFn,
 )
 from platon.types import (
     Version,
     BlockIdentifier,
 )
-from platon.inner_contract import (
+from platon._utils.inner_contract import (
     InnerContract,
 )
 

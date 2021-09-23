@@ -178,11 +178,6 @@ class BasePlaton(Module):
         mungers=None,
     )
 
-    get_coinbase: Method[Callable[[], Bech32Address]] = Method(
-        RPC.platon_coinbase,
-        mungers=None,
-    )
-
     evidences: Method[Callable[[], str]] = Method(
         RPC.platon_evidences,
         mungers=None,
@@ -582,9 +577,11 @@ class Platon(BasePlaton, Module):
     def contract(self, address: Union[Address, Bech32Address, ENS], **kwargs: Any) -> Contract:
         ...
 
-    def contract(
-            self, address: Optional[Union[Address, Bech32Address, ENS]] = None, **kwargs: Any
-    ) -> Union[Type[Contract], Contract]:
+    def contract(self,
+                 address: Optional[Union[Address, Bech32Address, ENS]] = None,
+                 **kwargs: Any
+                 ) -> Union[Type[Contract], Contract]:
+
         ContractFactoryClass = kwargs.pop('ContractFactoryClass', self.defaultContractFactory)
 
         ContractFactory = ContractFactoryClass.factory(self.web3, **kwargs)

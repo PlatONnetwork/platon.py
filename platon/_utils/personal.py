@@ -1,7 +1,5 @@
 from typing import (
-    Any,
     Callable,
-    Dict,
     List,
     Optional,
 )
@@ -83,10 +81,10 @@ sign: Method[Callable[[str, Bech32Address, Optional[str]], HexStr]] = Method(
 )
 
 
-sign_typed_data: Method[Callable[[Dict[str, Any], Bech32Address, str], HexStr]] = Method(
-    RPC.personal_signTypedData,
-    mungers=[default_root_munger],
-)
+# sign_typed_data: Method[Callable[[Dict[str, Any], Bech32Address, str], HexStr]] = Method(
+#     RPC.personal_signTypedData,
+#     mungers=[default_root_munger],
+# )
 
 
 ec_recover: Method[Callable[[str, HexStr], Bech32Address]] = Method(

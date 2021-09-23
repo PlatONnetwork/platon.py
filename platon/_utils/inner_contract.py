@@ -33,7 +33,7 @@ from platon._utils.rpc_abi import (
 from platon._utils.transactions import (
     fill_transaction_defaults,
 )
-from platon._utils.argument_formatter import (
+from platon._utils.contract_formatter import (
     INNER_CONTRACT_PARAM_ABIS,
     DEFAULT_PARAM_NORMALIZERS,
     DEFAULT_PARAM_ABIS,

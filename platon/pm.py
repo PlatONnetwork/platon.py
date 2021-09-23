@@ -70,7 +70,7 @@ from platon.types import (
 # is not automatically available on a platon instance. To use the `PM` module,
 # please enable the package management API on an individual platon instance.
 #
-# >>> from platon.auto import w3
+# >>> from platon.chains import w3
 # >>> w3.pm
 # AttributeError: The Package Management feature is disabled by default ...
 # >>> w3.enable_unstable_package_management_api()

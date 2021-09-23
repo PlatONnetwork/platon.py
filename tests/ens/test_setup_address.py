@@ -136,7 +136,7 @@ def test_setup_address_default_address_to_owner(ens):
 
 
 def test_first_owner_upchain_identify(ens):
-    # _first_owner should auto-select the name owner to send the transaction from
+    # _first_owner should chains-select the name owner to send the transaction from
     addr = '0x5B2063246F2191f18F2675ceDB8b28102e957458'
 
     def getowner(name):

@@ -18,7 +18,7 @@ The ``web3.pm`` object exposes methods to interact with Packages as defined by `
 
    .. code-block:: python
 
-      >>> from platon.auto import w3
+      >>> from platon.chains import w3
       >>> w3.pm
       ...
       AttributeError: The Package Management feature is disabled by default ...

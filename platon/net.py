@@ -1,7 +1,3 @@
-from typing import (
-    NoReturn,
-)
-
 from platon._utils.net import (
     listening,
     peer_count,
@@ -13,10 +9,6 @@ from platon.module import (
 
 
 class Net(Module):
-    """
-        https://github.com/platonnetwork/wiki/wiki/JSON-RPC
-    """
-
     _listening = listening
     _peer_count = peer_count
     _version = version

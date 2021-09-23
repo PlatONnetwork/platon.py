@@ -1,7 +1,7 @@
 from platon_typing import Bech32Address
 
 from platon.types import InnerFn
-from platon.inner_contract import (
+from platon._utils.inner_contract import (
     InnerContract,
 )
 

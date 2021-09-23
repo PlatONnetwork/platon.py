@@ -171,12 +171,18 @@ class BlockNotFound(Exception):
     pass
 
 
-class InfuraKeyNotFound(Exception):
+class PlatonKeyNotFound(Exception):
     """
-    Raised when there is no Infura Project Id set.
+    Raised when there is no Platon Project Id set.
     """
     pass
 
+
+class AlayaKeyNotFound(Exception):
+    """
+    Raised when there is no Alaya Project Id set.
+    """
+    pass
 
 class LogTopicError(ValueError):
     # Inherits from ValueError for backwards compatibility

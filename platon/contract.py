@@ -38,7 +38,7 @@ from platon_utils import (
     function_abi_to_4byte_selector,
     is_list_like,
     is_text,
-    to_tuple,
+    to_tuple, remove_0x_prefix,
 )
 from platon_utils.toolz import (
     compose,
@@ -155,8 +155,9 @@ class ContractFunctions:
     """Class containing contract function objects
     """
 
-    def __init__(self, abi: ABI, web3: 'Web3', address: Optional[Bech32Address] = None) -> None:
+    def __init__(self, abi: ABI, vm_type: str, web3: 'Web3', address: Optional[Bech32Address] = None) -> None:
         self.abi = abi
+        self.vm_type = vm_type
         self.web3 = web3
         self.address = address
 
@@ -170,6 +171,7 @@ class ContractFunctions:
                         func['name'],
                         web3=self.web3,
                         contract_abi=self.abi,
+                        vm_type=self.vm_type,
                         address=self.address,
                         function_identifier=func['name']))
 
@@ -229,9 +231,10 @@ class ContractEvents:
 
     """
 
-    def __init__(self, abi: ABI, web3: 'Web3', address: Optional[Bech32Address] = None) -> None:
+    def __init__(self, abi: ABI, vm_type: str, web3: 'Web3', address: Optional[Bech32Address] = None) -> None:
         if abi:
             self.abi = abi
+            self.vm_type = vm_type
             self._events = filter_by_type('event', self.abi)
             for event in self._events:
                 setattr(
@@ -240,6 +243,7 @@ class ContractEvents:
                     ContractEvent.factory(
                         event['name'],
                         web3=web3,
+                        vm_type=vm_type,
                         contract_abi=self.abi,
                         address=address,
                         event_name=event['name']))
@@ -301,6 +305,7 @@ class Contract:
 
     # class properties (overridable at instance level)
     abi: ABI = None
+    vm_type: str = None
 
     asm = None
     ast = None
@@ -340,9 +345,9 @@ class Contract:
         if not self.address:
             raise TypeError("The address argument is required to instantiate a contract.")
 
-        self.functions = ContractFunctions(self.abi, self.web3, self.address)
+        self.functions = ContractFunctions(self.abi, self.vm_type, self.web3, self.address)
+        self.events = ContractEvents(self.abi, self.vm_type, self.web3, self.address)
         self.caller = ContractCaller(self.abi, self.web3, self.address)
-        self.events = ContractEvents(self.abi, self.web3, self.address)
         self.fallback = Contract.get_fallback_function(self.abi, self.web3, self.address)
         self.receive = Contract.get_receive_function(self.abi, self.web3, self.address)
 
@@ -364,9 +369,9 @@ class Contract:
             kwargs,
             normalizers=normalizers,
         ))
-        contract.functions = ContractFunctions(contract.abi, contract.web3)
+        contract.functions = ContractFunctions(contract.abi, contract.vm_type, contract.web3)
+        contract.events = ContractEvents(contract.abi, contract.vm_type, contract.web3)
         contract.caller = ContractCaller(contract.abi, contract.web3, contract.address)
-        contract.events = ContractEvents(contract.abi, contract.web3)
         contract.fallback = Contract.get_fallback_function(contract.abi, contract.web3)
         contract.receive = Contract.get_receive_function(contract.abi, contract.web3)
 
@@ -390,6 +395,7 @@ class Contract:
 
         return ContractConstructor(cls.web3,
                                    cls.abi,
+                                   cls.vm_type,
                                    cls.bytecode,
                                    *args,
                                    **kwargs)
@@ -398,7 +404,7 @@ class Contract:
     #
     @combomethod
     def encode_abi(cls, fn_name: str, args: Optional[Any] = None,
-                   kwargs: Optional[Any] = None, data: Optional[HexStr] = None) -> HexStr:
+                   kwargs: Optional[Any] = None, vm_type: str = None, data: Optional[HexStr] = None) -> HexStr:
         """
         Encodes the arguments using the Platon ABI for the contract function
         that matches the given name and arguments..
@@ -412,7 +418,7 @@ class Contract:
         if data is None:
             data = fn_selector
 
-        return encode_abi(cls.web3, fn_abi, fn_arguments, data)
+        return encode_abi(cls.web3, vm_type, fn_abi, fn_arguments, data=data)
 
     @combomethod
     def all_functions(self) -> List['ContractFunction']:
@@ -571,7 +577,7 @@ class Contract:
             arguments = merge_args_and_kwargs(constructor_abi, args, kwargs)
 
             deploy_data = add_0x_prefix(
-                encode_abi(cls.web3, constructor_abi, arguments, data=cls.bytecode)
+                encode_abi(cls.web3, constructor_abi, arguments, vm_type=cls.vm_type, data=cls.bytecode)
             )
         else:
             if args is not None or kwargs is not None:
@@ -598,10 +604,11 @@ class ContractConstructor:
     """
 
     def __init__(
-            self, web3: 'Web3', abi: ABI, bytecode: HexStr, *args: Any, **kwargs: Any
+            self, web3: 'Web3', abi: ABI, vm_type: str, bytecode: HexStr, *args: Any, **kwargs: Any
     ) -> None:
         self.web3 = web3
         self.abi = abi
+        self.vm_type = vm_type
         self.bytecode = bytecode
         self.data_in_transaction = self._encode_data_in_transaction(*args, **kwargs)
 
@@ -617,10 +624,13 @@ class ContractConstructor:
 
             arguments = merge_args_and_kwargs(constructor_abi, args, kwargs)
             data = add_0x_prefix(
-                encode_abi(self.web3, constructor_abi, arguments, data=self.bytecode)
+                encode_abi(self.web3, self.vm_type, constructor_abi, arguments, data=self.bytecode)
             )
         else:
             data = to_hex(self.bytecode)
+
+        if self.vm_type == 'wasm':
+            data = add_0x_prefix('0061736d' + remove_0x_prefix(data))
 
         return data
 
@@ -857,6 +867,7 @@ class ContractFunction:
     web3: 'Web3' = None
     contract_abi: ABI = None
     abi: ABIFunction = None
+    vm_type: str = None
     transaction: TxParams = None
     arguments: Tuple[Any, ...] = None
     args: Any = None
@@ -1001,6 +1012,7 @@ class ContractFunction:
         return transact_with_contract_function(
             self.address,
             self.web3,
+            self.vm_type,
             self.function_identifier,
             transact_transaction,
             self.contract_abi,
@@ -1043,6 +1055,7 @@ class ContractFunction:
         return estimate_gas_for_function(
             self.address,
             self.web3,
+            self.vm_type,
             self.function_identifier,
             estimate_gas_transaction,
             self.contract_abi,
@@ -1083,6 +1096,7 @@ class ContractFunction:
         return build_transaction_for_function(
             self.address,
             self.web3,
+            self.vm_type,
             self.function_identifier,
             built_transaction,
             self.contract_abi,
@@ -1093,7 +1107,7 @@ class ContractFunction:
 
     @combomethod
     def _encode_transaction_data(cls) -> HexStr:
-        return add_0x_prefix(encode_abi(cls.web3, cls.abi, cls.arguments, cls.selector))
+        return add_0x_prefix(encode_abi(cls.web3, cls.abi, cls.arguments, cls.vm_type, cls.selector))
 
     _return_data_normalizers: Optional[Tuple[Callable[..., Any], ...]] = tuple()
 
@@ -1119,6 +1133,7 @@ class ContractEvent:
     address: Bech32Address = None
     event_name: str = None
     web3: 'Web3' = None
+    vm_type: str = None,
     contract_abi: ABI = None
     abi: ABIEvent = None
 
@@ -1140,13 +1155,13 @@ class ContractEvent:
 
     @combomethod
     def processReceipt(
-            self, txn_receipt: TxReceipt, errors: EventLogErrorFlags = WARN
+            self, txn_receipt: TxReceipt, errors: EventLogErrorFlags = WARN,
     ) -> Iterable[EventData]:
         return self._parse_logs(txn_receipt, errors)
 
     @to_tuple
     def _parse_logs(
-            self, txn_receipt: TxReceipt, errors: EventLogErrorFlags
+            self, txn_receipt: TxReceipt, errors: EventLogErrorFlags,
     ) -> Iterable[EventData]:
         try:
             errors.name
@@ -1155,7 +1170,7 @@ class ContractEvent:
 
         for log in txn_receipt['logs']:
             try:
-                rich_log = get_event_data(self.web3.codec, self.abi, log)
+                rich_log = get_event_data(self.web3.codec, self.abi, log, self.vm_type)
             except (MismatchedABI, LogTopicError, InvalidEventABI, TypeError) as e:
                 if errors == DISCARD:
                     continue
@@ -1571,6 +1586,7 @@ def parse_block_identifier_int(web3: 'Web3', block_identifier_int: int) -> Block
 def transact_with_contract_function(
         address: Bech32Address,
         web3: 'Web3',
+        vm_type: str,
         function_name: Optional[FunctionType] = None,
         transaction: Optional[TxParams] = None,
         contract_abi: Optional[ABI] = None,
@@ -1584,6 +1600,7 @@ def transact_with_contract_function(
     transact_transaction = prepare_transaction(
         address,
         web3,
+        vm_type,
         fn_identifier=function_name,
         contract_abi=contract_abi,
         transaction=transaction,
@@ -1599,6 +1616,7 @@ def transact_with_contract_function(
 def estimate_gas_for_function(
         address: Bech32Address,
         web3: 'Web3',
+        vm_type: str,
         fn_identifier: Optional[FunctionType] = None,
         transaction: Optional[TxParams] = None,
         contract_abi: Optional[ABI] = None,
@@ -1614,6 +1632,7 @@ def estimate_gas_for_function(
     estimate_transaction = prepare_transaction(
         address,
         web3,
+        vm_type,
         fn_identifier=fn_identifier,
         contract_abi=contract_abi,
         fn_abi=fn_abi,
@@ -1628,6 +1647,7 @@ def estimate_gas_for_function(
 def build_transaction_for_function(
         address: Bech32Address,
         web3: 'Web3',
+        vm_type: str = None,
         function_name: Optional[FunctionType] = None,
         transaction: Optional[TxParams] = None,
         contract_abi: Optional[ABI] = None,
@@ -1642,6 +1662,7 @@ def build_transaction_for_function(
     prepared_transaction = prepare_transaction(
         address,
         web3,
+        vm_type=vm_type,
         fn_identifier=function_name,
         contract_abi=contract_abi,
         fn_abi=fn_abi,

@@ -1,4 +1,5 @@
 import codecs
+import copy
 from distutils.version import (
     LooseVersion,
 )
@@ -31,7 +32,9 @@ from platon_utils import (
     to_bytes,
     to_bech32_address,
     to_hex,
-    to_text, to_canonical_address, is_address,
+    to_text,
+    to_canonical_address,
+    is_address,
 )
 from platon_utils.toolz import (
     curry,
@@ -68,7 +71,7 @@ if TYPE_CHECKING:
 
 
 def implicitly_identity(
-    to_wrap: Callable[[TypeStr, Any], Any]
+        to_wrap: Callable[[TypeStr, Any], Any]
 ) -> Callable[[TypeStr, Any], Tuple[TypeStr, Any]]:
     @functools.wraps(to_wrap)
     def wrapper(type_str: TypeStr, data: Any) -> Tuple[TypeStr, Any]:
@@ -77,6 +80,7 @@ def implicitly_identity(
             return type_str, data
         else:
             return modified
+
     return wrapper
 
 
@@ -105,13 +109,14 @@ def decode_abi_strings(type_str: TypeStr, data: Any) -> Tuple[TypeStr, str]:
 
 
 def parse_basic_type_str(
-    old_normalizer: Callable[[BasicType, TypeStr, Any], Tuple[TypeStr, Any]]
+        old_normalizer: Callable[[BasicType, TypeStr, Any], Tuple[TypeStr, Any]]
 ) -> Callable[[TypeStr, Any], Tuple[TypeStr, Any]]:
     """
     Modifies a normalizer to automatically parse the incoming type string.  If
     that type string does not represent a basic type (i.e. non-tuple type) or is
     not parsable, the normalizer does nothing.
     """
+
     @functools.wraps(old_normalizer)
     def new_normalizer(type_str: TypeStr, data: Any) -> Tuple[TypeStr, Any]:
         try:
@@ -131,7 +136,7 @@ def parse_basic_type_str(
 @implicitly_identity
 @parse_basic_type_str
 def abi_bytes_to_hex(
-    abi_type: BasicType, type_str: TypeStr, data: Any
+        abi_type: BasicType, type_str: TypeStr, data: Any
 ) -> Optional[Tuple[TypeStr, HexStr]]:
     if abi_type.base != 'bytes' or abi_type.is_array:
         return None
@@ -155,7 +160,7 @@ def abi_bytes_to_hex(
 @implicitly_identity
 @parse_basic_type_str
 def abi_int_to_hex(
-    abi_type: BasicType, type_str: TypeStr, data: Any
+        abi_type: BasicType, type_str: TypeStr, data: Any
 ) -> Optional[Tuple[TypeStr, HexStr]]:
     if abi_type.base == 'uint' and not abi_type.is_array:
         # double check?
@@ -180,7 +185,7 @@ def abi_string_to_text(type_str: TypeStr, data: Any) -> Optional[Tuple[TypeStr, 
 @implicitly_identity
 @parse_basic_type_str
 def abi_bytes_to_bytes(
-    abi_type: BasicType, type_str: TypeStr, data: Any
+        abi_type: BasicType, type_str: TypeStr, data: Any
 ) -> Optional[Tuple[TypeStr, HexStr]]:
     if abi_type.base == 'bytes' and not abi_type.is_array:
         return type_str, hexstr_if_str(to_bytes, data)
@@ -233,9 +238,46 @@ BASE_RETURN_NORMALIZERS = [
     addresses_bech32,
 ]
 
-
 if LooseVersion(platon_abi.__version__) < LooseVersion("2"):
     BASE_RETURN_NORMALIZERS.append(decode_abi_strings)
+
+
+def transform_wasm_abi(abis: [dict]):
+
+    def _rewrite_abi(abi: dict):
+        if abi.get('name') == 'init':
+            abi['type'] = 'constructor'
+        if 'input' in abi.keys():
+            abi['inputs'] = abi.pop('input')
+        if 'output' in abi.keys():
+            abi['outputs'] = {'name': "", 'type': abi.pop('output')}
+        if abi.get('type') == 'Action':
+            abi['type'] = 'function'
+
+        if abi.get('type') == 'Event':
+            abi.update({
+                'type': 'event',
+                'anonymous': False,
+            })
+            inputs = abi.get('inputs')
+            topic = abi.get('topic')
+            zer = zip(range(topic), inputs)
+            for index, _input in zer:
+                _input['indexed'] = True
+
+        if abi.get('type') == 'struct':
+            if 'fields' in abi:
+                abi['inputs'] = abi.pop('fields')
+                baseclass = abi.get('baseclass')
+                for _class in baseclass:
+                    abi['inputs'].append({'name': _class, 'type': 'struct'})
+                del abi['baseclass']
+
+    for abi in abis:
+        _rewrite_abi(abi)
+
+    # print(f'contract abis: {abis}')
+    return abis
 
 
 #
@@ -246,6 +288,7 @@ if LooseVersion(platon_abi.__version__) < LooseVersion("2"):
 def normalize_abi(abi: Union[ABI, str]) -> ABI:
     if isinstance(abi, str):
         abi = json.loads(abi)
+    abi = transform_wasm_abi(copy.deepcopy(abi))
     validate_abi(cast(ABI, abi))
     return cast(ABI, abi)
 

@@ -90,8 +90,8 @@ if TYPE_CHECKING:
 
 
 def construct_event_topic_set(
-    event_abi: ABIEvent, abi_codec: ABICodec,
-    arguments: Optional[Union[Sequence[Any], Dict[str, Any]]] = None
+        event_abi: ABIEvent, abi_codec: ABICodec,
+        arguments: Optional[Union[Sequence[Any], Dict[str, Any]]] = None
 ) -> List[HexStr]:
     if arguments is None:
         arguments = {}
@@ -133,8 +133,8 @@ def construct_event_topic_set(
 
 
 def construct_event_data_set(
-    event_abi: ABIEvent, abi_codec: ABICodec,
-    arguments: Optional[Union[Sequence[Any], Dict[str, Any]]] = None
+        event_abi: ABIEvent, abi_codec: ABICodec,
+        arguments: Optional[Union[Sequence[Any], Dict[str, Any]]] = None
 ) -> List[List[Optional[HexStr]]]:
     if arguments is None:
         arguments = {}
@@ -197,7 +197,7 @@ def get_event_abi_types_for_decoding(event_inputs: Sequence[ABIEventParams]) -> 
 
 
 @curry
-def get_event_data(abi_codec: ABICodec, event_abi: ABIEvent, log_entry: LogReceipt) -> EventData:
+def get_event_data(abi_codec: ABICodec, event_abi: ABIEvent, log_entry: LogReceipt, vm_type: str = None) -> EventData:
     """
     Given an event ABI and a log entry for that event, return the decoded
     event data
@@ -207,7 +207,7 @@ def get_event_data(abi_codec: ABICodec, event_abi: ABIEvent, log_entry: LogRecei
     elif not log_entry['topics']:
         raise MismatchedABI("Expected non-anonymous event to have 1 or more topics")
     # type ignored b/c event_abi_to_log_topic(event_abi: Dict[str, Any])
-    elif event_abi_to_log_topic(event_abi) != log_entry['topics'][0]:  # type: ignore
+    elif event_abi_to_log_topic(event_abi, vm_type) != log_entry['topics'][0]:  # type: ignore
         raise MismatchedABI("The event signature did not match the provided ABI")
     else:
         log_topics = log_entry['topics'][1:]
@@ -238,13 +238,6 @@ def get_event_data(abi_codec: ABICodec, event_abi: ABIEvent, log_entry: LogRecei
             f"between event inputs: '{', '.join(duplicate_names)}'"
         )
 
-    decoded_log_data = abi_codec.decode_abi(log_data_types, log_data)
-    normalized_log_data = map_abi_data(
-        BASE_RETURN_NORMALIZERS,
-        log_data_types,
-        decoded_log_data
-    )
-
     decoded_topic_data = [
         abi_codec.decode_single(topic_type, topic_data)
         for topic_type, topic_data
@@ -255,6 +248,19 @@ def get_event_data(abi_codec: ABICodec, event_abi: ABIEvent, log_entry: LogRecei
         log_topic_types,
         decoded_topic_data
     )
+
+    if vm_type == 'wasm':
+        normalized_log_data = wasmevent_decode(hrp, log_data_types, log_data)
+        if isinstance(normalized_topic_data[0], bytes):
+            if normalized_topic_data[0][0] == 0:
+                normalized_topic_data = topic_decode(normalized_topic_data)
+    else:
+        decoded_log_data = abi_codec.decode_abi(log_data_types, log_data)
+        normalized_log_data = map_abi_data(
+            BASE_RETURN_NORMALIZERS,
+            log_data_types,
+            decoded_log_data
+        )
 
     event_args = dict(itertools.chain(
         zip(log_topic_names, normalized_topic_data),
@@ -291,7 +297,7 @@ def remove_trailing_from_seq(seq: Sequence[Any],
 
 normalize_topic_list = compose(
     remove_trailing_from_seq(remove_value=None),
-    pop_singlets,)
+    pop_singlets, )
 
 
 def is_indexed(arg: Any) -> bool:
@@ -311,8 +317,8 @@ class EventFilterBuilder:
     _immutable = False
 
     def __init__(
-        self, event_abi: ABIEvent, abi_codec: ABICodec,
-        formatter: Optional[EventData] = None
+            self, event_abi: ABIEvent, abi_codec: ABICodec,
+            formatter: Optional[EventData] = None
     ) -> None:
         self.event_abi = event_abi
         self.abi_codec = abi_codec
@@ -424,7 +430,7 @@ def initialize_event_topics(event_abi: ABIEvent) -> Union[bytes, List[Any]]:
 
 @to_dict
 def _build_argument_filters_from_event_abi(
-    event_abi: ABIEvent, abi_codec: ABICodec
+        event_abi: ABIEvent, abi_codec: ABICodec
 ) -> Iterable[Tuple[str, 'BaseArgumentFilter']]:
     for item in event_abi['inputs']:
         key = item['name']

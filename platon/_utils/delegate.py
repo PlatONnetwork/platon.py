@@ -16,7 +16,7 @@ from platon.types import (
     Von,
     BlockIdentifier,
 )
-from platon.inner_contract import (
+from platon._utils.inner_contract import (
     InnerContract,
     bubble_dict,
 )

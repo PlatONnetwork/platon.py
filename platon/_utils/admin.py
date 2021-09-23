@@ -4,8 +4,6 @@ from typing import (
     Tuple,
 )
 
-from platon_typing import HexStr
-
 from platon._utils.compat import (
     Protocol,
 )
@@ -106,7 +104,7 @@ get_schnorr_NIZK_prove: Method[Callable[[], str]] = Method(
     mungers=None,
 )
 
-set_solc: Method[Callable[[], str]] = Method(
-    RPC.admin_setSolc,
-    mungers=None,
-)
+# set_solc: Method[Callable[[], str]] = Method(
+#     RPC.admin_setSolc,
+#     mungers=None,
+# )

@@ -9,7 +9,7 @@ from threading import (
 import time
 import uuid
 
-from platon.auto.nodedev import (
+from platon.chains.nodedev import (
     w3,
 )
 from platon.middleware import (

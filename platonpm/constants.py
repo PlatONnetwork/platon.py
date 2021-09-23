@@ -6,7 +6,7 @@ DEFAULT_IPFS_BACKEND = "platonpm.backends.ipfs.InfuraIPFSBackend"
 
 IPFS_GATEWAY_PREFIX = "https://ipfs.io/ipfs/"
 
-INFURA_GATEWAY_MULTIADDR = "/dns4/ipfs.infura.io/tcp/5001/https/"
+INFURA_GATEWAY_MULTIADDR = "/dns4/ipfs.platon.io/tcp/5001/https/"
 
 GITHUB_API_AUTHORITY = "api.github.com"
 

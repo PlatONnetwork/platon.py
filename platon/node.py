@@ -12,17 +12,9 @@ from platon._utils.admin import (
     export_chain,
     get_program_version,
     get_schnorr_NIZK_prove,
-    set_solc,
 )
 from platon._utils.miner import (
-    make_dag,
-    set_etherbase,
-    set_extra,
     set_gas_price,
-    start,
-    start_auto_dag,
-    stop,
-    stop_auto_dag,
 )
 from platon._utils.personal import (
     ec_recover,
@@ -33,7 +25,6 @@ from platon._utils.personal import (
     new_account,
     send_transaction,
     sign,
-    sign_typed_data,
     unlock_account,
 )
 from platon._utils.txpool import (
@@ -60,18 +51,11 @@ class Admin(Module):
     export_chain = export_chain
     get_program_version = get_program_version
     get_schnorr_NIZK_prove = get_schnorr_NIZK_prove
-    set_solc = set_solc
+    # set_solc = set_solc
 
 
 class Miner(Module):
-    make_dag = make_dag
-    set_extra = set_extra
-    set_etherbase = set_etherbase
     set_gas_price = set_gas_price
-    start = start
-    stop = stop
-    start_auto_dag = start_auto_dag
-    stop_auto_dag = stop_auto_dag
 
 
 class Personal(Module):
@@ -83,7 +67,6 @@ class Personal(Module):
     new_account = new_account
     send_transaction = send_transaction
     sign = sign
-    sign_typed_data = sign_typed_data
     unlock_account = unlock_account
 
 

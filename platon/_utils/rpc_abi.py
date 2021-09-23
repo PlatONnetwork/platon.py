@@ -43,14 +43,13 @@ class RPC:
     admin_exportChain = RPCEndpoint("admin_exportChain")
     admin_getProgramVersion = RPCEndpoint("admin_getProgramVersion")
     admin_getSchnorrNIZKProve = RPCEndpoint("admin_getSchnorrNIZKProve")
-    admin_setSolc = RPCEndpoint("admin_setSolc")
+    # admin_setSolc = RPCEndpoint("admin_setSolc")
 
     # platon
     platon_accounts = RPCEndpoint("platon_accounts")
     platon_blockNumber = RPCEndpoint("platon_blockNumber")
     platon_call = RPCEndpoint("platon_call")
     platon_chainId = RPCEndpoint("platon_chainId")
-    platon_coinbase = RPCEndpoint("platon_coinbase")
     platon_estimateGas = RPCEndpoint("platon_estimateGas")
     platon_gasPrice = RPCEndpoint("platon_gasPrice")
     platon_getAddressHrp = RPCEndpoint("platon_getAddressHrp")
@@ -60,6 +59,7 @@ class RPC:
     platon_getBlockTransactionCountByHash = RPCEndpoint("platon_getBlockTransactionCountByHash")
     platon_getBlockTransactionCountByNumber = RPCEndpoint("platon_getBlockTransactionCountByNumber")
     platon_getCode = RPCEndpoint("platon_getCode")
+    platon_subscribe = RPCEndpoint("platon_subscribe")
     platon_getFilterChanges = RPCEndpoint("platon_getFilterChanges")
     platon_getFilterLogs = RPCEndpoint("platon_getFilterLogs")
     platon_getLogs = RPCEndpoint("platon_getLogs")
@@ -89,20 +89,14 @@ class RPC:
     platon_getPrepareQC = RPCEndpoint("platon_getPrepareQC")
 
     # evm
-    evm_mine = RPCEndpoint("evm_mine")
-    evm_reset = RPCEndpoint("evm_reset")
-    evm_revert = RPCEndpoint("evm_revert")
-    evm_snapshot = RPCEndpoint("evm_snapshot")
+    # evm_mine = RPCEndpoint("evm_mine")
+    # evm_reset = RPCEndpoint("evm_reset")
+    # evm_revert = RPCEndpoint("evm_revert")
+    # evm_snapshot = RPCEndpoint("evm_snapshot")
 
     # miner
-    miner_makeDag = RPCEndpoint("miner_makeDag")
-    miner_setExtra = RPCEndpoint("miner_setExtra")
-    miner_setEtherbase = RPCEndpoint("miner_setEtherbase")
+    # miner_setExtra = RPCEndpoint("miner_setExtra")
     miner_setGasPrice = RPCEndpoint("miner_setGasPrice")
-    miner_start = RPCEndpoint("miner_start")
-    miner_stop = RPCEndpoint("miner_stop")
-    miner_startAutoDag = RPCEndpoint("miner_startAutoDag")
-    miner_stopAutoDag = RPCEndpoint("miner_stopAutoDag")
 
     # net
     net_listening = RPCEndpoint("net_listening")
@@ -110,12 +104,12 @@ class RPC:
     net_version = RPCEndpoint("net_version")
 
     # parity
-    parity_addReservedPeer = RPCEndpoint("parity_addReservedPeer")
-    parity_enode = RPCEndpoint("parity_enode")
-    parity_listStorageKeys = RPCEndpoint("parity_listStorageKeys")
-    parity_netPeers = RPCEndpoint("parity_netPeers")
-    parity_mode = RPCEndpoint("parity_mode")
-    parity_setMode = RPCEndpoint("parity_setMode")
+    # parity_addReservedPeer = RPCEndpoint("parity_addReservedPeer")
+    # parity_enode = RPCEndpoint("parity_enode")
+    # parity_listStorageKeys = RPCEndpoint("parity_listStorageKeys")
+    # parity_netPeers = RPCEndpoint("parity_netPeers")
+    # parity_mode = RPCEndpoint("parity_mode")
+    # parity_setMode = RPCEndpoint("parity_setMode")
 
     # personal
     personal_ecRecover = RPCEndpoint("personal_ecRecover")
@@ -126,11 +120,11 @@ class RPC:
     personal_newAccount = RPCEndpoint("personal_newAccount")
     personal_sendTransaction = RPCEndpoint("personal_sendTransaction")
     personal_sign = RPCEndpoint("personal_sign")
-    personal_signTypedData = RPCEndpoint("personal_signTypedData")
+    # personal_signTypedData = RPCEndpoint("personal_signTypedData")
     personal_unlockAccount = RPCEndpoint("personal_unlockAccount")
 
     # testing
-    testing_timeTravel = RPCEndpoint("testing_timeTravel")
+    # testing_timeTravel = RPCEndpoint("testing_timeTravel")
 
     # debug
     debug_economicConfig = RPCEndpoint("debug_economicConfig")
@@ -138,13 +132,13 @@ class RPC:
     debug_getBadBlocks = RPCEndpoint("debug_getBadBlocks")
 
     # trace
-    trace_block = RPCEndpoint("trace_block")
-    trace_call = RPCEndpoint("trace_call")
-    trace_filter = RPCEndpoint("trace_filter")
-    trace_rawTransaction = RPCEndpoint("trace_rawTransaction")
-    trace_replayBlockTransactions = RPCEndpoint("trace_replayBlockTransactions")
-    trace_replayTransaction = RPCEndpoint("trace_replayTransaction")
-    trace_transaction = RPCEndpoint("trace_transaction")
+    # trace_block = RPCEndpoint("trace_block")
+    # trace_call = RPCEndpoint("trace_call")
+    # trace_filter = RPCEndpoint("trace_filter")
+    # trace_rawTransaction = RPCEndpoint("trace_rawTransaction")
+    # trace_replayBlockTransactions = RPCEndpoint("trace_replayBlockTransactions")
+    # trace_replayTransaction = RPCEndpoint("trace_replayTransaction")
+    # trace_transaction = RPCEndpoint("trace_transaction")
 
     # txpool
     txpool_content = RPCEndpoint("txpool_content")

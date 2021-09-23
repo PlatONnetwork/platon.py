@@ -299,7 +299,7 @@ Check Encodability
 
    .. code-block:: python
 
-        >>> from platon.auto.nodedev import w3
+        >>> from platon.chains.nodedev import w3
         >>> w3.is_encodable('bytes2', b'12')
         True
         >>> w3.is_encodable('bytes2', b'1')
@@ -315,7 +315,7 @@ Check Encodability
 
     .. doctest::
 
-        >>> from platon.auto.nodedev import w3
+        >>> from platon.chains.nodedev import w3
                 >>> w3.enable_strict_bytes_type_checking()
                 >>> w3.is_encodable('bytes2', b'12')
                 True

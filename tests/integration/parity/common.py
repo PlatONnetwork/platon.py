@@ -54,7 +54,7 @@ class ParityPlatonModuleTest(PlatonModuleTest):
         pytest.xfail('platon_uninstallFilter calls to parity always return true')
         super().test_platon_uninstall_filter(web3)
 
-    @pytest.mark.xfail(reason='Parity is not setup to auto mine')
+    @pytest.mark.xfail(reason='Parity is not setup to chains mine')
     def test_platon_replace_transaction_already_mined(self, web3, unlocked_account):
         super().test_platon_replace_transaction_already_mined(web3, unlocked_account)
 

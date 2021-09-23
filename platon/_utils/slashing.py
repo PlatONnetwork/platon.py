@@ -6,14 +6,11 @@ from platon_typing import (
     NodeID,
     HexStr,
 )
-from platon_typing.evm import (
-    BlockNumber,
-)
 
 from platon.types import (
     InnerFn, BlockIdentifier,
 )
-from platon.inner_contract import (
+from platon._utils.inner_contract import (
     InnerContract,
 )
 

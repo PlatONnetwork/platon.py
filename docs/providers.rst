@@ -76,7 +76,7 @@ when you initialize like so:
 
 .. code-block:: python
 
-    from platon.auto import w3
+    from platon.chains import w3
 
     # which is equivalent to:
 
@@ -106,7 +106,7 @@ successful connection it can make:
 2. :class:`~web3.providers.ipc.IPCProvider`, which looks for several IPC file locations.
    ``IPCProvider`` will not automatically detect a testnet connection, it is suggested that the
    user instead uses a ``w3`` instance from ``web3.auto.infura`` (e.g.
-   ``from platon.auto.infura.ropsten import w3``) if they want to auto-detect a testnet.
+   ``from platon.chains.infura.ropsten import w3``) if they want to auto-detect a testnet.
 3. :class:`~web3.providers.rpc.HTTPProvider`, which attempts to connect to "http://localhost:8545"
 4. ``None`` - if no providers are successful, you can still use Web3 APIs
    that do not require a connection, like:
@@ -130,7 +130,7 @@ For example, the following retrieves the client enode endpoint for both node and
 
 .. code-block:: python
 
-    from platon.auto import w3
+    from platon.chains import w3
 
     connected = w3.isConnected()
 
@@ -183,7 +183,7 @@ an optional secret key, set the environment variable ``WEB3_INFURA_API_SECRET``:
 
 .. code-block:: python
 
-    >>> from platon.auto.infura import w3
+    >>> from platon.chains.infura import w3
 
     # confirm that the connection succeeded
     >>> w3.isConnected()
@@ -196,7 +196,7 @@ To connect to a ``node --dev`` Proof of Authority instance with defaults:
 
 .. code-block:: python
 
-    >>> from platon.auto.nodedev import w3
+    >>> from platon.chains.nodedev import w3
 
     # confirm that the connection succeeded
     >>> w3.isConnected()

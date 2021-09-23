@@ -342,7 +342,7 @@ The easiest way to connect to a default ``node --dev`` instance which loads the 
 
 .. code-block:: python
 
-    >>> from platon.auto.nodedev import w3
+    >>> from platon.chains.nodedev import w3
 
     # confirm that the connection succeeded
     >>> w3.clientVersion

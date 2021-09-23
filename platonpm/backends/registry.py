@@ -47,7 +47,7 @@ class RegistryURIBackend(BaseURIBackend):
     """
 
     def __init__(self) -> None:
-        from platon.auto.infura import w3
+        from platon.chains.platon import w3
         self.w3 = w3
 
     def can_translate_uri(self, uri: str) -> bool:
@@ -89,7 +89,7 @@ def parse_registry_uri(uri: str) -> RegistryURI:
     """
     Validate and return (authority, chain_id, pkg_name, version) from a valid registry URI.
     """
-    from platon.auto.infura import w3
+    from platon.chains.platon import w3
     validate_registry_uri(uri)
     parsed_uri = parse.urlparse(uri)
     if ":" in parsed_uri.netloc:

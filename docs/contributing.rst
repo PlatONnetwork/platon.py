@@ -403,7 +403,7 @@ virtualenv for smoke testing:
         # smoke test the release
         $ pip install ipython
         $ ipython
-        >>> from platon.auto import w3
+        >>> from platon.chains import w3
         >>> w3.isConnected()
         >>> ...
 
@@ -417,7 +417,7 @@ virtualenv for smoke testing:
         # smoke test the release
         $ pip install ipython
         $ ipython
-        >>> from platon.auto import w3
+        >>> from platon.chains import w3
         >>> w3.isConnected()
         >>> ...
 
@@ -431,7 +431,7 @@ virtualenv for smoke testing:
     # smoke test the release
     $ pip install ipython
     $ ipython
-    >>> from platon.auto import w3
+    >>> from platon.chains import w3
     >>> w3.isConnected()
     >>> ...
 

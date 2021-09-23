@@ -420,7 +420,7 @@ it as a ``Package`` instance.
 
 .. code-block:: python3
 
-    from platon.auto.infura import w3
+    from platon.chains.infura import w3
 
     # Note. To use the web3.pm module, you will need to instantiate your w3 instance
     # with a web3 provider connected to the chain on which your registry lives.
@@ -469,7 +469,7 @@ within an ethPM package.
     # connected to your provider of choice. Now your factories will automatically
     # deploy to this new chain, and the deployments available on a package will
     # be automatically filtered to those located on the new chain.
-    from platon.auto.infura.goerli import w3 as goerli_w3
+    from platon.chains.infura.goerli import w3 as goerli_w3
     goerli_registrar = ens_package.update_w3(goerli_w3)
 
 

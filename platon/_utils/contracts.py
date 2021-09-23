@@ -1,4 +1,5 @@
 import functools
+
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -10,8 +11,12 @@ from typing import (
     cast,
 )
 
+from client_sdk_python.fvnhash import fnv1_64
 from platon_abi.codec import (
-    ABICodec,
+    ABICodec, WasmABICodec,
+)
+from platon_abi.registry import (
+    registry_wasm,
 )
 from platon_typing import (
     Bech32Address,
@@ -74,10 +79,9 @@ if TYPE_CHECKING:
 
 
 def find_matching_event_abi(
-    abi: ABI, event_name: Optional[str] = None,
-    argument_names: Optional[Sequence[str]] = None
+        abi: ABI, event_name: Optional[str] = None,
+        argument_names: Optional[Sequence[str]] = None
 ) -> ABIEvent:
-
     filters = [
         functools.partial(filter_by_type, 'event'),
     ]
@@ -101,11 +105,11 @@ def find_matching_event_abi(
 
 
 def find_matching_fn_abi(
-    abi: ABI,
-    abi_codec: ABICodec,
-    fn_identifier: Optional[Union[str, Type[FallbackFn], Type[ReceiveFn]]] = None,
-    args: Optional[Sequence[Any]] = None,
-    kwargs: Optional[Any] = None,
+        abi: ABI,
+        abi_codec: ABICodec,
+        fn_identifier: Optional[Union[str, Type[FallbackFn], Type[ReceiveFn]]] = None,
+        args: Optional[Sequence[Any]] = None,
+        kwargs: Optional[Any] = None,
 ) -> ABIFunction:
     args = args or tuple()
     kwargs = kwargs or dict()
@@ -164,7 +168,7 @@ def find_matching_fn_abi(
 
 
 def encode_abi(
-    web3: "Web3", abi: ABIFunction, arguments: Sequence[Any], data: Optional[HexStr] = None
+        web3: "Web3", vm_type: str, abi: ABIFunction, arguments: Sequence[Any], data: Optional[HexStr] = None
 ) -> HexStr:
     argument_types = get_abi_input_types(abi)
 
@@ -187,26 +191,28 @@ def encode_abi(
         argument_types,
         arguments,
     )
-    encoded_arguments = web3.codec.encode_abi(
+
+    codec = web3.codec if vm_type != 'wasm' else WasmABICodec(registry_wasm)
+    encoded_arguments = codec.encode_abi(
         argument_types,
         normalized_arguments,
+        identifier=abi['name'],
+        data=data,
     )
 
-    if data:
-        return to_hex(HexBytes(data) + encoded_arguments)
-    else:
-        return encode_hex(encoded_arguments)
+    return encode_hex(encoded_arguments)
 
 
 def prepare_transaction(
-    address: Bech32Address,
-    web3: "Web3",
-    fn_identifier: Union[str, Type[FallbackFn], Type[ReceiveFn]],
-    contract_abi: Optional[ABI] = None,
-    fn_abi: Optional[ABIFunction] = None,
-    transaction: Optional[TxParams] = None,
-    fn_args: Optional[Sequence[Any]] = None,
-    fn_kwargs: Optional[Any] = None,
+        address: Bech32Address,
+        web3: "Web3",
+        vm_type: str,
+        fn_identifier: Union[str, Type[FallbackFn], Type[ReceiveFn]],
+        contract_abi: Optional[ABI] = None,
+        fn_abi: Optional[ABIFunction] = None,
+        transaction: Optional[TxParams] = None,
+        fn_args: Optional[Sequence[Any]] = None,
+        fn_kwargs: Optional[Any] = None,
 ) -> TxParams:
     """
     :parameter `is_function_abi` is used to distinguish  function abi from contract abi
@@ -214,6 +220,7 @@ def prepare_transaction(
     TODO: make this a public API
     TODO: add new prepare_deploy_transaction API
     """
+    # todo: 支持wasm codec
     if fn_abi is None:
         fn_abi = find_matching_fn_abi(contract_abi, web3.codec, fn_identifier, fn_args, fn_kwargs)
 
@@ -232,6 +239,7 @@ def prepare_transaction(
 
     prepared_transaction['data'] = encode_transaction_data(
         web3,
+        vm_type,
         fn_identifier,
         contract_abi,
         fn_abi,
@@ -242,12 +250,13 @@ def prepare_transaction(
 
 
 def encode_transaction_data(
-    web3: "Web3",
-    fn_identifier: Union[str, Type[FallbackFn], Type[ReceiveFn]],
-    contract_abi: Optional[ABI] = None,
-    fn_abi: Optional[ABIFunction] = None,
-    args: Optional[Sequence[Any]] = None,
-    kwargs: Optional[Any] = None
+        web3: "Web3",
+        vm_type: str,
+        fn_identifier: Union[str, Type[FallbackFn], Type[ReceiveFn]],
+        contract_abi: Optional[ABI] = None,
+        fn_abi: Optional[ABIFunction] = None,
+        args: Optional[Sequence[Any]] = None,
+        kwargs: Optional[Any] = None
 ) -> HexStr:
     if fn_identifier is FallbackFn:
         fn_abi, fn_selector, fn_arguments = get_fallback_function_info(contract_abi, fn_abi)
@@ -261,11 +270,15 @@ def encode_transaction_data(
     else:
         raise TypeError("Unsupported function identifier")
 
-    return add_0x_prefix(encode_abi(web3, fn_abi, fn_arguments, fn_selector))
+    if vm_type == 'wasm':
+        return add_0x_prefix(encode_abi(web3, vm_type, fn_abi, fn_arguments))
+
+    return add_0x_prefix(encode_abi(web3, vm_type, fn_abi, fn_arguments, fn_selector))
 
 
 def get_fallback_function_info(
-    contract_abi: Optional[ABI] = None, fn_abi: Optional[ABIFunction] = None
+        contract_abi: Optional[ABI] = None,
+        fn_abi: Optional[ABIFunction] = None,
 ) -> Tuple[ABIFunction, HexStr, Tuple[Any, ...]]:
     if fn_abi is None:
         fn_abi = get_fallback_func_abi(contract_abi)
@@ -275,7 +288,8 @@ def get_fallback_function_info(
 
 
 def get_receive_function_info(
-    contract_abi: Optional[ABI] = None, fn_abi: Optional[ABIFunction] = None
+        contract_abi: Optional[ABI] = None,
+        fn_abi: Optional[ABIFunction] = None,
 ) -> Tuple[ABIFunction, HexStr, Tuple[Any, ...]]:
     if fn_abi is None:
         fn_abi = get_receive_func_abi(contract_abi)
@@ -285,12 +299,12 @@ def get_receive_function_info(
 
 
 def get_function_info(
-    fn_name: str,
-    abi_codec: ABICodec,
-    contract_abi: Optional[ABI] = None,
-    fn_abi: Optional[ABIFunction] = None,
-    args: Optional[Sequence[Any]] = None,
-    kwargs: Optional[Any] = None,
+        fn_name: str,
+        abi_codec: ABICodec,
+        contract_abi: Optional[ABI] = None,
+        fn_abi: Optional[ABIFunction] = None,
+        args: Optional[Sequence[Any]] = None,
+        kwargs: Optional[Any] = None,
 ) -> Tuple[ABIFunction, HexStr, Tuple[Any, ...]]:
     if args is None:
         args = tuple()
