@@ -106,7 +106,7 @@ def find_matching_event_abi(
 
 def find_matching_fn_abi(
         abi: ABI,
-        abi_codec: ABICodec,
+        abi_codec: ABICodec = None,
         fn_identifier: Optional[Union[str, Type[FallbackFn], Type[ReceiveFn]]] = None,
         args: Optional[Sequence[Any]] = None,
         kwargs: Optional[Any] = None,
@@ -126,9 +126,12 @@ def find_matching_fn_abi(
 
     name_filter = functools.partial(filter_by_name, fn_identifier)
     arg_count_filter = functools.partial(filter_by_argument_count, num_arguments)
-    encoding_filter = functools.partial(filter_by_encodability, abi_codec, args, kwargs)
-
-    function_candidates = pipe(abi, name_filter, arg_count_filter, encoding_filter)
+    # todo: waiting for the completion of wasm codec
+    if abi_codec:
+        encoding_filter = functools.partial(filter_by_encodability, abi_codec, args, kwargs)
+        function_candidates = pipe(abi, name_filter, arg_count_filter, encoding_filter)
+    else:
+        function_candidates = pipe(abi, name_filter, arg_count_filter)
 
     if len(function_candidates) == 1:
         return function_candidates[0]
@@ -137,13 +140,14 @@ def find_matching_fn_abi(
         matching_function_signatures = [abi_to_signature(func) for func in matching_identifiers]
 
         arg_count_matches = len(arg_count_filter(matching_identifiers))
-        encoding_matches = len(encoding_filter(matching_identifiers))
+        if abi_codec:
+            encoding_matches = len(encoding_filter(matching_identifiers))
 
         if arg_count_matches == 0:
             diagnosis = "\nFunction invocation failed due to improper number of arguments."
-        elif encoding_matches == 0:
+        elif abi_codec and encoding_matches == 0:
             diagnosis = "\nFunction invocation failed due to no matching argument types."
-        elif encoding_matches > 1:
+        elif abi_codec and encoding_matches > 1:
             diagnosis = (
                 "\nAmbiguous argument encoding. "
                 "Provided arguments can be encoded to multiple functions matching this call."
@@ -167,36 +171,45 @@ def find_matching_fn_abi(
         raise ValidationError(message)
 
 
-def encode_abi(
-        web3: "Web3", vm_type: str, abi: ABIFunction, arguments: Sequence[Any], data: Optional[HexStr] = None
-) -> HexStr:
+def encode_abi(web3: "Web3",
+               vm_type: str,
+               abi: ABIFunction,
+               arguments: Sequence[Any],
+               struct_dict: dict = None,
+               data: Optional[HexStr] = None,
+               ) -> HexStr:
     argument_types = get_abi_input_types(abi)
 
-    if not check_if_arguments_can_be_encoded(abi, web3.codec, arguments, {}):
-        raise TypeError(
-            "One or more arguments could not be encoded to the necessary "
-            "ABI type.  Expected types are: {0}".format(
-                ', '.join(argument_types),
+    # todo: Add arguments checker for wasm
+    if vm_type == 'wasm':
+        normalized_arguments = arguments
+    else:
+        if not check_if_arguments_can_be_encoded(abi, web3.codec, arguments, {}):
+            raise TypeError(
+                "One or more arguments could not be encoded to the necessary "
+                "ABI type.  Expected types are: {0}".format(
+                    ', '.join(argument_types),
+                )
             )
-        )
 
-    normalizers = [
-        abi_ens_resolver(web3),
-        abi_address_to_bech32,
-        abi_bytes_to_bytes,
-        abi_string_to_text,
-    ]
-    normalized_arguments = map_abi_data(
-        normalizers,
-        argument_types,
-        arguments,
-    )
+        normalizers = [
+            abi_ens_resolver(web3),
+            abi_address_to_bech32,
+            abi_bytes_to_bytes,
+            abi_string_to_text,
+        ]
+        normalized_arguments = map_abi_data(
+            normalizers,
+            argument_types,
+            arguments,
+        )
 
     codec = web3.codec if vm_type != 'wasm' else WasmABICodec(registry_wasm)
     encoded_arguments = codec.encode_abi(
         argument_types,
         normalized_arguments,
         identifier=abi['name'],
+        struct_dict=struct_dict,
         data=data,
     )
 
@@ -270,10 +283,11 @@ def encode_transaction_data(
     else:
         raise TypeError("Unsupported function identifier")
 
+    struct_dict = get_struct_dict(contract_abi)
     if vm_type == 'wasm':
-        return add_0x_prefix(encode_abi(web3, vm_type, fn_abi, fn_arguments))
+        return add_0x_prefix(encode_abi(web3, vm_type, fn_abi, fn_arguments, struct_dict=struct_dict))
 
-    return add_0x_prefix(encode_abi(web3, vm_type, fn_abi, fn_arguments, fn_selector))
+    return add_0x_prefix(encode_abi(web3, vm_type, fn_abi, fn_arguments, data=fn_selector))
 
 
 def get_fallback_function_info(
@@ -323,6 +337,10 @@ def get_function_info(
     _, aligned_fn_arguments = get_aligned_abi_inputs(fn_abi, fn_arguments)
 
     return fn_abi, fn_selector, aligned_fn_arguments
+
+
+def get_struct_dict(contract_abi: Optional[ABI] = None):
+    return {abi['name']: abi for abi in contract_abi if abi['type'] == 'struct'}
 
 
 def validate_payable(transaction: TxParams, abi: ABIFunction) -> None:

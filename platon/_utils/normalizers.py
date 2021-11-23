@@ -91,7 +91,7 @@ def implicitly_identity(
 
 @implicitly_identity
 def addresses_bech32(type_str: TypeStr, data: Any) -> Tuple[TypeStr, Bech32Address]:
-    if type_str == 'address':
+    if type_str == 'address' and data:
         return type_str, to_bech32_address(data)
     return None
 
@@ -194,7 +194,7 @@ def abi_bytes_to_bytes(
 
 @implicitly_identity
 def abi_address_to_bytes(type_str: TypeStr, data: Any) -> Optional[Tuple[TypeStr, Address]]:
-    if type_str == 'address':
+    if type_str == 'address' and data:
         validate_address(data)
         if is_address(data):
             return type_str, to_canonical_address(data)
@@ -203,7 +203,7 @@ def abi_address_to_bytes(type_str: TypeStr, data: Any) -> Optional[Tuple[TypeStr
 
 @implicitly_identity
 def abi_address_to_bech32(type_str: TypeStr, data: Any) -> Optional[Tuple[TypeStr, Bech32Address]]:
-    if type_str == 'address':
+    if type_str == 'address' and data:
         validate_address(data)
         if is_address(data):
             return type_str, to_bech32_address(data)
@@ -242,8 +242,10 @@ if LooseVersion(platon_abi.__version__) < LooseVersion("2"):
     BASE_RETURN_NORMALIZERS.append(decode_abi_strings)
 
 
-def transform_wasm_abi(abis: [dict]):
-
+def to_normalize_abi(abis: [dict]):
+    """
+    Convert the ABIs to canonical mode for uniform processing
+    """
     def _rewrite_abi(abi: dict):
         if abi.get('name') == 'init':
             abi['type'] = 'constructor'
@@ -261,22 +263,24 @@ def transform_wasm_abi(abis: [dict]):
             })
             inputs = abi.get('inputs')
             topic = abi.get('topic')
-            zer = zip(range(topic), inputs)
-            for index, _input in zer:
+            for _input in inputs[:topic]:
                 _input['indexed'] = True
+            for _input in inputs[topic:]:
+                _input['indexed'] = False
 
         if abi.get('type') == 'struct':
             if 'fields' in abi:
                 abi['inputs'] = abi.pop('fields')
                 baseclass = abi.get('baseclass')
+                baseclass.reverse()
                 for _class in baseclass:
-                    abi['inputs'].append({'name': _class, 'type': 'struct'})
+                    abi['inputs'].insert(0, {'name': _class, 'type': _class})
                 del abi['baseclass']
 
     for abi in abis:
         _rewrite_abi(abi)
 
-    # print(f'contract abis: {abis}')
+    # print(f'normalized abis: {abis}')
     return abis
 
 
@@ -288,7 +292,7 @@ def transform_wasm_abi(abis: [dict]):
 def normalize_abi(abi: Union[ABI, str]) -> ABI:
     if isinstance(abi, str):
         abi = json.loads(abi)
-    abi = transform_wasm_abi(copy.deepcopy(abi))
+    abi = to_normalize_abi(copy.deepcopy(abi))
     validate_abi(cast(ABI, abi))
     return cast(ABI, abi)
 

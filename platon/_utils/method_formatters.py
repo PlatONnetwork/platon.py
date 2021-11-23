@@ -110,7 +110,6 @@ to_ascii_if_bytes = apply_formatter_if(is_bytes, bytes_to_ascii)
 to_integer_if_hex = apply_formatter_if(is_string, hex_to_integer)
 to_hex_if_integer = apply_formatter_if(is_integer, integer_to_hex)
 
-
 is_false = partial(operator.is_, False)
 
 is_not_false = complement(is_false)

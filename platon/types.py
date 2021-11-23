@@ -104,6 +104,13 @@ class ABIFunction(TypedDict, total=False):
     type: Literal["function", "constructor", "fallback", "receive"]
 
 
+class ABIStruct(TypedDict, total=False):
+    baseclass: Sequence["str"]
+    fields: Sequence["ABIFunctionParams"]
+    name: str
+    type: str
+
+
 ABIElement = Union[ABIFunction, ABIEvent]
 ABI = Sequence[Union[ABIFunction, ABIEvent]]
 

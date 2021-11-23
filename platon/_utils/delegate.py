@@ -79,7 +79,7 @@ class _DelegatePart(InnerContract):
         kwargs = bubble_dict(dict(locals()), 'staking_block_identifier')
         block = self.web3.platon.get_block(staking_block_identifier)
         kwargs['staking_block_identifier'] = block['number']
-        return self.function_processor(InnerFn.staking_getCandidateInfo, kwargs, is_call=True)
+        return self.function_processor(InnerFn.delegate_getDelegateInfo, kwargs, is_call=True)
 
 
 class _DelegateReward(InnerContract):

@@ -123,7 +123,6 @@ from platon.providers.websocket import (
     WebsocketProvider,
 )
 from platon.types import (
-    Middleware,
     MiddlewareOnion,
     Von,
 )

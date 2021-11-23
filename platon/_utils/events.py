@@ -22,8 +22,9 @@ from platon_abi import (
     grammar,
 )
 from platon_abi.codec import (
-    ABICodec,
+    ABICodec, WasmABICodec,
 )
+from platon_abi.registry import registry_wasm
 from platon_typing import (
     Bech32Address,
     HexStr,
@@ -250,17 +251,15 @@ def get_event_data(abi_codec: ABICodec, event_abi: ABIEvent, log_entry: LogRecei
     )
 
     if vm_type == 'wasm':
-        normalized_log_data = wasmevent_decode(hrp, log_data_types, log_data)
-        if isinstance(normalized_topic_data[0], bytes):
-            if normalized_topic_data[0][0] == 0:
-                normalized_topic_data = topic_decode(normalized_topic_data)
-    else:
-        decoded_log_data = abi_codec.decode_abi(log_data_types, log_data)
-        normalized_log_data = map_abi_data(
-            BASE_RETURN_NORMALIZERS,
-            log_data_types,
-            decoded_log_data
-        )
+        abi_codec = WasmABICodec(registry_wasm)
+
+    decoded_log_data = abi_codec.decode_abi(log_data_types, log_data)
+
+    normalized_log_data = map_abi_data(
+        BASE_RETURN_NORMALIZERS,
+        log_data_types,
+        decoded_log_data
+    )
 
     event_args = dict(itertools.chain(
         zip(log_topic_names, normalized_topic_data),

@@ -38,7 +38,8 @@ from platon_utils import (
     function_abi_to_4byte_selector,
     is_list_like,
     is_text,
-    to_tuple, remove_0x_prefix,
+    to_tuple,
+    remove_0x_prefix,
 )
 from platon_utils.toolz import (
     compose,
@@ -70,6 +71,7 @@ from platon._utils.contracts import (
     find_matching_event_abi,
     find_matching_fn_abi,
     get_function_info,
+    get_struct_dict,
     prepare_transaction,
 )
 from platon._utils.datatypes import (
@@ -403,8 +405,13 @@ class Contract:
     #  Public API
     #
     @combomethod
-    def encode_abi(cls, fn_name: str, args: Optional[Any] = None,
-                   kwargs: Optional[Any] = None, vm_type: str = None, data: Optional[HexStr] = None) -> HexStr:
+    def encode_abi(cls,
+                   fn_name: str,
+                   args: Optional[Any] = None,
+                   kwargs: Optional[Any] = None,
+                   vm_type: str = None,
+                   data: Optional[HexStr] = None
+                   ) -> HexStr:
         """
         Encodes the arguments using the Platon ABI for the contract function
         that matches the given name and arguments..
@@ -415,10 +422,12 @@ class Contract:
             fn_name, cls.web3.codec, contract_abi=cls.abi, args=args, kwargs=kwargs,
         )
 
+        struct_dict = get_struct_dict(cls.abi)
+
         if data is None:
             data = fn_selector
 
-        return encode_abi(cls.web3, vm_type, fn_abi, fn_arguments, data=data)
+        return encode_abi(cls.web3, vm_type, fn_abi, fn_arguments, struct_dict=struct_dict, data=data)
 
     @combomethod
     def all_functions(self) -> List['ContractFunction']:
@@ -608,6 +617,7 @@ class ContractConstructor:
     ) -> None:
         self.web3 = web3
         self.abi = abi
+        self.struct_dict = get_struct_dict(abi)
         self.vm_type = vm_type
         self.bytecode = bytecode
         self.data_in_transaction = self._encode_data_in_transaction(*args, **kwargs)
@@ -624,7 +634,7 @@ class ContractConstructor:
 
             arguments = merge_args_and_kwargs(constructor_abi, args, kwargs)
             data = add_0x_prefix(
-                encode_abi(self.web3, self.vm_type, constructor_abi, arguments, data=self.bytecode)
+                encode_abi(self.web3, self.vm_type, constructor_abi, arguments, self.struct_dict, data=self.bytecode)
             )
         else:
             data = to_hex(self.bytecode)
@@ -895,7 +905,9 @@ class ContractFunction:
         if not self.abi:
             self.abi = find_matching_fn_abi(
                 self.contract_abi,
-                self.web3.codec,
+                # todo: waiting for the completion of wasm codec
+                # self.web3.codec,
+                None,
                 self.function_identifier,
                 self.args,
                 self.kwargs
@@ -972,6 +984,7 @@ class ContractFunction:
         return call_contract_function(
             self.web3,
             self.address,
+            self.vm_type,
             self._return_data_normalizers,
             self.function_identifier,
             call_transaction,
@@ -1494,6 +1507,7 @@ def check_for_forbidden_api_filter_arguments(
 def call_contract_function(
         web3: 'Web3',
         address: Bech32Address,
+        vm_type: str,
         normalizers: Tuple[Callable[..., Any], ...],
         function_identifier: FunctionType,
         transaction: TxParams,
@@ -1510,6 +1524,7 @@ def call_contract_function(
     call_transaction = prepare_transaction(
         address,
         web3,
+        vm_type,
         fn_identifier=function_identifier,
         contract_abi=contract_abi,
         fn_abi=fn_abi,

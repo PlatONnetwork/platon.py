@@ -1,6 +1,6 @@
-from platon_utils.curried import apply_formatters_to_dict
+from platon_utils.curried import apply_formatters_to_dict, apply_formatter_if
 
-from platon._utils.method_formatters import to_integer_if_hex, apply_list_to_array_formatter
+from platon._utils.method_formatters import to_integer_if_hex, apply_list_to_array_formatter, is_not_null
 
 from platon.types import (
     InnerFn,
@@ -80,9 +80,9 @@ restricting_plan_formatter = apply_formatters_to_dict(RESTRICTING_PLAN_FORMATTER
 
 RESTRICTING_INFO_FORMATTER = {
     'balance': to_integer_if_hex,
-    'pledge': to_integer_if_hex,
+    'Pledge': to_integer_if_hex,
     'debt': to_integer_if_hex,
-    'plans': apply_list_to_array_formatter(restricting_plan_formatter),
+    'plans': apply_formatter_if(is_not_null, apply_list_to_array_formatter(restricting_plan_formatter))
 }
 
 restricting_info_formatter = apply_formatters_to_dict(RESTRICTING_INFO_FORMATTER)

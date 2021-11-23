@@ -111,8 +111,10 @@ def get_abi_input_types(abi: ABIFunction) -> List[str]:
 def get_abi_output_types(abi: ABIFunction) -> List[str]:
     if abi['type'] == 'fallback':
         return []
-    else:
-        return [collapse_if_tuple(cast(Dict[str, Any], arg)) for arg in abi['outputs']]
+    elif isinstance(abi.get('outputs'), dict):
+        return abi['outputs']['type']
+
+    return [collapse_if_tuple(cast(Dict[str, Any], arg)) for arg in abi['outputs']]
 
 
 def get_abi_input_names(abi: Union[ABIFunction, ABIEvent]) -> List[str]:
@@ -560,6 +562,7 @@ def get_aligned_abi_inputs(
     """
     input_abis = abi.get('inputs', [])
 
+    # todo: support wasm abi types
     if isinstance(args, abc.Mapping):
         # `args` is mapping.  Align values according to abi order.
         args = tuple(args[abi['name']] for abi in input_abis)

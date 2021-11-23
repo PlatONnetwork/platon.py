@@ -42,7 +42,7 @@ from platon.types import (
 if TYPE_CHECKING:
     from platon import Web3
 
-MAX_EXTRADATA_LENGTH = 97
+MAX_EXTRADATA_LENGTH = 328
 
 is_not_null = complement(is_null)
 
