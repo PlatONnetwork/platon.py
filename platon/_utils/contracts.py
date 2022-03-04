@@ -208,7 +208,7 @@ def encode_abi(web3: "Web3",
     encoded_arguments = codec.encode_abi(
         argument_types,
         normalized_arguments,
-        identifier=abi['name'],
+        identifier=abi.get('name'),
         struct_dict=struct_dict,
         data=data,
     )

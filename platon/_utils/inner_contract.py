@@ -252,10 +252,11 @@ class InnerContractFunction:
         rets = result.get('Ret')
 
         if result.get('Code') != 0:
-            # todo: Wait to resolve the return value issue
+            # todo: Wait platon resolve the return value issue
             # raise ContractLogicError(rets)
             return rets
 
+        # when rest is empty value, as <''> \ <[]> ...
         if not rets:
             return rets
 

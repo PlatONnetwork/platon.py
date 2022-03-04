@@ -19,7 +19,7 @@ from platon._utils.caching import (
 
 
 def get_default_http_endpoint() -> URI:
-    return URI(os.environ.get('WEB3_HTTP_PROVIDER_URI', 'http://localhost:8545'))
+    return URI(os.environ.get('WEB3_HTTP_PROVIDER_URI', 'http://localhost:6789'))
 
 
 def cache_session(endpoint_uri: URI, session: requests.Session) -> None:
