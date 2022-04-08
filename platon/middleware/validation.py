@@ -120,6 +120,7 @@ def chain_id_validator(web3: "Web3") -> Callable[..., Any]:
 def build_validators_with_web3(w3: "Web3") -> FormattersDict:
     return dict(
         request_formatters={
+            # todo: waiting check
             RPC.platon_sendTransaction: chain_id_validator(w3),
             RPC.platon_estimateGas: chain_id_validator(w3),
             RPC.platon_call: chain_id_validator(w3),

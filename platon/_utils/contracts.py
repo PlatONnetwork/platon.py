@@ -11,7 +11,6 @@ from typing import (
     cast,
 )
 
-from client_sdk_python.fvnhash import fnv1_64
 from platon_abi.codec import (
     ABICodec, WasmABICodec,
 )

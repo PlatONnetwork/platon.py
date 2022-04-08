@@ -57,7 +57,7 @@ TRANSACTION_DEFAULTS = {
     'data': b'',
     'gas': lambda web3, tx: web3.platon.estimate_gas(tx),
     'gasPrice': lambda web3, tx: web3.platon.generate_gas_price(tx) or web3.platon.gas_price,
-    'chainId': lambda web3, tx: web3.platon.chain_id,
+    'chainId': lambda web3, tx: web3.chain_id,
 }
 
 if TYPE_CHECKING:
