@@ -92,7 +92,10 @@ def implicitly_identity(
 @implicitly_identity
 def addresses_bech32(type_str: TypeStr, data: Any) -> Tuple[TypeStr, Bech32Address]:
     if type_str == 'address' and data:
-        return type_str, to_bech32_address(data)
+        # todo: 格式化地址
+        # return type_str, to_bech32_address(data)
+        return type_str, data
+
     return None
 
 

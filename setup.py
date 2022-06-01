@@ -7,7 +7,7 @@ from setuptools import (
 
 extras_require = {
     'tester': [
-        "platon-tester[py-evm]==v0.5.0-beta.4",
+        "platon-tester[py-evm]>=1.2.0",
         # "py-node>=3.2.0,<4",
     ],
     'linter': [
@@ -62,7 +62,7 @@ with open('./README.md') as readme:
 setup(
     name='platon.py',
     # *IMPORTANT*: Don't manually change the version here. Use the 'bumpversion' utility.
-    version='1.1.3',
+    version='1.2.0',
     description="""platon.py""",
     long_description_content_type='text/markdown',
     long_description=long_description,
@@ -72,11 +72,11 @@ setup(
     include_package_data=True,
     install_requires=[
         "aiohttp>=3.7.4.post0,<4",
-        "platon-abi>=2.0.0b6,<3.0.0",
-        "platon-account>=0.5.3,<0.6.0",
-        "platon-hash[pycryptodome]>=0.2.0,<1.0.0",
-        "platon-typing>=2.0.0,<3.0.0",
-        "platon-utils>=1.9.5,<2.0.0",
+        "platon-abi>=1.2.0",
+        "platon-account>=1.2.0",
+        "platon-hash[pycryptodome]>=1.2.0",
+        "platon-typing>=1.2.0",
+        "platon-utils>=1.2.0",
         "hexbytes>=0.1.0,<1.0.0",
         "ipfshttpclient==0.7.0",
         "jsonschema>=3.2.0,<4.0.0",
