@@ -95,6 +95,7 @@ from platon.types import (
     TxReceipt,
     Von,
     _Hash32,
+    UnFillTxParams,
 )
 
 
@@ -120,6 +121,13 @@ class BasePlaton(Module):
     _send_transaction: Method[Callable[[TxParams], HexBytes]] = Method(
         RPC.platon_sendTransaction,
         mungers=[send_transaction_munger]
+    )
+
+    fill_transaction_munger = send_transaction_munger
+
+    fill_transaction: Method[Callable[[UnFillTxParams], TxParams]] = Method(
+        RPC.platon_fillTransaction,
+        mungers=[fill_transaction_munger]
     )
 
     _get_transaction: Method[Callable[[_Hash32], TxData]] = Method(

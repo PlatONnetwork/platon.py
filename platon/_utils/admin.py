@@ -84,14 +84,14 @@ stop_ws: Method[Callable[[], bool]] = Method(
     mungers=None,
 )
 
-import_chain: Method[Callable[[], str]] = Method(
+import_chain: Method[Callable[[str], str]] = Method(
     RPC.admin_importChain,
-    mungers=None,
+    mungers=[default_root_munger],
 )
 
-export_chain: Method[Callable[[], str]] = Method(
+export_chain: Method[Callable[[str, int, int], str]] = Method(
     RPC.admin_exportChain,
-    mungers=None,
+    mungers=[default_root_munger],
 )
 
 get_program_version: Method[Callable[[], str]] = Method(

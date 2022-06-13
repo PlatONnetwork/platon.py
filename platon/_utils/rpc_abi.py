@@ -51,6 +51,7 @@ class RPC:
     platon_call = RPCEndpoint("platon_call")
     platon_chainId = RPCEndpoint("platon_chainId")
     platon_estimateGas = RPCEndpoint("platon_estimateGas")
+    platon_fillTransaction = RPCEndpoint("platon_fillTransaction")
     platon_gasPrice = RPCEndpoint("platon_gasPrice")
     platon_getAddressHrp = RPCEndpoint("platon_getAddressHrp")
     platon_getBalance = RPCEndpoint("platon_getBalance")
@@ -130,6 +131,8 @@ class RPC:
     debug_economicConfig = RPCEndpoint("debug_economicConfig")
     debug_getWaitSlashingNodeList = RPCEndpoint("debug_getWaitSlashingNodeList")
     debug_getBadBlocks = RPCEndpoint("debug_getBadBlocks")
+    debug_accountRange = RPCEndpoint("debug_accountRange")
+    debug_chaindbProperty = RPCEndpoint("debug_chaindbProperty")
 
     # trace
     # trace_block = RPCEndpoint("trace_block")

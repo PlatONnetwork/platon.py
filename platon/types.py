@@ -216,6 +216,12 @@ TxParams = TypedDict("TxParams", {
     "value": Von,
 }, total=False)
 
+UnFillTxParams = TypedDict("UnFillTxParams", {
+    "from": Bech32Address,
+    "to": Bech32Address,
+    "value": Von,
+}, total=False)
+
 
 class CallOverrideParams(TypedDict):
     balance: Optional[Von]
