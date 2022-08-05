@@ -6,7 +6,6 @@ from typing import (
     cast,
     TYPE_CHECKING,
 )
-from collections import Iterable
 
 import rlp
 from hexbytes import HexBytes
@@ -109,7 +108,7 @@ class InnerContractFunction:
         if kwargs is None:
             clone.kwargs = {}
         else:
-            clone.kwargs = kwargs
+            clone.kwargs = copy.copy(kwargs)
 
         return clone
 
