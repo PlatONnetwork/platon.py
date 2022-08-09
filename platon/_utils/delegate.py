@@ -33,7 +33,7 @@ class _DelegatePart(InnerContract):
         """
         Delegate the amount to the node and get the reward from the node.
 
-        :param balance_type: delegate balance type, including: free balance: 0, restricting: 1
+        :param balance_type: delegate balance type, including: free balance: 0, restricting: 1, locked balance and restricting: 2
         :param node_id: id of the candidate node to delegate
         :param amount: delegate amount
         """
@@ -58,6 +58,12 @@ class _DelegatePart(InnerContract):
         kwargs['staking_block_identifier'] = block['number']
         return self.function_processor(InnerFn.delegate_withdrewDelegation, kwargs)
 
+    def redeem_delegate(self):
+        """
+        redeem all unlocked delegates.
+        """
+        return self.function_processor(InnerFn.delegate_redeemDelegation, locals())
+
     def get_delegate_list(self, address: Bech32Address):
         """
         Get all delegate information of the address.
@@ -80,6 +86,12 @@ class _DelegatePart(InnerContract):
         block = self.web3.platon.get_block(staking_block_identifier)
         kwargs['staking_block_identifier'] = block['number']
         return self.function_processor(InnerFn.delegate_getDelegateInfo, kwargs, is_call=True)
+
+    def get_delegate_lock_info(self, address: Bech32Address,):
+        """
+        Get locked delegate information of the address.
+        """
+        return self.function_processor(InnerFn.delegate_getDelegationLockInfo, locals(), is_call=True)
 
 
 class _DelegateReward(InnerContract):
@@ -127,6 +139,9 @@ class Delegate:
                           ):
         return self.delegateBase.withdrew_delegate(node_id, staking_block_identifier, amount)
 
+    def redeem_delegate(self):
+        return self.delegateBase.redeem_delegate()
+
     def get_delegate_list(self, address: Bech32Address):
         return self.delegateBase.get_delegate_list(address)
 
@@ -136,6 +151,9 @@ class Delegate:
                           staking_block_identifier: BlockIdentifier,
                           ):
         return self.delegateBase.get_delegate_info(address, node_id, staking_block_identifier)
+
+    def get_delegate_lock_info(self, address: Bech32Address):
+        return self.delegateBase.get_delegate_lock_info(address)
 
     def withdraw_delegate_reward(self):
         return self.delegateReward.withdraw_delegate_reward()

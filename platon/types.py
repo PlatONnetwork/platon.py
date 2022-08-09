@@ -418,9 +418,10 @@ class InnerFn:
     # delegate
     delegate_delegate = FunctionIdentifier(1004)
     delegate_withdrewDelegation = FunctionIdentifier(1005)
-    # delegate_redeemDelegation = FunctionIdentifier(1006)
+    delegate_redeemDelegation = FunctionIdentifier(1006)
     delegate_getDelegateList = FunctionIdentifier(1103)
     delegate_getDelegateInfo = FunctionIdentifier(1104)
+    delegate_getDelegationLockInfo = FunctionIdentifier(1106)
     delegate_withdrawDelegateReward = FunctionIdentifier(5000)
     delegate_getDelegateReward = FunctionIdentifier(5100)
     # govern
