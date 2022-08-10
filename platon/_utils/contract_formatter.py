@@ -122,9 +122,23 @@ DELEGATE_INFO_FORMATTER = {
     'RestrictingPlan': to_integer_if_hex,
     'RestrictingPlanHes': to_integer_if_hex,
     'CumulativeIncome': to_integer_if_hex,
+    'LockHes': to_integer_if_hex,
+    'LockRestrictingHes': to_integer_if_hex,
 }
 
 delegate_info_formatter = apply_formatters_to_dict(DELEGATE_INFO_FORMATTER)
+
+LOCKED_DELEGATE_INFO_FORMATTER = {
+    "Amount": to_integer_if_hex,
+}
+
+locked_delegate_info_formatter = apply_formatters_to_dict(LOCKED_DELEGATE_INFO_FORMATTER)
+
+DELEGATE_LOCK_INFO_FORMATTER = {
+    "Locks": apply_list_to_array_formatter(locked_delegate_info_formatter),
+    "Balance": to_integer_if_hex,
+    "Restricting": to_integer_if_hex,
+}
 
 DELEGATE_REWARD_FORMATTER = {
     'reward': to_integer_if_hex,
@@ -142,4 +156,5 @@ INNER_CONTRACT_RESULT_FORMATTERS = {
     InnerFn.staking_getStakingReward: to_integer_if_hex,
     InnerFn.delegate_getDelegateInfo: delegate_info_formatter,
     InnerFn.delegate_getDelegateReward: apply_list_to_array_formatter(delegate_reward_formatter),
+    InnerFn.delegate_getDelegateLockInfo: DELEGATE_LOCK_INFO_FORMATTER,
 }

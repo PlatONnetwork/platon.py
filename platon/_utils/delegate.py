@@ -56,13 +56,13 @@ class _DelegatePart(InnerContract):
         kwargs = bubble_dict(dict(locals()), 'staking_block_identifier')
         block = self.web3.platon.get_block(staking_block_identifier)
         kwargs['staking_block_identifier'] = block['number']
-        return self.function_processor(InnerFn.delegate_withdrewDelegation, kwargs)
+        return self.function_processor(InnerFn.delegate_withdrewDelegate, kwargs)
 
     def redeem_delegate(self):
         """
         redeem all unlocked delegates.
         """
-        return self.function_processor(InnerFn.delegate_redeemDelegation, locals())
+        return self.function_processor(InnerFn.delegate_redeemDelegate, locals())
 
     def get_delegate_list(self, address: Bech32Address):
         """
@@ -87,11 +87,11 @@ class _DelegatePart(InnerContract):
         kwargs['staking_block_identifier'] = block['number']
         return self.function_processor(InnerFn.delegate_getDelegateInfo, kwargs, is_call=True)
 
-    def get_delegate_lock_info(self, address: Bech32Address,):
+    def get_delegate_lock_info(self, address: Bech32Address):
         """
         Get locked delegate information of the address.
         """
-        return self.function_processor(InnerFn.delegate_getDelegationLockInfo, locals(), is_call=True)
+        return self.function_processor(InnerFn.delegate_getDelegateLockInfo, locals(), is_call=True)
 
 
 class _DelegateReward(InnerContract):
