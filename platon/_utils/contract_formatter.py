@@ -122,8 +122,8 @@ DELEGATE_INFO_FORMATTER = {
     'RestrictingPlan': to_integer_if_hex,
     'RestrictingPlanHes': to_integer_if_hex,
     'CumulativeIncome': to_integer_if_hex,
-    'LockHes': to_integer_if_hex,
-    'LockRestrictingHes': to_integer_if_hex,
+    'LockReleasedHes': to_integer_if_hex,
+    'LockRestrictingPlanHes': to_integer_if_hex,
 }
 
 delegate_info_formatter = apply_formatters_to_dict(DELEGATE_INFO_FORMATTER)
