@@ -61,10 +61,12 @@ from platon._utils.filters import (
 )
 from platon._utils.formatters import (
     hex_to_integer,
+    bytes_to_integer,
     integer_to_hex,
     is_array_of_dicts,
     is_array_of_strings,
     remove_key_if,
+    bytes_to_hex,
 )
 from platon._utils.normalizers import (
     abi_address_to_bech32,
@@ -107,8 +109,10 @@ def bytes_to_ascii(value: bytes) -> str:
 
 
 to_ascii_if_bytes = apply_formatter_if(is_bytes, bytes_to_ascii)
+to_integer_if_bytes = apply_formatter_if(is_bytes, bytes_to_integer)
 to_integer_if_hex = apply_formatter_if(is_string, hex_to_integer)
 to_hex_if_integer = apply_formatter_if(is_integer, integer_to_hex)
+to_hex_if_bytes = apply_formatter_if(is_bytes, bytes_to_hex)
 
 is_false = partial(operator.is_, False)
 
@@ -170,7 +174,9 @@ transaction_result_formatter = apply_formatters_to_dict(TRANSACTION_RESULT_FORMA
 
 
 def apply_list_to_array_formatter(formatter: Any) -> Callable[..., Any]:
-    return to_list(apply_formatter_to_array(formatter))
+    # todo: Does this cause any problems?
+    # return to_list(apply_formatter_to_array(formatter))
+    return apply_formatter_to_array(formatter)
 
 
 LOG_ENTRY_FORMATTERS = {

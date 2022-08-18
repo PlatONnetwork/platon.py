@@ -20,6 +20,8 @@ from platon_utils import (
     is_string,
     to_dict,
     to_list,
+    to_hex,
+    add_0x_prefix,
 )
 from platon_utils.curried import (
     apply_formatter_at_index,
@@ -42,6 +44,16 @@ def hex_to_integer(value: HexStr) -> int:
     return int(value, 16)
 
 
+def bytes_to_integer(value: bytes) -> int:
+    if not value:
+        return 0
+    return int.from_bytes(value, 'big')
+
+
+def bytes_to_hex(value: bytes) -> HexStr:
+    return add_0x_prefix(HexStr(to_hex(value)))
+
+
 integer_to_hex = hex
 
 
@@ -56,7 +68,7 @@ def apply_formatters_to_args(*formatters: Callable[[TValue], TReturn]) -> Callab
 @curry
 @to_list
 def apply_formatter_to_array(
-    formatter: Callable[[TValue], TReturn], value: Sequence[TValue]
+        formatter: Callable[[TValue], TReturn], value: Sequence[TValue]
 ) -> Iterable[TReturn]:
     for item in value:
         yield formatter(item)
@@ -84,8 +96,10 @@ def recursive_map(func: Callable[..., TReturn], data: Any) -> TReturn:
     Apply func to data, and any collection items inside data (using map_collection).
     Define func so that it only applies to the type of value that you want it to apply to.
     """
+
     def recurse(item: Any) -> TReturn:
         return recursive_map(func, item)
+
     items_mapped = map_collection(recurse, data)
     return func(items_mapped)
 
@@ -93,12 +107,14 @@ def recursive_map(func: Callable[..., TReturn], data: Any) -> TReturn:
 def static_return(value: TValue) -> Callable[..., TValue]:
     def inner(*args: Any, **kwargs: Any) -> TValue:
         return value
+
     return inner
 
 
 def static_result(value: TValue) -> Callable[..., Dict[str, TValue]]:
     def inner(*args: Any, **kwargs: Any) -> Dict[str, TValue]:
         return {'result': value}
+
     return inner
 
 
@@ -126,7 +142,7 @@ def is_array_of_dicts(value: Any) -> bool:
 
 @curry
 def remove_key_if(
-    key: Any, remove_if: Callable[[Dict[Any, Any]], bool], input_dict: Dict[Any, Any]
+        key: Any, remove_if: Callable[[Dict[Any, Any]], bool], input_dict: Dict[Any, Any]
 ) -> Dict[Any, Any]:
     if key in input_dict and remove_if(input_dict):
         return dissoc(input_dict, key)

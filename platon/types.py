@@ -129,6 +129,7 @@ class EventData(TypedDict):
 class CodeData(TypedDict):
     code: int
     message: str
+    data: Optional[Any]
 
 
 class RPCError(TypedDict):

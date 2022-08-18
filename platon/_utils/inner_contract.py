@@ -9,13 +9,11 @@ from typing import (
 
 import rlp
 from hexbytes import HexBytes
+from platon.datastructures import AttributeDict
 
 from platon._utils.error_code import ERROR_CODE
 from platon.module import apply_result_formatters
 
-from platon.exceptions import (
-    ContractLogicError,
-)
 from platon_typing import (
     HexStr,
     Bech32Address,
@@ -37,12 +35,17 @@ from platon._utils.contract_formatter import (
     DEFAULT_PARAM_NORMALIZERS,
     DEFAULT_PARAM_ABIS,
     INNER_CONTRACT_RESULT_FORMATTERS,
+    INNER_CONTRACT_EVENT_FORMATTERS,
 )
 from platon.types import (
     TxParams,
     BlockIdentifier,
     CallOverrideParams,
-    FunctionIdentifier, TxReceipt, EventData, LogReceipt, CodeData,
+    FunctionIdentifier,
+    TxReceipt,
+    EventData,
+    LogReceipt,
+    CodeData,
 )
 
 if TYPE_CHECKING:
@@ -269,27 +272,70 @@ class InnerContractFunction:
 
 class InnerContractEvent:
 
-    @classmethod
-    def get_event(cls, transaction_receipt: TxReceipt) -> EventData:
-        logs = transaction_receipt['logs']
-        code_data = cls._get_code(logs[0])
-        # todo: add code data to event data
-        return code_data
+    def __init__(self, func_number=None):
+        self.formatter = self._get_event_formatter(func_number)
 
-    @classmethod
-    def _get_code(cls, log: LogReceipt) -> CodeData:
-        encoded_data = log.get('data')
-        if type(encoded_data) is str:
-            encoded_data = remove_0x_prefix(encoded_data)
-        rlp_data_list = rlp.decode(bytes.fromhex(encoded_data))
-        data = bytes.decode(rlp_data_list[0])
-        try:
-            # compatible historical versions
-            return json.loads(data)
-        finally:
-            code = int(data)
-            error_msg = ERROR_CODE.get(int(code), 'Unknown error code')
-            return {'code': code, 'message': error_msg}
+    @staticmethod
+    def _get_event_formatter(fn):
+        return INNER_CONTRACT_EVENT_FORMATTERS.get(fn)
+
+    def processReceipt(self, txn_receipt: TxReceipt) -> CodeData:
+        # an inner-contract receipt has only one log
+        log = txn_receipt['logs'][0]
+        return self._parse_log(log)
+
+    def _parse_log(self, log: LogReceipt) -> CodeData:
+        data = log.get('data')
+        if type(data) is str:
+            data = remove_0x_prefix(data)
+        # todo: return the entire event?
+        return self._format_data(data)
+
+    def _format_data(self, data) -> CodeData:
+        data = self._decode_data(data)
+        code = data[0]
+        message = ERROR_CODE.get(int(code), 'Unknown error code')
+        # no returns in data
+        if not self.formatter:
+            formatted_data = {'code': code, 'message': message, 'data': None}
+            return cast(CodeData, AttributeDict.recursive(formatted_data))
+
+        args = data[1:]
+        if self.formatter.__name__ == 'apply_formatters_to_dict':
+            # format the returns as a dict
+            raw_formatter = self.formatter.args[0]
+            packaged_args = dict(zip(raw_formatter.keys(), args))
+
+        elif self.formatter.__name__ == 'apply_formatter_to_array':
+            # format the returns as a dict-list
+            actual_args = args[0]
+            if type(actual_args) is not list:
+                raise ValueError('event data is inconsistent with formatter')
+
+            packaged_args = []
+            raw_formatter = self.formatter.args[0].args[0]
+            for _args in actual_args:
+                packaged_args.append(dict(zip(raw_formatter.keys(), _args)))
+
+        else:
+            raise ValueError(f'Unknown formatter: {self.formatter.__name__}')
+
+        formatted_args = apply_result_formatters(self.formatter, packaged_args)
+        formatted_data = {'code': code, 'message': message, 'data': formatted_args}
+        return cast(CodeData, AttributeDict.recursive(formatted_data))
+
+    @staticmethod
+    def _decode_data(data):
+        decoded_event = []
+        primite_data = rlp.decode(bytes.fromhex(data))
+        # 解码事件code
+        code = int(primite_data[0])
+        decoded_event.append(code)
+        # 解码事件参数
+        for arg_data in primite_data[1:]:
+            decoded_event.append(rlp.decode(arg_data))
+
+        return decoded_event
 
 
 def bubble_dict(target: dict, *keys: Any):
