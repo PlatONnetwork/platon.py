@@ -19,7 +19,9 @@ from platon_typing import (
     Bech32Address,
 )
 from platon_utils import (
-    to_bech32_address, remove_0x_prefix,
+    to_bech32_address,
+    remove_0x_prefix,
+    combomethod,
 )
 from platon._utils.empty import (
     empty,
@@ -56,7 +58,6 @@ class InnerContract:
     _HEX_ADDRESS = None
     _address = None
     _function = None
-    _event = None
 
     # If you want to get the result of the transaction, please set it to True,
     # if you only want to get the transaction hash, please set it to False
@@ -77,11 +78,9 @@ class InnerContract:
             self._function = InnerContractFunction(self.web3, self.address)
         return self._function
 
-    @property
-    def event(self):
-        if not self._event:
-            self._event = InnerContractEvent()
-        return self._event
+    @combomethod
+    def event(self, func_id):
+        return InnerContractEvent(func_id)
 
     def function_processor(self, func_type: FunctionIdentifier, kwargs: dict, is_call: bool = False) -> callable:
         self.kwargs_process(kwargs)
@@ -272,8 +271,8 @@ class InnerContractFunction:
 
 class InnerContractEvent:
 
-    def __init__(self, func_number=None):
-        self.formatter = self._get_event_formatter(func_number)
+    def __init__(self, func_id=None):
+        self.formatter = self._get_event_formatter(func_id)
 
     @staticmethod
     def _get_event_formatter(fn):
@@ -297,7 +296,7 @@ class InnerContractEvent:
         message = ERROR_CODE.get(int(code), 'Unknown error code')
         # no returns in data
         if not self.formatter:
-            formatted_data = {'code': code, 'message': message, 'data': None}
+            formatted_data = {'code': code, 'message': message}
             return cast(CodeData, AttributeDict.recursive(formatted_data))
 
         args = data[1:]

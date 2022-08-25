@@ -62,7 +62,7 @@ with open('./README.md') as readme:
 setup(
     name='platon.py',
     # *IMPORTANT*: Don't manually change the version here. Use the 'bumpversion' utility.
-    version='1.3.1',
+    version='1.3.2',
     description="""platon.py""",
     long_description_content_type='text/markdown',
     long_description=long_description,

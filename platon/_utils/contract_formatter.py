@@ -151,8 +151,8 @@ locked_delegate_info_formatter = apply_formatters_to_dict(LOCKED_DELEGATE_INFO_F
 
 DELEGATE_LOCK_INFO_FORMATTER = {
     "Locks": apply_list_to_array_formatter(locked_delegate_info_formatter),
-    "Balance": to_integer_if_hex,
-    "Restricting": to_integer_if_hex,
+    "Released": to_integer_if_hex,
+    "RestrictingPlan": to_integer_if_hex,
 }
 
 delegate_lock_info_formatter = apply_formatters_to_dict(DELEGATE_LOCK_INFO_FORMATTER)
