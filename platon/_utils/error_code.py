@@ -62,6 +62,8 @@ ERROR_CODE = {
     301204: 'Query candidate info failed',
     301205: 'Query delegate info failed',
     301206: 'Failed to convert Node ID to address',
+    301207: 'The user delegation lock balance is not enough for delegate',
+    301208: 'Query delegation lock info failed',
     305001: 'Delegation info not found',
     # slashing error code
     303000: 'Double-signning verification failed',
