@@ -144,7 +144,8 @@ DELEGATE_INFO_FORMATTER = {
 delegate_info_formatter = apply_formatters_to_dict(DELEGATE_INFO_FORMATTER)
 
 LOCKED_DELEGATE_INFO_FORMATTER = {
-    "Amount": to_integer_if_hex,
+    "Released": to_integer_if_hex,
+    "RestrictingPlan": to_integer_if_hex,
 }
 
 locked_delegate_info_formatter = apply_formatters_to_dict(LOCKED_DELEGATE_INFO_FORMATTER)
