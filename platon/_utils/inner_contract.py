@@ -9,6 +9,8 @@ from typing import (
 
 import rlp
 from hexbytes import HexBytes
+from platon._utils.method_formatters import ATTRDICT_FORMATTER
+
 from platon.datastructures import AttributeDict
 
 from platon._utils.error_code import ERROR_CODE
@@ -260,6 +262,8 @@ class InnerContractFunction:
         # when rest is empty value, as <''> \ <[]> ...
         if not rets:
             return rets
+
+        rets = apply_result_formatters(ATTRDICT_FORMATTER, rets)
 
         function_formatter = INNER_CONTRACT_RESULT_FORMATTERS.get(func_id)
 
