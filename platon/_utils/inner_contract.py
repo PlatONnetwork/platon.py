@@ -247,7 +247,7 @@ class InnerContractFunction:
         Format result to make its easier to use
         """
         if type(result) in [bytes, HexBytes]:
-            result = json.loads(HexBytes(result).decode('utf-8'))
+            result = AttributeDict.recursive(json.loads(HexBytes(result).decode('utf-8')))
 
         if 'Code' not in result.keys() or 'Ret' not in result.keys():
             return result
@@ -263,12 +263,10 @@ class InnerContractFunction:
         if not rets:
             return rets
 
-        rets = apply_result_formatters(ATTRDICT_FORMATTER, rets)
-
         function_formatter = INNER_CONTRACT_RESULT_FORMATTERS.get(func_id)
 
         if function_formatter:
-            return apply_result_formatters(function_formatter, rets)
+            return AttributeDict.recursive(apply_result_formatters(function_formatter, rets))
 
         return rets
 
