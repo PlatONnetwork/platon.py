@@ -178,7 +178,7 @@ class Pip(InnerContract):
         """
         return self.function_processor(InnerFn.govern_getGovernParam, locals(), is_call=True)
 
-    def govern_param_list(self, module: str = None):
+    def govern_param_list(self, module: str = ''):
         """
         get all governable parameters.
 
