@@ -11,7 +11,7 @@ import rlp
 from hexbytes import HexBytes
 from platon._utils.method_formatters import ATTRDICT_FORMATTER
 
-from platon.datastructures import AttributeDict
+from platon.datastructures import MutableAttributeDict
 
 from platon._utils.error_code import ERROR_CODE
 from platon.module import apply_result_formatters
@@ -247,7 +247,7 @@ class InnerContractFunction:
         Format result to make its easier to use
         """
         if type(result) in [bytes, HexBytes]:
-            result = AttributeDict.recursive(json.loads(HexBytes(result).decode('utf-8')))
+            result = MutableAttributeDict.recursive(json.loads(HexBytes(result).decode('utf-8')))
 
         if 'Code' not in result.keys() or 'Ret' not in result.keys():
             return result
@@ -266,7 +266,7 @@ class InnerContractFunction:
         function_formatter = INNER_CONTRACT_RESULT_FORMATTERS.get(func_id)
 
         if function_formatter:
-            return AttributeDict.recursive(apply_result_formatters(function_formatter, rets))
+            return MutableAttributeDict.recursive(apply_result_formatters(function_formatter, rets))
 
         return rets
 
@@ -299,7 +299,7 @@ class InnerContractEvent:
         # no returns in data
         if not self.formatter:
             formatted_data = {'code': code, 'message': message}
-            return cast(CodeData, AttributeDict.recursive(formatted_data))
+            return cast(CodeData, MutableAttributeDict.recursive(formatted_data))
 
         args = data[1:]
         if self.formatter.__name__ == 'apply_formatters_to_dict':
@@ -323,7 +323,7 @@ class InnerContractEvent:
 
         formatted_args = apply_result_formatters(self.formatter, packaged_args)
         formatted_data = {'code': code, 'message': message, 'data': formatted_args}
-        return cast(CodeData, AttributeDict.recursive(formatted_data))
+        return cast(CodeData, MutableAttributeDict.recursive(formatted_data))
 
     @staticmethod
     def _decode_data(data):
