@@ -13,7 +13,9 @@ from platon_utils import (
     to_text,
     to_von,
     is_bech32_address,
-    to_bech32_address
+    to_bech32_address,
+    is_checksum_address,
+    to_checksum_address
 )
 from functools import (
     wraps,
@@ -227,6 +229,14 @@ class Web3:
     @staticmethod
     def to_bech32_address(value: Union[AnyAddress, str, bytes], hrp: str):
         return to_bech32_address(value, hrp)
+
+    @staticmethod
+    def is_checksum_address(value: Any):
+        return is_checksum_address(value)
+
+    @staticmethod
+    def to_checksum_address(value: Union[AnyAddress, str, bytes], hrp: str):
+        return to_checksum_address(value, hrp)
 
     # mypy Types
     platon: Platon
